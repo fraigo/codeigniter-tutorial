@@ -56,7 +56,11 @@
     * Call `php spark db:seed SeederName`
     * Table data will be populated
     * You can see the contents of a table running `php spark db:table tablename`
-
+* Create a Base model
+    * Create a file in `app/Models/BaseModel.php`
+    * Set namespace `App\Models`
+    * Create the BaseModel class extending from `Codeigniter\Model`
+    * Add any common methods for models here
 
 
 ## What is CodeIgniter?
