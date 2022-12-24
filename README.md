@@ -8,12 +8,18 @@
     * Optionally, a Database engine like MySQL or PostgreSQL
 * Download Codeigniter or create a Codeigniter project
     * Follow instructions from https://codeigniter4.github.io/userguide/installation/
-    * Manual Instalation:
+    * Manual Installation:
         * Download Codeigniter source code https://github.com/CodeIgniter4/framework/releases/latest
         * Note: Updates to the Codeigniter codebase should be done manually
     * Install via composer
         * Run `composer create-project codeigniter4/appstarter [foldername]`
         * To update Codeigniter codebase, run `composer update`
+* Setup `.env` file
+    * Copy `env` file to `.env`
+    * Uncomment `CI_ENVIRONMENT = development`
+    * To set up an SQLite database, uncomment and set the driver and filename:
+        * `database.default.DBDriver = SQLite3`
+        * `database.default.database = database.sqlite`
 
 
 ## What is CodeIgniter?
