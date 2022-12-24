@@ -20,6 +20,10 @@
     * To set up an SQLite database, uncomment and set the driver and filename:
         * `database.default.DBDriver = SQLite3`
         * `database.default.database = database.sqlite`
+* Start the web service locally
+    * Run `php spark serve` to start a local dev server at `http://localhost:8080`
+    * Press `Ctrl+C` to stop the server
+    * To use a different port run `php spark serve --port PORTNUMBER`
 
 
 ## What is CodeIgniter?
