@@ -46,6 +46,16 @@
 * Run the migration file
     * `php spart migrate` (It will run all Migrations in order of timestamp)
     *  Table `users` will be created in the database
+* Create a seeder file (table data)
+    * Run `php spark make:seeder SeederName` (eg: `UserData`)
+    * Edit file `app/Database/Seeds/SeederName.php` 
+    * Use `$this->db->table('tablename')->trunctate();` fo clear data in a table
+    * Use `$this->db->table('tablename')->insert($data);` fo insert a key => value data array
+    * `$data` must contain values for at least all non-null fields
+* Run seeders
+    * Call `php spark db:seed SeederName`
+    * Table data will be populated
+    * You can see the contents of a table running `php spark db:table tablename`
 
 
 
