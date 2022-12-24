@@ -24,6 +24,13 @@
     * Run `php spark serve` to start a local dev server at `http://localhost:8080`
     * Press `Ctrl+C` to stop the server
     * To use a different port run `php spark serve --port PORTNUMBER`
+* Create your home page view
+    * Modify `app/Views/welcome_message.php` (or create a new view file `app/Views/home.php`)
+    * Include your own HTML code 
+    * If you want to change the file name of the home view to app/Views/home.php
+        * Modify the controller `app/Controllers/Home.php` to return `view('home')` instead of `view('welcome_message')`.
+        * If you created a new file, remove the old file app/Views/welcome_message.php
+    * Include any additional static files in the `public/` folder
 
 
 ## What is CodeIgniter?
