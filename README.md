@@ -68,7 +68,24 @@
         * `$allowedFields`:  define which fields of the table could be edited by the user. Generally, we exclude the table id field and any automatic or internal fields (like creation and update timestamps)
         * `$validationRules`: a set of validations to help the controller to check whether the data to be inserted or updated follow the rules or not. Some examples of rules are: `required`, `max_length[number]`, `valid_email` and others. More info on validations is in the Codeigniter 4 documentation.
         * Change `extends Model` to `extends BaseModel` to use the common Base Model class just created.
-
+* Create a controller
+    * Run `php spark make:controller ControllerName`
+    * Edit file created `app/Controllers/ControllerName.php`
+        * Get a reference to the model `$model = new \App\Models\Users();`
+        * Retrieve all rows from the model `$items = $model->findAll();`
+        * Return a response with model data
+            * Directly return content. For example, JSON data.
+              `return $this->response->setJSON($items);`
+            * Return a view (eg: `users/index` will map to `app/views/users/index.php`)
+              `return view('users/index', ['items' => $items]);`
+    * To make the controller RESTful, change inheritance to `ResourceController` 
+        * Change to `use CodeIgniter\RESTful\ResourceController;`
+        * Change `extends BaseController` to `extends ResourceController`
+        * Setup the source $modelName
+            * `protected $modelName = 'App\Models\ModelName';`
+        * Setup the output format (generally, json)
+            * `protected $format    = 'json';`
+        * For the `index` method return `$this->respond($this->model->findAll());`
 
 
 ## What is CodeIgniter?
