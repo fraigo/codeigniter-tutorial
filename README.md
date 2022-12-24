@@ -61,6 +61,14 @@
     * Set namespace `App\Models`
     * Create the BaseModel class extending from `Codeigniter\Model`
     * Add any common methods for models here
+* Create a model class
+    * Run `php spark make:model ModelName` (eg: Users)
+    * Edit model class `app/Models/ModelName.php`
+        * `$table`: is the real name of the table in the database.
+        * `$allowedFields`:  define which fields of the table could be edited by the user. Generally, we exclude the table id field and any automatic or internal fields (like creation and update timestamps)
+        * `$validationRules`: a set of validations to help the controller to check whether the data to be inserted or updated follow the rules or not. Some examples of rules are: `required`, `max_length[number]`, `valid_email` and others. More info on validations is in the Codeigniter 4 documentation.
+        * Change `extends Model` to `extends BaseModel` to use the common Base Model class just created.
+
 
 
 ## What is CodeIgniter?
