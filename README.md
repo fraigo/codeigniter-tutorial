@@ -31,6 +31,22 @@
         * Modify the controller `app/Controllers/Home.php` to return `view('home')` instead of `view('welcome_message')`.
         * If you created a new file, remove the old file app/Views/welcome_message.php
     * Include any additional static files in the `public/` folder
+* Create a migration file (to create `user` table)
+    * Use a meaningful name for the migration
+        * `php spark make:migration CreateUser`
+    * Edit File `app/Database/Migrations/{TIMESTAMP}_CreateUser.php`:
+        * Add fields: `$this->forge->addField(["fieldname"=>[fieldconfig]])` 
+        * Add primary key: `$this->forge->addKey('fieldname', true);` 
+        * Add unique key: `$this->forge->addUniqueKey(['field1',''field2']);` 
+        * Create the table: `$this->forge->createTable('tablename');` 
+    * For the migration `down()` method, add the opposite actions to remove/create fields
+        * Drop table: `$this->forge->dropTable('TABLENAME');`
+        * Drop fields: `$forge->dropColumn('table_name', ['column_1', 'column_2']);`
+        * Drop index: `$forge->dropKey('tablename', 'index_name');`
+* Run the migration file
+    * `php spart migrate` (It will run all Migrations in order of timestamp)
+    *  Table `users` will be created in the database
+
 
 
 ## What is CodeIgniter?
