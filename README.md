@@ -86,6 +86,15 @@
         * Setup the output format (generally, json)
             * `protected $format    = 'json';`
         * For the `index` method return `$this->respond($this->model->findAll());`
+* Create routes
+    * Modify the file `app/Config/Routes.php` to setup routes to controllers
+    * Use `$routes->get('/path/','Controller::method');` for common GET requests
+    * Use `$routes->post`, `$routes->delete`, `$routes->put` for other methods
+    * To pass parameters to the controller:
+        * Use parameters in the path like `(:any)` (text) and `(:num)` to enforce numbers
+        * Pass parameters to the controller as `$1`, `$2`, etc
+        * Example: `$routes->get('/user/(:num)','User::show/$1');`
+    
 
 
 ## What is CodeIgniter?
