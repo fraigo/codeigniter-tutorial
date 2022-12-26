@@ -6,10 +6,15 @@ use App\Controllers\BaseController;
 
 class Users extends BaseController
 {
+
+    protected $helpers = ['html'];
+
     public function index()
     {
         $model = new \App\Models\Users();
         $items = $model->findAll();
-        return $this->response->setJSON($items);
+        // not needed when setting $helpers property
+        // helper('html'); 
+        return htmlTable($items,null,["border"=>1]);
     }
 }

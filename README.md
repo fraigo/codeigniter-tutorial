@@ -94,6 +94,18 @@
         * Use parameters in the path like `(:any)` (text) and `(:num)` to enforce numbers
         * Pass parameters to the controller as `$1`, `$2`, etc
         * Example: `$routes->get('/user/(:num)','User::show/$1');`
+* Create or extend helpers
+    * Create or extend a helper adding a file in `app/Helpers/{helpername}_helper`
+    * Some existing helpers:
+        * `array`: Array processing functions like `array_sort_by_multiple_keys($array, $columns` to search, sort, and format arrays. See Array Helper in the Codeigniter 4 documentation
+        * `file`: To get some file information (eg: `get_file_info()`) and perform file operations like `write_file($path, $data, $mode`.
+        * `html`: HTML generation shortcut functions to generate different HTML tags like `ul`, `link`, `img` and others. 
+        * `form`: A set of HTML form utilities to create a form like `form_open()` and `form_close()`. Also HTML controls like `form_input()`, `form_dropdown()`, and `form_button()`
+    * Load a helper in any part of the controller or view by calling `helper('helpername')`
+    * In a controller, helpers could be loaded at startup by setting the `$helpers` property:
+      `protected $helpers = ['html'];`
+    * Once a helper is loaded, you can call any function or class created in the helper file.
+
     
 
 
