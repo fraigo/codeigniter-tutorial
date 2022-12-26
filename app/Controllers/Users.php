@@ -13,8 +13,8 @@ class Users extends BaseController
     {
         $model = new \App\Models\Users();
         $items = $model->findAll();
-        // not needed when setting $helpers property
-        // helper('html'); 
-        return htmlTable($items,null,["border"=>1]);
+        return view('users/index',[
+            "items"=>$items
+        ]);
     }
 }

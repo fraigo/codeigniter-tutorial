@@ -105,8 +105,10 @@
     * In a controller, helpers could be loaded at startup by setting the `$helpers` property:
       `protected $helpers = ['html'];`
     * Once a helper is loaded, you can call any function or class created in the helper file.
-
-    
+* Create a view
+    * Views are php files stored in `app/Views/`. We can group views by controller to store them in the same folder (eg: `app/Views/users/index.php` in the `users` subfolder)
+    * To load a view from a controller or another view use `view('path/to/view', $data)`
+    * To pass data to the view use the second `view()` parameter. Any value inside `$data` will pass as a $variable in the target view.
 
 
 ## What is CodeIgniter?
