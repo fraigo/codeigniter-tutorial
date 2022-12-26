@@ -11,6 +11,14 @@ header{
     background-color: #eee;
     line-height: 3em;
     padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+header a{
+    display: inline-block;
+    margin: 0 8px;
+    text-decoration: none;
+    color: inherit !important;
 }
 main{
     padding: 1rem;

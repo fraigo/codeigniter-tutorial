@@ -6,7 +6,6 @@ use App\Controllers\BaseController;
 
 class Users extends BaseController
 {
-
     protected $helpers = ['html'];
 
     public function index()
@@ -14,7 +13,8 @@ class Users extends BaseController
         $model = new \App\Models\Users();
         $items = $model->findAll();
         return view('users/index',[
-            "items"=>$items
+            "title" => "Users", // page $title
+            "items" => $items
         ]);
     }
 }

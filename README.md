@@ -109,6 +109,17 @@
     * Views are php files stored in `app/Views/`. We can group views by controller to store them in the same folder (eg: `app/Views/users/index.php` in the `users` subfolder)
     * To load a view from a controller or another view use `view('path/to/view', $data)`
     * To pass data to the view use the second `view()` parameter. Any value inside `$data` will pass as a $variable in the target view.
+* Setup a common layout to simplify views
+    * Create a common/default page structure to reuse. Store it as a default layout (`app/Views/layouts/default.php`)
+        * Setup the HTML content (head, body and common content)
+        * Include common variables (eg: a page `$title`)
+        * Setup section placeholders using `$this->renderSection('{section name}')` (eg: section name `'content'`)
+    * Load the layout in any view:
+        * Call first `$this->extend()` to load the layout (eg: `$this->extend('layouts/default')`)
+        * Call `$this->section('{section name}')` at the start of the section and `$this->endSection()` at the end.
+    * Add additional data for the layout in the main `view()` call (eg: for `title`)
+
+
 
 
 ## What is CodeIgniter?
