@@ -32,7 +32,7 @@ class Users extends BaseModel
     protected $validationRules      = [
         'email' => [
             'label' => 'Email',
-            'rules' => 'required|max_length[64]|valid_email|is_unique[email]'
+            'rules' => 'required|max_length[64]|valid_email|is_unique[users.email]'
         ],
         'password' => [
             'label' => 'Password',

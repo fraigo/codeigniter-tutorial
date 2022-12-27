@@ -118,8 +118,21 @@
         * Call first `$this->extend()` to load the layout (eg: `$this->extend('layouts/default')`)
         * Call `$this->section('{section name}')` at the start of the section and `$this->endSection()` at the end.
     * Add additional data for the layout in the main `view()` call (eg: for `title`)
-
-
+* Create authentication controller
+    * Run `php spark make:controller Auth`
+    * Modify `app/Controllers/Auth.php` to set a login method
+        * Read login `email` + `password` data:`$data = $this->request->getVar();`
+        * Check user email + password (hash md5) on user model:
+            * `$users = new \App\Models\Users();`
+            * `$user = $users->where("email",$data["email"])->where("password",md5($data["password"]))->first();`
+        * If `$user` does not exist, return error: `'User or password incorrect'`
+        * If `$user` exists, create a session variable and redirect to `/`
+    * Modify `app/Controllers/Auth.php` to set a logout method
+        * remove session variables
+        * return OK
+    * Create routes for login and logout in `app/Confir/Routes.php`
+        * `$routes->post('/auth/login','Auth::login');`
+        * `$routes->get('/auth/logout','Auth::logout');`
 
 
 ## What is CodeIgniter?
