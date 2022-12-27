@@ -9,6 +9,15 @@ class Auth extends BaseController
     public function login()
     {
         $data = $this->request->getVar();
+        $rules = [
+            "email" => "required|valid_email",
+            "password" => "required",
+        ];
+        $validation = \Config\Services::validation();
+        $validation->setRules($rules);
+        if (!$validation->run($data)){
+            die(implode('<br>',$validation->getErrors()));
+        }
         $users = new \App\Models\Users();
         $user = $users
                     ->where("email",$data["email"])

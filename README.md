@@ -133,6 +133,31 @@
     * Create routes for login and logout in `app/Confir/Routes.php`
         * `$routes->post('/auth/login','Auth::login');`
         * `$routes->get('/auth/logout','Auth::logout');`
+* Work with validations
+    * Create $validation instance: `$validation = \Config\Services::validation();`
+    * Setup rules: 
+        * `$validation->setRules(['email'=>'valid_email','password'=>'required]);`;
+    * Use the long rule format for more customizations, including a label and custom error messages:
+        ```php
+        [
+          'email' => [
+            'label'  => 'User Email',
+            'rules'  => 'valid_email',
+            'errors' => [
+                'valid_email' => '{field} must ve a valid email',
+            ]
+          ]
+        ]
+        ```
+    * Run validation `$validation->run($data)`
+        * If returned `false`, some validations were not passed. 
+        * `$validation->getErrors()` return an array of field => validation error. 
+        * Error example (`valid_email` failed): `['email'=>'The email field must contain a valid email address.']`
+* Add validation to Authentication login
+    * Create $validation instance: `$validation = \Config\Services::validation();`
+    * Setup rules for `email` and `password`: `$validation->setRules(['email'=>'valid_email','password'=>'required]);`;
+    * Run validation `$validation->run($data)`
+        * If error (return `false`), return form errors: `$validation->getErrors()`
 
 
 ## What is CodeIgniter?
