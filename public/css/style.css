@@ -13,6 +13,13 @@ header{
     padding: 0 1rem;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
+}
+@media (max-width: 767px) {
+    header nav{
+        flex: 1 1 100%;
+        text-align: center;
+    }
 }
 header a{
     display: inline-block;
@@ -29,4 +36,39 @@ footer{
     color: #eee;
     line-height: 3em;
     padding: 0 1rem;
+}
+
+.form-item{
+    display: flex;
+    margin: 8px 0;
+    max-width: 400px;
+}
+.form-item div{
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+}
+.form-item label{
+    width: 130px;
+    display: flex;
+    line-height: 1.2em;
+    align-items: center;
+}
+.form-item .form-error{
+    flex: 1 1 100%;
+    font-size: 0.8em;
+    padding: 4px 0;
+    color: #800;
+}
+.form-item input, .form-item select, .form-item textarea, .form-item button{
+    line-height: 2.4em;
+    padding: 0 8px;
+    border-radius: 5px;
+    border: 1px solid #888;
+    box-sizing: border-box;
+    flex: 1;
+}
+.form-errors{
+    margin: 8px 0;
+    line-height: 1.4em;
 }

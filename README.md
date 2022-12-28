@@ -177,6 +177,17 @@
     * Modify routes `app/Config/Routes.php`
         * Add route for the logout method: `$routes->get('auth/logout');`
         * Add route for the login form: `$routes->get('/auth/login', 'Auth::form');`
+* Use and extend the form helper
+    * Create `app/Helpers/form_helper.php` to additional form utilities 
+        * `form_item($config)` container for a label + input + error message
+    * Load the form helper: `helper('form')`
+    * In `content` section, change HTML form content to PHP calls:
+        * Open form: `echo form_open('/auth/login');`
+        * Replace HTML fields and labels for email and password. 
+            * Use `form_item($config)` to create inputs + labels + error message
+            * Use `form_input($config)` to create single inputs
+        * Create a submit button: `echo form_submit('','Log In')`
+        * Close the form: `form_close()`
 
 
 ## What is CodeIgniter?

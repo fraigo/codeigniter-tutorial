@@ -1,10 +1,28 @@
 <?= $this->extend('layouts/default') ?>
 <?= $this->section('content') ?>
     <h2>Login</h2>
-    <form action="/auth/login" method="POST">
-        <div><label>Email</label><br><input type="text" name="email" value=""></div>
-        <div><label>Password</label><br><input type="password" name="password" value=""></div>
-        <div><input type="submit" value="Log In"></div>
-        <div><?= implode('<br>',$errors?:[]) ?></div>
-    </form>
+    <?php
+    helper('form');
+    echo form_open('/auth/login', []);
+    echo form_item([
+        'label' => 'Email',
+        'name'      => 'email',
+        'id'        => 'email',
+        'value'     => @$_REQUEST["email"],
+        'errors'    => @$errors['email']
+    ]);
+    echo form_item([
+        'type' => 'password',
+        'label' => 'Password',
+        'name'      => 'password',
+        'id'        => 'password',
+        'value'     => '',
+        'errors'    => @$errors['password']
+    ]);
+    echo form_item([
+        'type' => 'submit',
+        'value' => 'Log In',
+    ]);
+    echo form_close();
+    ?>
 <?= $this->endSection() ?>
