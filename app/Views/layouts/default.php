@@ -12,7 +12,12 @@
     <div>My Web Application</div>
     <nav>
         <a href="/" >Home</a>
-        <a href="/users" >Users</a>
+        <?php if(session('auth')) { ?>
+            <a href="/users" >Users</a>
+            <a href="/auth/logout" >Logout</a>
+        <?php } else { ?>
+            <a href="/auth/login" >Login</a>
+        <?php } ?>
     </nav>
 </header>
 <main>

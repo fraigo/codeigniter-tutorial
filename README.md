@@ -201,6 +201,13 @@
         * `$routes->group('', ['filter' => 'auth'], static function ($routes) { /* $restricted $routes */ })`,
         *  Include `/users` route to the restricted group `$routes->get('/users', 'Users::index');`
     * Try loading `localhost:8080/users` without login. It will redirect to home (or login) page.
+* Modify layout and views to check login status
+    * Modify the default layout `app/Views/layouts/default.php`
+    * Check session variable `session('auth')` to show or hide menus:
+        * If looged in, show Users (`/users`) and Logout (`/auth/logout`) links
+        * If not logged in, show only Log in link (`/auth/login`)
+    * In home page view, you can display the current user email or name (if set)
+        * `echo @session('auth')['email'] `
 
 ## What is CodeIgniter?
 
