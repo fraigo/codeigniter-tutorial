@@ -158,6 +158,25 @@
     * Setup rules for `email` and `password`: `$validation->setRules(['email'=>'valid_email','password'=>'required]);`;
     * Run validation `$validation->run($data)`
         * If error (return `false`), return form errors: `$validation->getErrors()`
+* Setup a Login form
+    * Create login form view `app/Views/auth/form.php` 
+        * Use the default layout `$this->extend('layouts/default')`
+        * Start the form `<form action="auth/login" method="POST">`
+        * Email field with label: `<div><label>Email</label><br><input type="text" name="email" value="">`
+        * Passowrd field with label: `<div><label>Email</label><br><input type="password" name="password" value="">`
+        * Add a submit button: `<div><input type="submit" value="Log In">`
+        * Display validation $errors from controller: `<div><?= implode('<br>',$errors?:[]) ?></div>`
+        * Close the form: `</form>`
+    * Modify Auth controller `app/Controllers/Auth.php`
+        * Create a new controller method `form()` 
+            * Return the login form view: `return view('auth/form',['errors'=>null])`
+        * Modify the `login() method
+            * If the validation fails, now return the login form with validation errors `return view('auth/form',['errors'=>$validation->getErrors()]);`
+            * if user is not found, return the login form with a custom error `return view('auth/form',['errors'=>['User or password is incorrect']]);`
+        * Optionally, create class attributes for login redirect and logout redirect.
+    * Modify routes `app/Config/Routes.php`
+        * Add route for the logout method: `$routes->get('auth/logout');`
+        * Add route for the login form: `$routes->get('/auth/login', 'Auth::form');`
 
 
 ## What is CodeIgniter?

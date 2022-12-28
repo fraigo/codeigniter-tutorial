@@ -6,6 +6,14 @@ use App\Controllers\BaseController;
 
 class Auth extends BaseController
 {
+    private $errors = null;
+    private $logoutRedirect = "/";
+    private $loginRedirect = "/";
+
+    public function form(){
+        return view('auth/form',['errors'=>$this->errors]);
+    }
+
     public function login()
     {
         $data = $this->request->getVar();
@@ -16,7 +24,8 @@ class Auth extends BaseController
         $validation = \Config\Services::validation();
         $validation->setRules($rules);
         if (!$validation->run($data)){
-            die(implode('<br>',$validation->getErrors()));
+            $this->errors = $validation->getErrors();
+            return $this->form();
         }
         $users = new \App\Models\Users();
         $user = $users
@@ -24,18 +33,19 @@ class Auth extends BaseController
                     ->where("password",md5($data["password"]))
                     ->first();
         if (!$user){
-            die("User or password is incorrect");
+            $this->errors = ["User or password is incorrect"];
+            return $this->form();
         }
         $user["login_at"]=gmdate("Y-m-d H:i:s");
         $users->update($user["id"],$user);
         $session = session();
         $session->set('auth', $user);
-        return $this->response->redirect('/');
+        return $this->response->redirect($this->loginRedirect);
     }
 
     public function logout(){
         $session = session();
         $session->set('auth', null);
-        return $this->response->redirect('/');
+        return $this->response->redirect($this->logoutRedirect);
     }
 }
