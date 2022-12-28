@@ -188,7 +188,19 @@
             * Use `form_input($config)` to create single inputs
         * Create a submit button: `echo form_submit('','Log In')`
         * Close the form: `form_close()`
-
+* Create a Controller filter for authentication
+    * Run `php spark make:filter FilterName` (eg: `php spark make:filter Auth`)
+    * Edit `before()` method in file `app/Filters/Auth.php`
+        * Check the session variable created at login `session('auth')`
+        * If not set, return a redirect to the home (or login) page `return redirect()->to(site_url('/'));`
+    * Edit the file `app/Config/App.php` to remove `index.php` from the base URL
+        * `public $indexPage = '';`
+    * Register the Auth filter in `app/Config/Filters.php`
+        * Add `'auth' => \App\Filters\Auth::class,` to `$aliases`
+    * Modify `app/Config/Routes.php` to create a filtered (authenticated-only) route group:
+        * `$routes->group('', ['filter' => 'auth'], static function ($routes) { /* $restricted $routes */ })`,
+        *  Include `/users` route to the restricted group `$routes->get('/users', 'Users::index');`
+    * Try loading `localhost:8080/users` without login. It will redirect to home (or login) page.
 
 ## What is CodeIgniter?
 
