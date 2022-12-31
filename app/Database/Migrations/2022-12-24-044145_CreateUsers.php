@@ -18,6 +18,10 @@ class CreateUsers extends Migration
                 'type'           => 'VARCHAR',
                 'constraint'     => 64,
             ],
+            'name' => [
+                'type'           => 'VARCHAR',
+                'constraint'     => 128,
+            ],
             'password' => [
                 'type'           => 'VARCHAR',
                 'constraint'     => 32,

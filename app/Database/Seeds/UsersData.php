@@ -12,12 +12,14 @@ class UsersData extends Seeder
         $this->db->table('users')->truncate(); 
         $this->db->table('users')->insert([
             "id" => 1001,
+            "name" => "Admin",
             "email" => "admin@example.com",
             "password" => md5("Admin.123"),
             "user_type" => 1, // admin type
         ]); 
         $this->db->table('users')->insert([
             "id" => 1002,
+            "name" => "User",
             "email" => "user@example.com",
             "password" => md5("User.123"),
             "user_type" => 0, // regular user

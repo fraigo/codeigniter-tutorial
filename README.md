@@ -208,6 +208,13 @@
         * If not logged in, show only Log in link (`/auth/login`)
     * In home page view, you can display the current user email or name (if set)
         * `echo @session('auth')['email'] `
+* Rebuild schema, fix tables
+    * Run `php spark migrate:rollback` to undo schema changes 
+    * Edit the migration file (eg: `app/Database/Migrations/{timestamp}_CreateUser.php`). Add/remove fields, modify rules, etc
+    * If applicable, modify any seeder data having schema changes (eg: `app/Database/Seeders/UserData.php`)
+    * Run again `php spark migrate` to create the table(s) again with fixes.
+    * Run any seeders again to populate tables (`php spark db:seed UserData`)
+
 
 ## What is CodeIgniter?
 

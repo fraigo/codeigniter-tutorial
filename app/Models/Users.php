@@ -16,13 +16,14 @@ class Users extends BaseModel
     protected $protectFields    = true;
     protected $allowedFields    = [
         'email',
+        'name',
         'password',
         'user_type',
         'login_at',
     ];
 
     // Dates
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -32,7 +33,11 @@ class Users extends BaseModel
     protected $validationRules      = [
         'email' => [
             'label' => 'Email',
-            'rules' => 'required|max_length[64]|valid_email|is_unique[users.email]'
+            'rules' => 'required|max_length[64]|valid_email|is_unique[users.email,id,{id}]'
+        ],
+        'name' => [
+            'label' => 'Name',
+            'rules' => 'required|max_length[128]'
         ],
         'password' => [
             'label' => 'Password',
