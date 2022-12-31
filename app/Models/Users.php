@@ -41,7 +41,7 @@ class Users extends BaseModel
         ],
         'password' => [
             'label' => 'Password',
-            'rules' => 'required|max_length[32]'
+            'rules' => 'required|min_length[6]|password_strength'
         ],
         'user_type' => [
             'label' => 'User Type',

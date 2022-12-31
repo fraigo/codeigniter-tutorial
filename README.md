@@ -214,7 +214,27 @@
     * If applicable, modify any seeder data having schema changes (eg: `app/Database/Seeders/UserData.php`)
     * Run again `php spark migrate` to create the table(s) again with fixes.
     * Run any seeders again to populate tables (`php spark db:seed UserData`)
-
+* Create custom validations
+    * Create a new class file (eg: `app/Config/CustomValidations.php`)
+    * Add this class reference to `$ruleSets` array in `app/Config/Validations`:
+        * eg: `\Config\CustomValidations::class,`
+    * Create validator function
+        * Assign a unique name (eg: `password_strength($value, $params, $data)`)
+        * `$value` is the value of the current field being validated (eg: password)
+        * `$params` will contain parsed parameters of the rule (between `[]`). Eg: `rule[param1,param2,{id}]` will convert to `['param1','param2',$data['id']]`
+        * `$data` is the data array being validated
+        * Return `false` if the validation failed, otherwise return `true`
+    * Add generic error messages to `app/Language/en/Validation.php`: 
+        * `[ 'password_strength' => 'Password must contain letters and numbers' ]`
+    * Use your validation rule in a controller:
+        * `'password' => 'required|min_length[6]|password_strength'`
+        * Values passed between `{}` are converted to field values from validation data
+        * Optionally, define a label and custom message for the rule (array notation):
+            * `'password' => [ `
+            * `  'label' => 'Password',`
+            * `  'rules' => 'required|min_length[6]|password_strength', `
+            * `  'errors' => [ 'password_strength' => 'Password is not strong', `
+            * `]`
 
 ## What is CodeIgniter?
 
