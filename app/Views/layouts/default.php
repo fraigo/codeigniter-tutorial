@@ -12,8 +12,10 @@
     <div>My Web Application</div>
     <nav>
         <a href="/" >Home</a>
+        <?php if(session('admin')) { ?>
+            <a href="/users/" >Users</a>
+        <?php } ?>
         <?php if(session('auth')) { ?>
-            <a href="/users" >Users</a>
             <a href="/auth/logout" >Logout</a>
         <?php } else { ?>
             <a href="/auth/login" >Login</a>

@@ -33,19 +33,22 @@ class Auth extends BaseController
                     ->where("password",md5($data["password"]))
                     ->first();
         if (!$user){
-            $this->errors = ["User or password is incorrect"];
+            $this->errors = ["password"=>"User or password is incorrect"];
             return $this->form();
         }
-        $user["login_at"]=gmdate("Y-m-d H:i:s");
-        $users->update($user["id"],$user);
+        $users->update($user["id"],[
+            "login_at" => gmdate("Y-m-d H:i:s")
+        ]);
         $session = session();
         $session->set('auth', $user);
+        $session->set('admin', $user["user_type"]==1);
         return $this->response->redirect($this->loginRedirect);
     }
 
     public function logout(){
         $session = session();
         $session->set('auth', null);
+        $session->set('admin', null);
         return $this->response->redirect($this->logoutRedirect);
     }
 }

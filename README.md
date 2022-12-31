@@ -235,6 +235,19 @@
             * `  'rules' => 'required|min_length[6]|password_strength', `
             * `  'errors' => [ 'password_strength' => 'Password is not strong', `
             * `]`
+* Setup filter arguments - user route permissions
+    * Modify Auth login method `app/Controllers/Auth.php` to setup a user role session variable (eg: `admin` = `true` for an admin user): 
+        * `$session->set('admin', $user["user_type"]==1);`
+    * Modify Auth filter `app/Filters/Auth.php`
+        * Check `$arguments` if it has `admin`: `if ($arguments[0]=='admin')`
+        * If `admin` argument is enabled, check if `session('admin')` is enabled (logged user is admin)
+        * If not admin, it could return:
+            * Error 403 (Not authorized)
+            * Redirect to the home or login page.
+    * Modify Routes to be restricted `app/Config/Routes.php`
+        * Setup router group with `['filter' => 'auth:admin']` for admin-only routes (eg: `/users`)
+        * Setup group filter to only `auth` (eg: `['filter' => 'auth']`) for routes for regular logged-in users
+    * Modify the default layout `app/Vies/layouts/default.php` to restrict the `Users` link to only admin users (check `auth` session variable, `session('auth`)`)
 
 ## What is CodeIgniter?
 
