@@ -248,6 +248,21 @@
         * Setup router group with `['filter' => 'auth:admin']` for admin-only routes (eg: `/users`)
         * Setup group filter to only `auth` (eg: `['filter' => 'auth']`) for routes for regular logged-in users
     * Modify the default layout `app/Vies/layouts/default.php` to restrict the `Users` link to only admin users (check `auth` session variable, `session('auth`)`)
+* Generate Fake Test data with Faker and Models
+    * Install or update Faker PHP component: `composer require --dev fakerphp/faker`
+    * Create a seeder for Test data: `php spark make:seeder TestData`
+    * Get an instance of a model: `$users = new \App\Models\Users()`
+    * Get an instance of Faker : `$faker = \Faker\Factory::create();`
+    * Use the `insert($data)` method to insert a data row: 
+      `$users->insert(['name'=>'Name','email'=>'email@examplecom'])`
+    * Use `$faker` methods (formatters) to generate specific types of fake data:
+        * `$faker->name()` for full names
+        * `$faker->email()` for emails
+        * Check https://fakerphp.github.io/formatters/ for more examples of formatters
+    * Make a for loop to create N rows generated with fake data
+    * Check generated data with `php spark db:table {tablename}`
+
+
 
 ## What is CodeIgniter?
 
