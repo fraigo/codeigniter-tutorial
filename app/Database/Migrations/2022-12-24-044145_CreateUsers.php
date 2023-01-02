@@ -34,6 +34,13 @@ class CreateUsers extends Migration
                 'type'           => 'DATETIME',
                 'null'           => true,
             ],
+            'created_at' => [
+                'type'           => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type'           => 'DATETIME',
+                'null'           => true,
+            ],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey(['email']);

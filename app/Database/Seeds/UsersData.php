@@ -15,6 +15,8 @@ class UsersData extends Seeder
             "name" => "Admin",
             "email" => "admin@example.com",
             "password" => md5("Admin.123"),
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s"),
             "user_type" => 1, // admin type
         ]); 
         $this->db->table('users')->insert([
@@ -22,7 +24,9 @@ class UsersData extends Seeder
             "name" => "User",
             "email" => "user@example.com",
             "password" => md5("User.123"),
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s"),
             "user_type" => 0, // regular user
-        ]); 
+        ]);
     }
 }
