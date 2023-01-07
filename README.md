@@ -261,7 +261,25 @@
         * Check https://fakerphp.github.io/formatters/ for more examples of formatters
     * Make a for loop to create N rows generated with fake data
     * Check generated data with `php spark db:table {tablename}`
-
+* Working with pagination and listings
+    * In a controller, get paginated data: `$items = $model->paginate($pageSize,$pagerGroup);`
+        * `$pageSize` is the number of items per page
+        * `$pagerGroup` is a suffix for pager variables (in case you have multiple paginated data)
+    * Use `select()` to select specific fields to display : `$items = $model->select(['name','email','updated_at'])->paginate($pageSize,$pagerGroup);`
+    * Load the view including the `PagerRenderer` instance (`  'pager' => $model->pager,`)
+    * In the view, call to `$pager->links($pagerGroup)` to generate automated links for pagination
+        * `$pager->links()` uses the `default_full` template defined in `app/Config/Pager.php`
+        * Use `$pager->simple($pagerGroup)` for a simple back/forward pagination (`default_simple` template)
+    * To customize the paginator links:
+        * Setup CSS styles for `ul.pagination`(full) and `ul.pager` (simple) elements 
+        * Create a new paginator templates. 
+            * Copy and modify from the default templates from `vendor/codeigniter4/framework/system/Pager/Views/`
+            * Create `app/Views/pager/full.php` from `default_full.php`
+            * Create `app/Views/pager/simple.php` from `default_simple.php`
+        * Modify `app/Config/Pager.php`:
+            * Set `default_full` template to `'App\Views\pager\full'`
+            * Set `default_simple` template to `'App\Views\pager\simple'`
+        
 
 
 ## What is CodeIgniter?

@@ -3,7 +3,10 @@
 /**
  * Generate HTML attributes from array
  */
-function htmlAttributes($attrs=[]){ 
+function htmlAttributes($attrs=[]){
+    if (!$attrs){
+        return "";
+    }
     $content = [];
     foreach($attrs as $attr=>$value){
         $content[] = "$attr=\"$value\"";
@@ -11,26 +14,66 @@ function htmlAttributes($attrs=[]){
     return implode(' ',$content);
 }
 
+function htmlContent($content){
+    if (is_array($content)){
+        if (@$content["tag"]){
+            return htmlTag($content["tag"],@$content["content"],@$content["attributes"]);
+        } else {
+            $contents=[];
+            foreach($content as $cont){
+                $contents[] = htmlContent($cont);
+            }
+            return implode("",$contents);
+        }
+    } else {
+        return $content;
+    }
+}
+
+function htmlTag($tag,$content,$attributes=[]){
+    $attr = htmlAttributes($attributes);
+    if (is_array($content)){
+        if (@$content["tag"]){
+            $content = htmlTag($content["tag"],@$content["content"],@$content["attributes"]);
+        } else {
+            $content = htmlContent($content);
+        }
+    }
+    return "<$tag $attr>$content</$tag>";
+}
+
 /**
  * Generate HTML table cell (td or th)
  */
-function htmlCell($cell,$cellTag="td"){
-    return "<$cellTag>$cell</$cellTag>";
+function htmlCell($content,$header=false,$attributes=[]){
+    if ($header){
+        $cellTag = "th";
+    } else {
+        $cellTag = "td";
+    }
+    return htmlTag($cellTag,$content,$attributes);
 }
 
 /**
  * Generate HTML table row (tr)
  */
-function htmlRow($row,$cellTag="td"){
-    if (!$row) return "";
+function htmlRow($row,$columns,$header=false){
+    if (!is_array($row)) return "";
     $cols = [];
-    foreach($row as $col){
-        $cols[] = htmlCell($col,$cellTag);
+    foreach($columns as $fld=>$cfg){
+        if (!is_array($cfg)){
+            $cfg=["label"=>$cfg];
+        }
+        $content = $header ? @$cfg["label"] : (@$cfg["content"]?:@$row[$fld]);
+        $cols[] = htmlCell($content,$header,@$cfg["cellAttributes"]);
     }
     $content = implode("\n",$cols);
     $template = "<tr>
         $content
     </tr>";
+    foreach($row as $fld=>$value){
+        $template = str_replace("{".$fld."}", $value, $template);
+    }
     return $template;
 }
 
@@ -41,18 +84,21 @@ function htmlRow($row,$cellTag="td"){
  */
 function htmlTable($data, $columns=null, $attrs=[]){
     if (!$columns){
-        $columns = array_keys($data[0]);
+        $columns = [];
+        foreach($data[0] as $fld=>$val){
+            $columns[$fld] = ["label"=>ucfirst($fld)];
+        }
     }
-    $thead = htmlRow($columns,"th");
+    $thead = htmlRow([], $columns, true);
     $rows = [];
     foreach($data as $row){
-        $rows[] = htmlRow($row);
+        $rows[] = htmlRow($row, $columns, false);
     }
     $tbody = implode("\n",$rows);
     $attrs = htmlAttributes($attrs);
-    $template = "<table $attrs>
+    $template = "<div class=\"table-container\" ><table $attrs>
         <thead>$thead</thead>
         <tbody>$tbody</tbody>
-    </table>";
+    </table></div>";
     return $template;
 }
