@@ -279,7 +279,26 @@
         * Modify `app/Config/Pager.php`:
             * Set `default_full` template to `'App\Views\pager\full'`
             * Set `default_simple` template to `'App\Views\pager\simple'`
-        
+* Create a CRUD interface (Create/Read/Update/Delete)
+    * A view to see/read item details (item details)
+    * An empty form to create a new item
+    * A form view to edit item details
+    * Manage requests for update, create and delete
+* Create an item detail view (Read)
+    * Create a new view `users/view` (`app/Views/users/view.php`)
+        * Use the same default layout of `users/index` view
+        * Display each `$item` field with  a label and value.
+            * Eg: `<div class="form-item"><label>Name</label><div><?=$item['name']?></div></div>`
+    * Modify controller to create a `view($id)` method 
+        * `$id` is the item id to be viewed
+        * Generate an instance of the model: `$model = new \App\Models\Users();`
+        * Get the item row by id: `$item = $model->where('id',$id);`
+        * Load the view `users/view` with $item data: `return view('users/view',['item'=>$item]);`
+    * Add a route to `users/view/(:num)` in `app/Config/Routes.php`
+        * `$routes->get('/users/view/(:num)', 'Users::view/$1');`
+            * `(:num)` will be the id of the item (eg: `/users/view/1001`)
+            * `$1` will be passed to the controller method `index($id)` as a number
+
 
 
 ## What is CodeIgniter?

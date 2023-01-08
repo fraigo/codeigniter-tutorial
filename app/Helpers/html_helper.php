@@ -54,6 +54,25 @@ function htmlCell($content,$header=false,$attributes=[]){
     return htmlTag($cellTag,$content,$attributes);
 }
 
+function parseData($content,$data){
+    if (is_array($content)){
+        foreach($content as $key=>$col){
+            if (is_array($col)){
+                $content[$key] = parseData($col, $data);
+            } else {
+                foreach($data as $fld=>$value){
+                    $content[$key] = str_replace("{$key}",$value, $col);
+                }
+            }
+        }
+    } else {
+        foreach($data as $fld=>$value){
+            $content = str_replace("{$fld}",$value, $content);
+        }
+    }
+    return $content;
+}
+
 /**
  * Generate HTML table row (tr)
  */
@@ -64,6 +83,7 @@ function htmlRow($row,$columns,$header=false){
         if (!is_array($cfg)){
             $cfg=["label"=>$cfg];
         }
+        $cfg = parseData($cfg,$row);
         $content = $header ? @$cfg["label"] : (@$cfg["content"]?:@$row[$fld]);
         $cols[] = htmlCell($content,$header,@$cfg["cellAttributes"]);
     }
