@@ -297,8 +297,40 @@
     * Add a route to `users/view/(:num)` in `app/Config/Routes.php`
         * `$routes->get('/users/view/(:num)', 'Users::view/$1');`
             * `(:num)` will be the id of the item (eg: `/users/view/1001`)
-            * `$1` will be passed to the controller method `index($id)` as a number
-
+            * `$1` will be passed to the controller method `view($id)` as a number
+* Create the item edit view (Update)
+    * Create a new view `users/form` (`app/Views/users/form.php`)
+        * Use the same default layout of `users/index` view
+        * Use the `form` helper to create a form
+        * Use `form_open('/users/edit')` to setup the form 
+        * Create each form field:
+            * Use the field name as the input `name` attribute
+            * Use `set_value('field', $item['field'])` to set the input value
+        * Close the form
+    * Modify controller to create a `edit($id)` method: 
+        * `$id` is the item id to be edited
+        * Generate an instance of the model: `$model = new \App\Models\Users();`
+        * Get the item row by id: `$item = $model->where('id',$id);`
+        * Load the view `users/form` with $item data: `return view('users/form',['item'=>$item]);`
+    * Add a route to `users/edit/(:num)` in `app/Config/Routes.php`
+        * `$routes->get('/users/edit/(:num)', 'Users::edit/$1');`
+            * `(:num)` will be the id of the item (eg: `/users/edit/1001`)
+            * `$1` will be passed to the controller method `edit($id)` as a number
+    * Modify controller to create a `update($id)` method (update data for `$id`)
+        * Generate an instance of the model: `$model = new \App\Models\Users();`
+        * Get the item row by id: `$item = $model->where('id',$id);`
+        * Get form data, for specific fields: `$data = $this->request->getVar(['name','email']);`
+        * Get validation rules for specific fields: `$rules = $model->getValidationRules(['only'=>['name','email']]);`
+        * Run validation. 
+            * If validation fails, load the view `users/form` with `errors` and `item` loaded
+        * If validation passes, update model with form fields: `$model->update($item["id"],$data);`
+        * Redirect to `users/view/{id}` using the same requested `$id`
+    * Add a route to `users/edit/(:num)` (for POST) in `app/Config/Routes.php`
+        * `$routes->post('/users/edit/(:num)', 'Users::update/$1');`
+            * `(:num)` will be the id of the item (eg: `/users/edit/1001`)
+            * `$1` will be passed to the controller method `update($id)` as a number
+    * Modify the index view `users/index.php` to add a 'View' action column for each row:
+        * Use a link to `/users/view/{id}` to view the item
 
 
 ## What is CodeIgniter?
