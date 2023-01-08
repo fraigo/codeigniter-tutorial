@@ -9,6 +9,7 @@ class Auth extends BaseController
     private $errors = null;
     private $logoutRedirect = "/";
     private $loginRedirect = "/";
+    protected $modelName = 'App\Models\Users';
 
     public function form(){
         return view('auth/form',['errors'=>$this->errors]);
@@ -27,8 +28,7 @@ class Auth extends BaseController
             $this->errors = $validation->getErrors();
             return $this->form();
         }
-        $users = new \App\Models\Users();
-        $user = $users
+        $user = $this->model
                     ->where("email",$data["email"])
                     ->where("password",md5($data["password"]))
                     ->first();
@@ -36,7 +36,7 @@ class Auth extends BaseController
             $this->errors = ["password"=>"User or password is incorrect"];
             return $this->form();
         }
-        $users->update($user["id"],[
+        $this->model->update($user["id"],[
             "login_at" => gmdate("Y-m-d H:i:s")
         ]);
         $session = session();

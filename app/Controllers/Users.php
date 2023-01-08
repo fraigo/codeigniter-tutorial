@@ -8,13 +8,13 @@ class Users extends BaseController
 {
     protected $helpers = ['html'];
     protected $errors = null;
+    protected $modelName = 'App\Models\Users';
 
     public function index()
     {
-        $model = new \App\Models\Users();
         $pagerGroup = 'users';
         $pageSize = @$_GET["pagesize_$pagerGroup"]?:10;
-        $items = $model->select(['id','name','email','updated_at'])->paginate($pageSize,$pagerGroup);
+        $items = $this->model->select(['id','name','email','updated_at'])->paginate($pageSize,$pagerGroup);
         $actions = [
             ["tag" => "a", "attributes" => [ 'href' => '/users/view/{id}'], "content" => '👁'],
             ["tag" => "a", "attributes" => [ 'href' => '/users/edit/{id}'], "content" => '✏️'],
@@ -39,7 +39,7 @@ class Users extends BaseController
             "title" => "Users", // page $title
             "items" => $items,
             "columns" => $columns,
-            "pager" => $model->pager,
+            "pager" => $this->model->pager,
             "pagesize" => $pageSize,
             "pager_group" => $pagerGroup
         ]);
@@ -47,21 +47,18 @@ class Users extends BaseController
 
 
     function view($id){
-        $model = new \App\Models\Users();
-        $item = $model->where('id',$id)->first();
+        $item = $this->model->where('id',$id)->first();
         return view('users/view',['item'=>$item,'title'=>'View User']);
     }
 
     function edit($id){
-        $model = new \App\Models\Users();
-        $item = $model->where('id',$id)->first();
+        $item = $this->model->where('id',$id)->first();
         $item['password'] = '';
         return view('users/form',['item'=>$item, 'errors'=>$this->errors,'title'=>'Edit User']);
     }
 
     function update($id){
-        $model = new \App\Models\Users();
-        $item = $model->where('id',$id)->first();
+        $item = $this->model->where('id',$id)->first();
         $has_password = $this->request->getVar('password');
         $fields = ['name','email','password','repeat_password'];
         if (!$has_password){
@@ -69,7 +66,7 @@ class Users extends BaseController
         }
         $data = $this->request->getVar($fields);
         $data["id"] = $id;
-        $rules = $model->getValidationRules(['only'=>$fields]);
+        $rules = $this->model->getValidationRules(['only'=>$fields]);
         if ($has_password){
             $rules['repeat_password'] = 'matches[password]';
         }
@@ -82,21 +79,19 @@ class Users extends BaseController
         if ($has_password){
             $data["password"] = md5($data["password"]);
         }
-        $model->update($item["id"],$data);
+        $this->model->update($item["id"],$data);
         return $this->response->redirect('/users/edit/'.$data['id']);
     }
 
     function new(){
-        $model = new \App\Models\Users();
         $item = [];
         return view('users/form',['item'=>$item]);
     }
 
     function create(){
-        $model = new \App\Models\Users();
         $data = $this->request->getVar(['name','email','password','repeat_password']);
         $data["user_type"] = 0;
-        $rules = $model->getValidationRules(['only'=>['name','email','password','repeat_password']]);
+        $rules = $this->model->getValidationRules(['only'=>['name','email','password','repeat_password']]);
         $rules['repeat_password'] = 'matches[password]';
         $validation = \Config\Services::validation();
         $validation->setRules($rules);
@@ -105,13 +100,12 @@ class Users extends BaseController
             return view('users/form',['item'=>$data, 'errors'=>$this->errors]);
         }
         $data["password"] = md5($data["password"]);
-        $id = $model->insert($data);
+        $id = $this->model->insert($data);
         return $this->response->redirect('/users/edit/'.$id);
     }
 
     function delete($id){
-        $model = new \App\Models\Users();
-        $model->delete($id);
+        $this->model->delete($id);
         return redirect()->back();
     }
 

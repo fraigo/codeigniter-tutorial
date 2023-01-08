@@ -362,6 +362,16 @@
     * Modify the index view `users/index` to add a 'Delete' action column for each row:
         * Use a link to `/users/delete/{id}` to delete the item
         * Include a confirmation action to send the delete request. Eg: `onclick="return confirm('Are you sure?')"`
+* Generalize controller elements: Setup a base model
+    * Modify the Base controller (`app/Controllers/BaseController.php`)
+        * Setup a base model name property: `protected $modelName = '';`;
+        * Setup a base model property: `protected $model = null;`;
+        * During `initController()` setup the model: 
+            * `$modelName = $this->modelName;`
+            * `$this->model = new $modelName();`
+    * Modify the controller (eg: `app/Models/Users.php`)
+        * Setup `$modelName` property: `protected $modelName = 'App\Models\Users';`
+        * Replace `$model` variables (created with `new App\Models\Users()`) with `$this->model`
 
 
 
