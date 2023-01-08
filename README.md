@@ -352,7 +352,17 @@
         * `$routes->post('/users/edit/(:num)', 'Users::update/$1');`
             * `(:num)` will be the id of the item (eg: `/users/edit/1001`)
             * `$1` will be passed to the controller method `update($id)` as a number
-    
+* Setup delete item requests
+    * Modify controller to create a `delete($id)` method (delete item by id)
+        * Get an instance of the model: `$model = new \App\Models\Users();`
+        * Call to delete with `$id`: `$model->delete($id)`
+        * Redirect back to the previous page (users list): `return redirect()->back();`
+    * Add a route to `users/delete/(:num)` in `app/Config/Routes.php`
+        * `$routes->get('/users/delete/(:num)', 'Users::delete/$1');`
+    * Modify the index view `users/index` to add a 'Delete' action column for each row:
+        * Use a link to `/users/delete/{id}` to delete the item
+        * Include a confirmation action to send the delete request. Eg: `onclick="return confirm('Are you sure?')"`
+
 
 
 ## What is CodeIgniter?

@@ -18,6 +18,10 @@ class Users extends BaseController
         $actions = [
             ["tag" => "a", "attributes" => [ 'href' => '/users/view/{id}'], "content" => '👁'],
             ["tag" => "a", "attributes" => [ 'href' => '/users/edit/{id}'], "content" => '✏️'],
+            ["tag" => "a", "attributes" => [ 
+                'href' => '/users/delete/{id}',
+                'onclick' => "return confirm('Are you sure you want to delete this item?')"
+            ], "content" => '🗑'],
         ];
         $columns = [
             "actions" => [
@@ -45,14 +49,14 @@ class Users extends BaseController
     function view($id){
         $model = new \App\Models\Users();
         $item = $model->where('id',$id)->first();
-        return view('users/view',['item'=>$item]);
+        return view('users/view',['item'=>$item,'title'=>'View User']);
     }
 
     function edit($id){
         $model = new \App\Models\Users();
         $item = $model->where('id',$id)->first();
         $item['password'] = '';
-        return view('users/form',['item'=>$item, 'errors'=>$this->errors]);
+        return view('users/form',['item'=>$item, 'errors'=>$this->errors,'title'=>'Edit User']);
     }
 
     function update($id){
@@ -103,6 +107,12 @@ class Users extends BaseController
         $data["password"] = md5($data["password"]);
         $id = $model->insert($data);
         return $this->response->redirect('/users/edit/'.$id);
+    }
+
+    function delete($id){
+        $model = new \App\Models\Users();
+        $model->delete($id);
+        return redirect()->back();
     }
 
 }
