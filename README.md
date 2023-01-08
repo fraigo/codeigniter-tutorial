@@ -372,7 +372,18 @@
     * Modify the controller (eg: `app/Models/Users.php`)
         * Setup `$modelName` property: `protected $modelName = 'App\Models\Users';`
         * Replace `$model` variables (created with `new App\Models\Users()`) with `$this->model`
-
+* Base Controller updates: Get model data or Not found
+    * Add method `getModelById($id)` to Base controller (`app/Controllers/BaseController.php`)
+        * Get the item by id with `find()`: `$item = $this->model->find($id);`
+        * If no `$item` is found:
+            * Trigger `PageNotFoundException` exception: `throw new \CodeIgniter\Exceptions\PageNotFoundException();`
+    * Replace calls to `$this->model->find($id)` or `$this->model->where('id',$id)->first()` with `$this->getModelById($id)`
+    * Setup `set404Override([function])` in `app/Config/Routes.php`
+        * Set status code to 404 (not found): `$response->setStatusCode(404);`
+        * Return the view `errors/html/error_404`
+    * Modify view `app/Views/errors/html/error_404.php`:
+        * Use the default layout calling `$this->extend('layouts/default')`
+        * Setup a 'Not found' message in content
 
 
 ## What is CodeIgniter?

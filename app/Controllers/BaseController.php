@@ -55,4 +55,12 @@ abstract class BaseController extends Controller
             $this->model = new $modelName();
         }
     }
+
+    protected function getModelById($id){
+        $item = $this->model->find($id);
+        if (!$item){
+            throw new \CodeIgniter\Exceptions\PageNotFoundException();
+        }
+        return $item;
+    }
 }

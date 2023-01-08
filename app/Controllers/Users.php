@@ -47,18 +47,18 @@ class Users extends BaseController
 
 
     function view($id){
-        $item = $this->model->where('id',$id)->first();
+        $item = $this->getModelById($id);
         return view('users/view',['item'=>$item,'title'=>'View User']);
     }
 
     function edit($id){
-        $item = $this->model->where('id',$id)->first();
+        $item = $this->getModelById($id);
         $item['password'] = '';
         return view('users/form',['item'=>$item, 'errors'=>$this->errors,'title'=>'Edit User']);
     }
 
     function update($id){
-        $item = $this->model->where('id',$id)->first();
+        $item = $this->getModelById($id);
         $has_password = $this->request->getVar('password');
         $fields = ['name','email','password','repeat_password'];
         if (!$has_password){
@@ -105,6 +105,7 @@ class Users extends BaseController
     }
 
     function delete($id){
+        $item = $this->getModelById($id);
         $this->model->delete($id);
         return redirect()->back();
     }
