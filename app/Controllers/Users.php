@@ -51,23 +51,58 @@ class Users extends BaseController
     function edit($id){
         $model = new \App\Models\Users();
         $item = $model->where('id',$id)->first();
+        $item['password'] = '';
         return view('users/form',['item'=>$item, 'errors'=>$this->errors]);
     }
 
     function update($id){
         $model = new \App\Models\Users();
         $item = $model->where('id',$id)->first();
-        $data = $this->request->getVar(['name','email']);
+        $has_password = $this->request->getVar('password');
+        $fields = ['name','email','password','repeat_password'];
+        if (!$has_password){
+            $fields = ['name','email'];
+        }
+        $data = $this->request->getVar($fields);
         $data["id"] = $id;
-        $rules = $model->getValidationRules(['only'=>['name','email']]);
+        $rules = $model->getValidationRules(['only'=>$fields]);
+        if ($has_password){
+            $rules['repeat_password'] = 'matches[password]';
+        }
         $validation = \Config\Services::validation();
         $validation->setRules($rules);
         if (!$validation->run($data)){
             $this->errors = $validation->getErrors();
             return view('users/form',['item'=>$item, 'errors'=>$this->errors]);
         }
+        if ($has_password){
+            $data["password"] = md5($data["password"]);
+        }
         $model->update($item["id"],$data);
         return $this->response->redirect('/users/edit/'.$data['id']);
+    }
+
+    function new(){
+        $model = new \App\Models\Users();
+        $item = [];
+        return view('users/form',['item'=>$item]);
+    }
+
+    function create(){
+        $model = new \App\Models\Users();
+        $data = $this->request->getVar(['name','email','password','repeat_password']);
+        $data["user_type"] = 0;
+        $rules = $model->getValidationRules(['only'=>['name','email','password','repeat_password']]);
+        $rules['repeat_password'] = 'matches[password]';
+        $validation = \Config\Services::validation();
+        $validation->setRules($rules);
+        if (!$validation->run($data)){
+            $this->errors = $validation->getErrors();
+            return view('users/form',['item'=>$data, 'errors'=>$this->errors]);
+        }
+        $data["password"] = md5($data["password"]);
+        $id = $model->insert($data);
+        return $this->response->redirect('/users/edit/'.$id);
     }
 
 }

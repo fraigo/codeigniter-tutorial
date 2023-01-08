@@ -331,6 +331,28 @@
             * `$1` will be passed to the controller method `update($id)` as a number
     * Modify the index view `users/index.php` to add a 'View' action column for each row:
         * Use a link to `/users/view/{id}` to view the item
+* Setup the form to create a new item (Create)
+    * Use the same view `users/form` (`app/Views/users/form.php`)
+        * Use `form_open('/users/new')` to setup the form for a new item (if `$data['id']` is not set)
+        * Add fields for Password and Repeat Password
+    * Modify controller to create a `new()` method: 
+        * Load the view `users/form` with empty `$item` data: `return view('users/form',['item'=>[]);`
+    * Add a route to `users/new` in `app/Config/Routes.php`
+        * `$routes->get('/users/new', 'Users::new');`
+    * Modify controller to create a `create()` method (POST new item data)
+        * Generate an instance of the model: `$model = new \App\Models\Users();`
+        * Get form data: `$data = $this->request->getVar(['name','email','password','repeat_password']);`
+        * Get validation rules for specific fields: `$rules = $model->getValidationRules(['only'=>['name','email','password']]);`
+        * Add a rule for `repeat_passsword` to match password field: `$rules['repeat_password'] = 'matches[password]';`
+        * Run validation. 
+            * If validation fails, load the view `users/form` with `errors`
+        * If validation passes, insert model with form data: `$id = $model->insert($data);`
+        * Redirect to `users/view/{id}` using the `$id` of the model inserted
+    * Add a route to `users/edit/(:num)` (for POST) in `app/Config/Routes.php`
+        * `$routes->post('/users/edit/(:num)', 'Users::update/$1');`
+            * `(:num)` will be the id of the item (eg: `/users/edit/1001`)
+            * `$1` will be passed to the controller method `update($id)` as a number
+    
 
 
 ## What is CodeIgniter?

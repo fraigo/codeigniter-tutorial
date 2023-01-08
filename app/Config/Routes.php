@@ -44,6 +44,8 @@ $routes->group('', ['filter' => 'auth:admin'], static function ($routes) {
     $routes->get('/users/view/(:num)', 'Users::view/$1');
     $routes->get('/users/edit/(:num)', 'Users::edit/$1');
     $routes->post('/users/edit/(:num)', 'Users::update/$1');
+    $routes->get('/users/new', 'Users::new');
+    $routes->post('/users/new', 'Users::create/$1');
 });
 
 /*
