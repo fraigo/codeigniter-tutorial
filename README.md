@@ -389,6 +389,26 @@
         * https://getbootstrap.com/docs/4.0/getting-started/introduction/#starter-template
     * Use an example from https://getbootstrap.com/docs/4.0/examples/ to setup the body content 
     * Modify views to use bootstrap classes
+* Sorting data with URL parameters
+    * Modify controller to read a sort query parameter (eg: 'sort_users') from URL
+        * `$sortQuery = 'sort_users';`
+        * Read parameter with `$sort = $this->request->getVar($sortQuery);`
+        * `$sort` should be a field name. It could be empty.
+        * Setup model query, sort, then paginate:
+            * `$query = $this->model->select(...);`
+            * If `$sort` is set, apply sort: `if ($sort) $query = $query->orderBy($sort);`
+            * `$items = $query->paginate($pageSize,$pagerGroup);`
+        * Use the URL library to get the base URL without sort query:
+            * `$sortUrl = current_url(true);`
+            * `$sortUrl->stripQuery($sortQuery);`
+        * Modify table column headers to create sort links
+            * Use `anchor(link,title)` function
+            * Link to `$sortUrl->addQuery($sortQuery,'fieldname')->toString()`
+            * Title is the column name plus a sort indicator (↓) if `$sort` is active for that column
+        * Add support for reverse order (DESC):
+            * Link to `$sortUrl->addQuery($sortQuery,$sort=='fieldname'?'fieldname desc':'fieldname')->toString()`
+            * Modify titles to show sort indicators (↓ or ↑) for regular or reverse order (desc). Eg. `"Name".($sort=='name'?' ↓':($sort=='name desc'?' ↑':'')`
+            
 
 
 ## What is CodeIgniter?

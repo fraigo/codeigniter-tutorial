@@ -14,7 +14,16 @@ class Users extends BaseController
     {
         $pagerGroup = 'users';
         $pageSize = @$_GET["pagesize_$pagerGroup"]?:10;
-        $items = $this->model->select(['id','name','email','updated_at'])->paginate($pageSize,$pagerGroup);
+        
+        $query = $this->model->select(['id','name','email','updated_at']);
+        
+        $sortQuery = "sort_$pagerGroup";
+        $sort=$this->request->getVar($sortQuery);
+        $sortUrl = current_url(true);
+        $sortUrl->stripQuery($sortQuery);
+        if ($sort) $query->orderBy($sort);
+        
+        $items = $query->paginate($pageSize,$pagerGroup);
         $actions = [
             ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => '/users/view/{id}'], "content" => '👁'],
             ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => '/users/edit/{id}'], "content" => '✏️'],
@@ -32,9 +41,24 @@ class Users extends BaseController
                     "width" => "100"
                 ]
             ],
-            "name" => "Name", 
-            "email" => "E-mail", 
-            "updated_at" => "Last update",
+            "name" => [
+                "label" => anchor(
+                    $sortUrl->addQuery($sortQuery,$sort=='name'?'name desc':'name')->__toString(),
+                    "Name".($sort=='name'?' ↓':($sort=='name desc'?' ↑':''))
+                )
+            ],
+            "email" => [
+                "label" => anchor(
+                    $sortUrl->addQuery($sortQuery,$sort=='email'?'email desc':'email')->__toString(),
+                    "Email".($sort=='email'?' ↓':($sort=='email desc'?' ↑':''))
+                ) 
+            ],
+            "updated_at" => [
+                "label" => anchor(
+                    $sortUrl->addQuery($sortQuery,$sort=='updated_at'?'updated_at desc':'updated_at')->__toString(),
+                    "Last Update".($sort=='updated_at'?' ↓':($sort=='updated_at desc'?' ↑':''))
+                )
+            ]
         ];
         return view('users/index',[
             "title" => "Users", // page $title
