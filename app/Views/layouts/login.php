@@ -7,23 +7,60 @@
     <link rel="shortcut icon" type="image/png" href="/favicon.ico"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/style.css" >
-</head>
-<body>
-<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-      <h5 class="my-0 mr-md-auto font-weight-normal">My Web Application</h5>
-      <nav class="my-2 my-md-0 mr-md-3">
-        <a  class="p-2 text-dark" href="/" >Home</a>
-        <?php if(session('admin')) { ?>
-            <a class="p-2 text-dark" href="/users/" >Users</a>
-        <?php } ?>
-      </nav>
-      <?php if(session('auth')) { ?>
-        <a class="btn btn-outline-primary" href="/auth/logout">Log Out</a>
-      <?php } else { ?>
-        <a class="btn btn-outline-primary" href="/auth/login">Log In</a>
-      <?php } ?>
-</div>
+    <style>
+html,
+body {
+  height: 100%;
+}
 
+body {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -ms-flex-align: center;
+  -ms-flex-pack: center;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+    </style>
+</head>
+<body class="text-center">
+    
 <?= $this->renderSection('content') ?>
 
     <!-- Optional JavaScript -->

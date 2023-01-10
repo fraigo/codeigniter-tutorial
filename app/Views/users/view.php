@@ -1,5 +1,7 @@
 <?= $this->extend('layouts/default') ?>
 <?= $this->section('content') ?>
+<header class="header">
+    <div class="container">
     <h2>User</h2>
     <?php
     helper('html');
@@ -24,4 +26,6 @@
         <label>Last Update</label>
         <div><?=$item['updated_at']?></div>
     </div>
+    </div>
+</header>
 <?= $this->endSection() ?>

@@ -16,9 +16,10 @@ class Users extends BaseController
         $pageSize = @$_GET["pagesize_$pagerGroup"]?:10;
         $items = $this->model->select(['id','name','email','updated_at'])->paginate($pageSize,$pagerGroup);
         $actions = [
-            ["tag" => "a", "attributes" => [ 'href' => '/users/view/{id}'], "content" => '👁'],
-            ["tag" => "a", "attributes" => [ 'href' => '/users/edit/{id}'], "content" => '✏️'],
+            ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => '/users/view/{id}'], "content" => '👁'],
+            ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => '/users/edit/{id}'], "content" => '✏️'],
             ["tag" => "a", "attributes" => [ 
+                'class' => 'px-sm-1', 
                 'href' => '/users/delete/{id}',
                 'onclick' => "return confirm('Are you sure you want to delete this item?')"
             ], "content" => '🗑'],
@@ -27,7 +28,7 @@ class Users extends BaseController
             "actions" => [
                 "content" => $actions,
                 "cellAttributes" => [
-                    "class" => "actions",
+                    "class" => "actions text-center text-nowrap",
                     "width" => "100"
                 ]
             ],

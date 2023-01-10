@@ -384,6 +384,11 @@
     * Modify view `app/Views/errors/html/error_404.php`:
         * Use the default layout calling `$this->extend('layouts/default')`
         * Setup a 'Not found' message in content
+* Setup Bootstrap 4
+    * Use the starter template as default template:
+        * https://getbootstrap.com/docs/4.0/getting-started/introduction/#starter-template
+    * Use an example from https://getbootstrap.com/docs/4.0/examples/ to setup the body content 
+    * Modify views to use bootstrap classes
 
 
 ## What is CodeIgniter?

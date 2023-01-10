@@ -7,7 +7,7 @@ html, body {
     display: flex;
     flex-direction: column;
 }
-header{
+div.header{
     background-color: #eee;
     line-height: 3em;
     padding: 0 1rem;
@@ -16,7 +16,7 @@ header{
     flex-wrap: wrap;
 }
 @media (max-width: 767px) {
-    header nav{
+    div.header nav{
         flex: 1 1 100%;
         text-align: center;
     }
@@ -29,7 +29,7 @@ a[disabled] {
     opacity: 0.5;
     pointer-events: none;
 }
-header a{
+div.header a{
     display: inline-block;
     margin: 0 8px;
 }
@@ -43,11 +43,16 @@ footer{
     line-height: 3em;
     padding: 0 1rem;
 }
-
+.form-small{
+    max-width: 400px;
+    margin: 0 auto;
+}
 .form-item{
     display: flex;
     margin: 8px 0;
-    max-width: 400px;
+}
+.form-small .form-item{
+    flex-direction: column;
 }
 .form-item div{
     flex: 1;
@@ -59,6 +64,11 @@ footer{
     display: flex;
     line-height: 1.2em;
     align-items: center;
+}
+.form-small .form-item label{
+    text-align: center;
+    display: block;
+    width: 100%;
 }
 .form-item .form-error{
     flex: 1 1 100%;
@@ -89,6 +99,7 @@ ul.pagination, ul.pager{
 ul.pagination li, ul.pager li{
     display: inline-block;
     flex: 0 1 34px;
+    white-space: nowrap;
 }
 
 ul.pagination li.row-selector{
@@ -134,14 +145,30 @@ table td.actions{
     padding-left: 0;
     padding-right: 0;
     text-align: center;
+    white-space: nowrap;
 }
 table td.actions a {
     display: inline-block;
     width: 2em;
     text-align: center;
 }
+table tbody tr:nth-child(2n+1){
+    background-color: rgba(128,128,128,0.1);
+}
 @media (max-width: 479px) {
     table td, table.th{
         word-wrap: break-word;
+    }
+}
+
+.d-none{
+    display: none !important;
+}
+@media (min-width: 480px) {
+    .d-sm-none{
+        display: none;
+    }
+    .d-sm-block{
+        display: inherit !important;
     }
 }

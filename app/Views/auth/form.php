@@ -1,24 +1,31 @@
-<?= $this->extend('layouts/default') ?>
+<?= $this->extend('layouts/login') ?>
 <?= $this->section('content') ?>
-    <h2>Login</h2>
+
     <?php
     helper('form');
-    echo form_open('/auth/login', []);
-    echo form_item([
-        'label' => 'Email',
+    echo form_open('/auth/login', ["class" => "form-signin"]);
+    ?>
+    <h2 class="text-center mb-4">Login</h2>
+    <?php
+    echo form_input([
+        'label' => null,
         'name'      => 'email',
+        'placeholder' => 'Email Address',
+        'class'     => 'form-control',
         'id'        => 'email',
-        'value'     => @$_REQUEST["email"],
-        'errors'    => @$errors['email']
+        'type'      => 'email',
+        'value'     => @$_REQUEST["email"]
     ]);
-    echo form_item([
+    echo form_input([
         'type' => 'password',
-        'label' => 'Password',
+        'label' => null,
+        'class'     => 'form-control',
         'name'      => 'password',
+        'placeholder' => 'Password',
         'id'        => 'password',
         'value'     => '',
-        'errors'    => @$errors['password']
     ]);
+    echo form_errors($errors);
     echo form_item([
         'type' => 'submit',
         'value' => 'Log In',

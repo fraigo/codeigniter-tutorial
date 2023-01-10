@@ -1,5 +1,7 @@
 <?= $this->extend('layouts/default') ?>
 <?= $this->section('content') ?>
+<header class="header">
+    <div class="container">
     <h2>User</h2>
     <?php
     helper(['html','form']);
@@ -40,4 +42,6 @@
     ]);
     echo form_close();
 ?>
+    </div>
+</header>
 <?= $this->endSection() ?>
