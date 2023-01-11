@@ -11,9 +11,10 @@ function form_item($config,$control="form_input",$class="form-item"){
     if (!@$functions[$control]){
         $control = $functions[0];
     }
-    $config["class"]="form-control";
     if (@$config["type"]=="submit"){
-        $config["class"]="btn btn-default";
+        @$config["class"] .= " btn";
+    } else {
+        @$config["class"] .= " form-control";
     }
     $control = $control($config);
     $label = @$config["label"]!==null ? "<label for=\"{$id}\" >{$label}</label>" : '';

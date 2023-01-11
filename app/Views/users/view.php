@@ -2,7 +2,13 @@
 <?= $this->section('content') ?>
 <header class="header">
     <div class="container">
-    <h2>User</h2>
+    <div class="d-flex justify-content-between mb-4">
+        <h2>View User</h2>
+        <div>
+            <button type="button" class="btn" onclick="document.location=this.getAttribute('data-href')" data-href="/users/">Back</button>
+            <button class="btn btn-primary" onclick="document.location=this.getAttribute('data-href')" data-href="/users/edit/<?=$item['id']?>">Edit</button>
+        </div>
+    </div>
     <?php
     helper('html');
     ?>

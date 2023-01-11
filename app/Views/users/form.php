@@ -2,10 +2,18 @@
 <?= $this->section('content') ?>
 <header class="header">
     <div class="container">
-    <h2>User</h2>
     <?php
     helper(['html','form']);
     echo form_open(isset($item["id"])?'/users/edit/'.$item["id"]:'/users/new', []);
+    ?>
+    <div class="d-flex justify-content-between mb-4">
+        <h2>Edit User</h2>
+        <div>
+            <button type="button" class="btn" onclick="document.location=this.getAttribute('data-href')" data-href="/users/">Back</button>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    </div>
+    <?php
     echo form_item([
         'label' => 'Name',
         'name'      => 'name',
@@ -35,10 +43,6 @@
         'id'        => 'repeat_password',
         'value'     => set_value('repeat_password',@$item["repeat_password"]),
         'errors'    => @$errors['repeat_password']
-    ]);
-    echo form_item([
-        'type' => 'submit',
-        'value' => 'Update',
     ]);
     echo form_close();
 ?>

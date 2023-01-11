@@ -5,7 +5,7 @@
     helper('form');
     echo form_open('/auth/login', ["class" => "form-signin"]);
     ?>
-    <h2 class="text-center mb-4">Login</h2>
+    <h2 class="text-center">Login</h2>
     <?php
     echo form_input([
         'label' => null,
@@ -29,6 +29,7 @@
     echo form_item([
         'type' => 'submit',
         'value' => 'Log In',
+        'class' => 'btn btn-primary col-12'
     ]);
     echo form_close();
     ?>

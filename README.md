@@ -388,7 +388,8 @@
     * Use the starter template as default template:
         * https://getbootstrap.com/docs/4.0/getting-started/introduction/#starter-template
     * Use an example from https://getbootstrap.com/docs/4.0/examples/ to setup the body content 
-    * Modify views to use bootstrap classes
+    * Change external urls to local resources
+    * Modify views to use bootstrap classes (forms)
 * Sorting data with URL parameters
     * Modify controller to read a sort query parameter (eg: 'sort_users') from URL
         * `$sortQuery = 'sort_users';`
