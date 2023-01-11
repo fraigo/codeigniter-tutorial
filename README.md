@@ -408,7 +408,18 @@
         * Add support for reverse order (DESC):
             * Link to `$sortUrl->addQuery($sortQuery,$sort=='fieldname'?'fieldname desc':'fieldname')->toString()`
             * Modify titles to show sort indicators (↓ or ↑) for regular or reverse order (desc). Eg. `"Name".($sort=='name'?' ↓':($sort=='name desc'?' ↑':'')`
-            
+* Filtering data in models (form filters)
+    * In the controller, setup fields to be filtered and apply filters
+        * Define filter query names structure (eg: `{$table}_{$field}`)
+        * Capture filter values from URL parameters: `$value = $this->request->getVar($filterQuery)`
+        * Apply filter to model query:
+            * For exact matches use `$query->where($field,$value)` 
+            * Por partial matches (substring) use `$query->like($field,$value)`
+    * In the view, show a form with current filter values
+        * Create a form with target to the current url and method GET
+        * Create form controls for each filter, displaying the current value
+        * Hide additional query parameters as hidden inputs (sort order, items per page)
+    
 
 
 ## What is CodeIgniter?

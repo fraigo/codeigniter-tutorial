@@ -14,9 +14,24 @@ class Users extends BaseController
     {
         $pagerGroup = 'users';
         $pageSize = @$_GET["pagesize_$pagerGroup"]?:10;
-        
         $query = $this->model->select(['id','name','email','updated_at']);
-        
+        $filters = [
+            "name" => [
+                "label" => "Name",
+            ],
+            "email" => [
+                "label" => "Email"
+            ]
+        ];
+        foreach ($filters as $field => $label) {
+            $filterQuery = "{$pagerGroup}_{$field}";
+            $value = $this->request->getVar($filterQuery);
+            if ($value){
+                $query = $query->like("$field",$value);
+            }
+            $filters[$field]["value"] = $value;
+            $filters[$field]["name"] = $filterQuery;
+        }
         $sortQuery = "sort_$pagerGroup";
         $sort=$this->request->getVar($sortQuery);
         $sortUrl = current_url(true);
@@ -60,10 +75,12 @@ class Users extends BaseController
                 )
             ]
         ];
+
         return view('users/index',[
             "title" => "Users", // page $title
             "items" => $items,
             "columns" => $columns,
+            "filters" => $filters,
             "pager" => $this->model->pager,
             "pagesize" => $pageSize,
             "pager_group" => $pagerGroup

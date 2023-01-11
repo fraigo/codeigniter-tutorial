@@ -88,6 +88,10 @@ footer{
     margin: 8px 0;
     line-height: 1.4em;
 }
+.form-filters{
+    background-color: rgba(128,128,128,0.2);
+    border-radius: 5px;
+}
 
 ul.pagination, ul.pager{
     list-style-type: none;
