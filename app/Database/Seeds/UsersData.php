@@ -26,7 +26,8 @@ class UsersData extends Seeder
             "password" => md5("User.123"),
             "created_at" => date("Y-m-d H:i:s"),
             "updated_at" => date("Y-m-d H:i:s"),
-            "user_type" => 0, // regular user
+            "user_type" => 2, // regular user
         ]);
+
     }
 }

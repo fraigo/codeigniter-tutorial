@@ -6,75 +6,38 @@ use App\Controllers\BaseController;
 
 class Users extends BaseController
 {
-    protected $helpers = ['html'];
-    protected $errors = null;
     protected $modelName = 'App\Models\Users';
-
+    protected $fields = [
+        "id" => [
+            "label" => "ID"
+        ],
+        "name" => [
+            "label" => "Name",
+            "sort" => true
+        ],
+        "email" => [
+            "label" => "Email",
+            "sort" => true
+        ],
+        "updated_at" => [
+            "label" => "Last Update",
+            "sort" => true
+        ],
+        "login_at" => [
+            "label" => "Last Login"
+        ]
+    ];
+    
     public function index()
     {
         $pagerGroup = 'users';
         $pageSize = @$_GET["pagesize_$pagerGroup"]?:10;
-        $query = $this->model->select(['id','name','email','updated_at']);
-        $filters = [
-            "name" => [
-                "label" => "Name",
-            ],
-            "email" => [
-                "label" => "Email"
-            ]
-        ];
-        foreach ($filters as $field => $label) {
-            $filterQuery = "{$pagerGroup}_{$field}";
-            $value = $this->request->getVar($filterQuery);
-            if ($value){
-                $query = $query->like("$field",$value);
-            }
-            $filters[$field]["value"] = $value;
-            $filters[$field]["name"] = $filterQuery;
-        }
-        $sortQuery = "sort_$pagerGroup";
-        $sort=$this->request->getVar($sortQuery);
-        $sortUrl = current_url(true);
-        $sortUrl->stripQuery($sortQuery);
-        if ($sort) $query->orderBy($sort);
-        
+        $query = $this->model
+            ->select($this->selectFields());
+        $filters = $this->processFilters($query,['name','email'],$pagerGroup);
+        $this->processSort($query,$pagerGroup);
         $items = $query->paginate($pageSize,$pagerGroup);
-        $actions = [
-            ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => '/users/view/{id}'], "content" => '👁'],
-            ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => '/users/edit/{id}'], "content" => '✏️'],
-            ["tag" => "a", "attributes" => [ 
-                'class' => 'px-sm-1', 
-                'href' => '/users/delete/{id}',
-                'onclick' => "return confirm('Are you sure you want to delete this item?')"
-            ], "content" => '🗑'],
-        ];
-        $columns = [
-            "actions" => [
-                "content" => $actions,
-                "cellAttributes" => [
-                    "class" => "actions text-center text-nowrap",
-                    "width" => "100"
-                ]
-            ],
-            "name" => [
-                "label" => anchor(
-                    $sortUrl->addQuery($sortQuery,$sort=='name'?'name desc':'name')->__toString(),
-                    "Name".($sort=='name'?' ↓':($sort=='name desc'?' ↑':''))
-                )
-            ],
-            "email" => [
-                "label" => anchor(
-                    $sortUrl->addQuery($sortQuery,$sort=='email'?'email desc':'email')->__toString(),
-                    "Email".($sort=='email'?' ↓':($sort=='email desc'?' ↑':''))
-                ) 
-            ],
-            "updated_at" => [
-                "label" => anchor(
-                    $sortUrl->addQuery($sortQuery,$sort=='updated_at'?'updated_at desc':'updated_at')->__toString(),
-                    "Last Update".($sort=='updated_at'?' ↓':($sort=='updated_at desc'?' ↑':''))
-                )
-            ]
-        ];
+        $columns = $this->indexColumns(['name','email','updated_at'],'/users',$pagerGroup);
 
         return $this->layout('users/index',[
             "title" => "Users", // page $title
@@ -102,9 +65,9 @@ class Users extends BaseController
     function update($id){
         $item = $this->getModelById($id);
         $has_password = $this->request->getVar('password');
-        $fields = ['name','email','password','repeat_password'];
-        if (!$has_password){
-            $fields = ['name','email'];
+        $fields = ['name','email'];
+        if ($has_password){
+            $fields = array_merge($fields,['password','repeat_password']);
         }
         $data = $this->request->getVar($fields);
         $data["id"] = $id;

@@ -6,8 +6,7 @@ use App\Controllers\BaseController;
 
 class Auth extends BaseController
 {
-    private $errors = null;
-    private $logoutRedirect = "/";
+    private $logoutRedirect = "/auth/login";
     private $loginRedirect = "/";
     protected $modelName = 'App\Models\Users';
 

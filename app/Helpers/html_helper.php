@@ -61,13 +61,13 @@ function parseData($content,$data){
                 $content[$key] = parseData($col, $data);
             } else {
                 foreach($data as $fld=>$value){
-                    $content[$key] = str_replace("{$key}",$value, $col);
+                    $content[$key] = str_replace("{$key}","$value", $col);
                 }
             }
         }
     } else {
         foreach($data as $fld=>$value){
-            $content = str_replace("{$fld}",$value, $content);
+            $content = str_replace("{$fld}","$value", $content);
         }
     }
     return $content;
@@ -92,7 +92,7 @@ function htmlRow($row,$columns,$header=false){
         $content
     </tr>";
     foreach($row as $fld=>$value){
-        $template = str_replace("{".$fld."}", $value, $template);
+        $template = str_replace("{".$fld."}", "$value", $template);
     }
     return $template;
 }

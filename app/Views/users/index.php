@@ -1,6 +1,6 @@
 <header class="header">
     <div class="container-fluid">
-    <h2 class="mb-4">Users</h2>
+    <h2 class="mb-4"><?=$title?></h2>
     <?php
     helper(['html','form']);
     echo form_filters($filters);

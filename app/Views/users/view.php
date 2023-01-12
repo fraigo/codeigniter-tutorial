@@ -22,7 +22,7 @@
     </div>
     <div class="form-item">
         <label>Last Login</label>
-        <div>{login_at}</div>
+        <div>{login_at|default(N/A)}</div>
     </div>
     <div class="form-item">
         <label>Last Update</label>

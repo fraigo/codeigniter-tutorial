@@ -15,7 +15,7 @@ class TestData extends Seeder
                 "name" => $faker->name(),
                 "email" => $faker->email(),
                 "password" => md5("User.123"),
-                "user_type" => 0,
+                "user_type" => 2,
             ]);
         }
     }

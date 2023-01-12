@@ -437,6 +437,13 @@
         * Calls to `view('default',['content'=>view($view, $data)])`
     * Create a similar method `parserLayout($view,$data)` but calling to `$parser->setData($data)->render($view)`
     * Modify controller to call `$this->layout('view/name', $data)` instead of `view('view/name', $data)`
+* Setup and generalize Base controller methods
+    * Setup a fields list
+    * Setup fields to be selected
+    * Apply sorting 
+    * Setup reading filter values and apply model conditions
+    * Setup table columns and sort headers
+
 
 
 ## What is CodeIgniter?
