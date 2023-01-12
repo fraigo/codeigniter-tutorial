@@ -63,4 +63,21 @@ abstract class BaseController extends Controller
         }
         return $item;
     }
+
+    protected function layout($view, $data=[], $layout='default'){ 
+        return view($layout, [
+            'content'=> view($view,$data)
+        ]);
+    }
+
+    protected function parserView($view, $data=[]){ 
+        $parser = \Config\Services::parser();
+        return $parser->setData($data)->render($view);
+    }
+
+    protected function parserLayout($view, $data=[], $layout='default'){ 
+        return view($layout, [
+            'content'=> $this->parserView($view,$data)
+        ]);
+    }
 }

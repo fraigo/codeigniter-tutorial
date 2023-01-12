@@ -23,7 +23,9 @@ $routes->setTranslateURIDashes(false);
 $routes->set404Override(static function () {
     $response = \Config\Services::response();
     $response->setStatusCode(404);
-    return view('errors/html/error_404',['title'=>'Not Found']);
+    return view('default',[
+        'content'=> view('errors/html/error_404',['title'=>'Not Found'])
+    ]);
 });
 // The Auto Routing (Legacy) is very dangerous. It is easy to create vulnerable apps
 // where controller filters or CSRF protection are bypassed.

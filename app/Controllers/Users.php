@@ -76,7 +76,7 @@ class Users extends BaseController
             ]
         ];
 
-        return view('users/index',[
+        return $this->layout('users/index',[
             "title" => "Users", // page $title
             "items" => $items,
             "columns" => $columns,
@@ -90,13 +90,13 @@ class Users extends BaseController
 
     function view($id){
         $item = $this->getModelById($id);
-        return view('users/view',['item'=>$item,'title'=>'View User']);
+        return $this->parserLayout('users/view',['item'=>[$item],'title'=>'View User','editurl' => '/users/edit/'.$item['id']]);
     }
 
     function edit($id){
         $item = $this->getModelById($id);
         $item['password'] = '';
-        return view('users/form',['item'=>$item, 'errors'=>$this->errors,'title'=>'Edit User']);
+        return $this->layout('users/form',['item'=>$item, 'errors'=>$this->errors,'title'=>'Edit User']);
     }
 
     function update($id){
@@ -127,7 +127,7 @@ class Users extends BaseController
 
     function new(){
         $item = [];
-        return view('users/form',['item'=>$item]);
+        return $this->layout('users/form',['item'=>$item]);
     }
 
     function create(){

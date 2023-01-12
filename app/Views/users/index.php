@@ -1,5 +1,3 @@
-<?= $this->extend('layouts/default') ?>
-<?= $this->section('content') ?>
 <header class="header">
     <div class="container-fluid">
     <h2 class="mb-4">Users</h2>
@@ -12,4 +10,3 @@
     ?>
     </div>
 </header>
-<?= $this->endSection() ?>

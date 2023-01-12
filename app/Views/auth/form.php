@@ -1,6 +1,3 @@
-<?= $this->extend('layouts/login') ?>
-<?= $this->section('content') ?>
-
     <?php
     helper('form');
     echo form_open('/auth/login', ["class" => "form-signin"]);
@@ -33,4 +30,3 @@
     ]);
     echo form_close();
     ?>
-<?= $this->endSection() ?>

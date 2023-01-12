@@ -1,5 +1,3 @@
-<?= $this->extend('layouts/default') ?>
-<?= $this->section('content') ?>
 <header class="header">
     <div class="container">
     <?php
@@ -48,4 +46,3 @@
 ?>
     </div>
 </header>
-<?= $this->endSection() ?>

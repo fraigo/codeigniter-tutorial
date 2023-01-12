@@ -12,7 +12,7 @@ class Auth extends BaseController
     protected $modelName = 'App\Models\Users';
 
     public function form(){
-        return view('auth/form',['errors'=>$this->errors]);
+        return $this->layout('auth/form',['errors'=>$this->errors],'login');
     }
 
     public function login()

@@ -420,7 +420,23 @@
         * Create a form with target to the current url and method GET
         * Create form controls for each filter, displaying the current value
         * Hide additional query parameters as hidden inputs (sort order, items per page)
-    
+* Remove layout configuration from views, render layout from controller
+    * In views, remove calls to `$this->extend('layouts/default')`, `$this->section()`, `$this->endSection()`
+    * Create a default view (`app/Views/default.php`)
+        * Use default layout calling to `$this->extend('layouts/default')`
+        * `$this->section()` will contain only a `$content` variable
+    * In controller, render view with default view calling `view('default',['content'=>view('view/name', $data)])`
+* Creating views using the Parser Class
+    * It allows to create views with simple substitutions instead of PHP code.
+    * PHP code is not interpreted in parser views
+    * To load the system parser: `$parser = \Config\Services::parser();`
+    * To render a view with $data: `$parser->setData($data)->render('view/name');`
+    * To render the view inside the default view layout:  `view('default',[ 'content' => $parser->setData($data)->render('view/name') ]`
+* Generalize use of view layout:
+    * Modify `app/Controllers/BaseController` to add a `layout($view, $data)` method
+        * Calls to `view('default',['content'=>view($view, $data)])`
+    * Create a similar method `parserLayout($view,$data)` but calling to `$parser->setData($data)->render($view)`
+    * Modify controller to call `$this->layout('view/name', $data)` instead of `view('view/name', $data)`
 
 
 ## What is CodeIgniter?

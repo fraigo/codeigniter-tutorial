@@ -6,23 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="/favicon.ico"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css" >
-    <link rel="stylesheet" href="/css/style.css" >
+    <?= $this->renderSection('head') ?>
 </head>
 <body>
-<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-      <h5 class="my-0 mr-md-auto font-weight-normal">My Web Application</h5>
-      <nav class="my-2 my-md-0 mr-md-3">
-        <a  class="p-2 text-dark" href="/" >Home</a>
-        <?php if(session('admin')) { ?>
-            <a class="p-2 text-dark" href="/users/" >Users</a>
-        <?php } ?>
-      </nav>
-      <?php if(session('auth')) { ?>
-        <a class="btn btn-outline-primary" href="/auth/logout">Log Out</a>
-      <?php } else { ?>
-        <a class="btn btn-outline-primary" href="/auth/login">Log In</a>
-      <?php } ?>
-</div>
+<?= $this->renderSection('header') ?>
 <?= $this->renderSection('content') ?>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
