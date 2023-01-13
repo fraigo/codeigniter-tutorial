@@ -438,11 +438,21 @@
     * Create a similar method `parserLayout($view,$data)` but calling to `$parser->setData($data)->render($view)`
     * Modify controller to call `$this->layout('view/name', $data)` instead of `view('view/name', $data)`
 * Setup and generalize Base controller methods
-    * Setup a fields list
+    * Setup a field list
     * Setup fields to be selected
     * Apply sorting 
     * Setup reading filter values and apply model conditions
     * Setup table columns and sort headers
+* Implement user types/profiles
+    * Create a new migration for `user_types`
+        * Each user type has its own name and access
+    * Modify `users` migration 
+        * Field `user_type` to reference `user_types.id`
+    * Recreate the schema running `php spark migrate:refresh`
+    * Modify `Auth` controller 
+        * in login method, set `admin` session if user has a "full access" user type
+    * Modify Users and Test data seed to setup user types accordingly
+    
 
 
 

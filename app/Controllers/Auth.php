@@ -35,12 +35,14 @@ class Auth extends BaseController
             $this->errors = ["password"=>"User or password is incorrect"];
             return $this->form();
         }
+        $userTypes = new \App\Models\UserTypes();
+        $userType = $userTypes->find($user["user_type"]);
         $this->model->update($user["id"],[
             "login_at" => gmdate("Y-m-d H:i:s")
         ]);
         $session = session();
         $session->set('auth', $user);
-        $session->set('admin', $user["user_type"]==1);
+        $session->set('admin', $userType["access"]==4);
         return $this->response->redirect($this->loginRedirect);
     }
 

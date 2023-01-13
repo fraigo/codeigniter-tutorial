@@ -14,8 +14,8 @@ class TestData extends Seeder
             $result=$users->insert([
                 "name" => $faker->name(),
                 "email" => $faker->email(),
-                "password" => md5("User.123"),
-                "user_type" => 2,
+                "password" => md5("Test.123"),
+                "user_type" => rand(1,3),
             ]);
         }
     }
