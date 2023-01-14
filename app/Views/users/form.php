@@ -7,7 +7,7 @@
     <div class="d-flex justify-content-between mb-4">
         <h2>Edit User</h2>
         <div>
-            <button type="button" class="btn" onclick="document.location=this.getAttribute('data-href')" data-href="/users/">Back</button>
+            <button type="button" class="btn" onclick="window.history.back(-1)" >Back</button>
             <button type="submit" class="btn btn-primary">Update</button>
         </div>
     </div>
@@ -26,6 +26,15 @@
         'value'     => set_value('email',@$item["email"]),
         'errors'    => @$errors['email']
     ]);
+    echo form_item([
+        'label' => 'Type',
+        'type'      => 'user_type',
+        'name'      => 'user_type',
+        'id'        => 'user_type',
+        'options'   => $userTypes,
+        'selected' => [set_value('user_type',@$item["user_type"])],
+        'errors'    => @$errors['user_type']
+    ],"form_dropdown");
     echo form_item([
         'label' => 'Password',
         'type'      => 'password',

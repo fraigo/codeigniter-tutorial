@@ -6,9 +6,10 @@ function form_item($config,$control="form_input",$class="form-item"){
     $error = @$config['errors'] ? "<div class='alert alert-danger p-1 mt-1'>".htmlentities(@$config['errors'])."</div>" : '';
     $errors = "<div class=\"form-error\">$error</div>";
     $functions = [
-        "form_input"
+        "form_input",
+        "form_dropdown"
     ];
-    if (!@$functions[$control]){
+    if (!in_array($control,$functions)){
         $control = $functions[0];
     }
     if (@$config["type"]=="submit"){
@@ -43,7 +44,13 @@ function form_filters($filters=[],$title="Filters"){
     $inputs = [];
     foreach($filters as $field=>$cfg){
         $inputs[] = $cfg["name"];
-        $content[] = form_item($cfg,"form_input","form-item col-12 col-md-6 col-lg-4");
+        $control = @$cfg["control"]?:"form_input";
+        $item = [
+            "name" => @$cfg["name"],
+            "value" => @$cfg["value"],
+            "label" => @$cfg["label"],
+        ];
+        $content[] = form_item($item,$control,"form-item col-12 col-md-6 col-lg-4");
     }
     foreach($_GET as $fld=>$value){
         if (!in_array("$fld",$inputs)){

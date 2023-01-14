@@ -84,7 +84,17 @@ function htmlRow($row,$columns,$header=false){
             $cfg=["label"=>$cfg];
         }
         $cfg = parseData($cfg,$row);
-        $content = $header ? @$cfg["label"] : (@$cfg["content"]?:@$row[$fld]);
+        if ($header){
+            $content = @$cfg["label"];
+        } else {
+            $content = @$row[$fld];
+            if (@$cfg["content"]){
+                $content = $cfg["content"];
+            }
+            if (@$cfg["values"]){
+                $content = @$cfg["values"][@$row[$fld]];
+            }
+        }
         $cols[] = htmlCell($content,$header,@$cfg["cellAttributes"]);
     }
     $content = implode("\n",$cols);

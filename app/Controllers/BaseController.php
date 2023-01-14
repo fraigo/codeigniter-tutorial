@@ -58,10 +58,16 @@ abstract class BaseController extends Controller
         }
     }
 
-    protected function getModelById($id){
+    protected function getQueryModel(){
         $item = $this->model
-            ->where("id", $id)
-            ->select($this->selectFields())
+            ->select($this->selectFields());
+        return $item;
+    }
+
+    protected function getModelById($id){
+        $table = $this->model->table;
+        $item = $this->getQueryModel()
+            ->where("$table.id", $id)
             ->first();
         if (!$item){
             throw new \CodeIgniter\Exceptions\PageNotFoundException();
@@ -89,15 +95,28 @@ abstract class BaseController extends Controller
     protected function selectFields(){
         $fields = [];
         foreach($this->fields as $fld=>$config){
+            if (@$config["field"]){
+                $fld = $config["field"]." as $fld";
+            } else {
+                $fld = $this->model->table.".".$fld;
+            }
             $fields[] = $fld;
         }
         return $fields;
     }
 
-    protected function processFilters($query, $filterFields, $group){
-        $filters = array_filter_by_keys($this->fields,$filterFields);
-        foreach ($filters as $field => $config) {
-            $tableField = $field;
+    protected function processFilters($query, $group){
+        $filters = [];
+        foreach ($this->fields as $field => $config) {
+            if (!@$config["filter"]){
+                continue;
+            }
+            $filters[$field] = $config;
+            if (@$config["field"]){
+                $tableField = $config["field"];
+            } else {
+                $tableField = $this->model->table.".".$field;
+            }
             $filterQuery = "{$group}_{$field}";
             $value = $this->request->getVar($filterQuery);
             if ($value){
@@ -116,7 +135,12 @@ abstract class BaseController extends Controller
         if ($sort) {
             @list($sortField,$sortDir) = explode(" ",$sort);
             $field = @$this->fields[$sortField]["field"];
-            $query->orderBy("$field $sortDir");
+            if ($field){
+                $sortField = $field;
+            } else {
+                $sortField = $this->model->table.".".$sortField;
+            }
+            $query->orderBy("$sortField $sortDir");
             
         }
     }
@@ -144,7 +168,7 @@ abstract class BaseController extends Controller
         ];
     }
 
-    protected function indexColumns($fields,$actionUrl, $group){
+    protected function indexColumns($actionUrl, $group){
         $actionCol = [];
         if ($actionUrl){
             $actionCol = [[
@@ -155,12 +179,71 @@ abstract class BaseController extends Controller
                 ]
             ]];
         }
-        $indexCols = array_filter_by_keys($this->fields,$fields);
-        foreach($indexCols as $fld=>$cfg){
+        $indexCols = [];
+        foreach($this->fields as $fld=>$cfg){
+            if (@$cfg["hidden"]){
+                continue;
+            }
+            $indexCols[$fld] = $cfg;
             if (@$cfg["sort"]){
                 $indexCols[$fld]["label"] = $this->sortColumn($fld,$indexCols[$fld]["label"],$group);
             }
         }
         return array_merge($actionCol,$indexCols);
     }
+
+    protected function table($title, $baseUrl)
+    {
+        $pagerGroup = $this->model->table;
+        $pageSize = @$_GET["pagesize_$pagerGroup"]?:10;
+        $query = $this->getQueryModel();
+        $filters = $this->processFilters($query,$pagerGroup);
+        $this->processSort($query,$pagerGroup);
+        $items = $query->paginate($pageSize,$pagerGroup);
+        $columns = $this->indexColumns($baseUrl,$pagerGroup);
+
+        return $this->layout('table',[
+            "title" => $title, // page $title
+            "items" => $items,
+            "columns" => $columns,
+            "filters" => $filters,
+            "pager" => $this->model->pager,
+            "pagesize" => $pageSize,
+            "pager_group" => $pagerGroup
+        ]);
+    }
+
+    function prepareData($data){
+        return $data;
+    }
+
+    function doUpdate($id, $fields, $rules=null){
+        $item = $this->getModelById($id);
+        $data = $this->request->getVar($fields);
+        $data["id"] = $id;
+        $rules = $rules ?: $this->model->getValidationRules(['only'=>$fields]);
+        $validation = \Config\Services::validation();
+        $validation->setRules($rules);
+        if (!$validation->run($data)){
+            $this->errors = $validation->getErrors();
+            return null;
+        }
+        $data = $this->prepareData($data);
+        $result = $this->model->update($item["id"],$data);
+        return $data;
+    }
+
+    function doCreate($fields, $rules=null){
+        $data = $this->request->getVar($fields);
+        $rules = $this->model->getValidationRules(['only'=>$fields]);
+        $validation = \Config\Services::validation();
+        $validation->setRules($rules);
+        if (!$validation->run($data)){
+            $this->errors = $validation->getErrors();
+            return false;
+        }
+        $id = $this->model->insert($data);
+        return $id;
+    }
+
 }

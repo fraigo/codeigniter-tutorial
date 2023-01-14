@@ -452,7 +452,12 @@
     * Modify `Auth` controller 
         * in login method, set `admin` session if user has a "full access" user type
     * Modify Users and Test data seed to setup user types accordingly
+* Implement common CRUD from Base Controller
+    * Generalize `index`, `edit`, `new` and `delete`
+    * Modify Users controller to use BaseController methods
+    * Setup field config for use with crud operations
     
+
 
 
 

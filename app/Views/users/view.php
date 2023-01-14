@@ -1,9 +1,9 @@
 <header class="header">
     <div class="container">
     <div class="d-flex justify-content-between mb-4">
-        <h2>View User</h2>
+        <h2>{title}</h2>
         <div>
-            <button type="button" class="btn" onclick="document.location=this.getAttribute('data-href')" data-href="/users/">Back</button>
+            <button type="button" class="btn" onclick="window.history.back(-1)" >Back</button>
             <button class="btn btn-primary" onclick="document.location=this.getAttribute('data-href')" data-href="{editurl}">Edit</button>
         </div>
     </div>
@@ -19,6 +19,10 @@
     <div class="form-item">
         <label>Email</label>
         <div>{email}</div>
+    </div>
+    <div class="form-item">
+        <label>User Type</label>
+        <div>{user_type_name}</div>
     </div>
     <div class="form-item">
         <label>Last Login</label>

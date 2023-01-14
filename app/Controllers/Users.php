@@ -7,17 +7,21 @@ use App\Controllers\BaseController;
 class Users extends BaseController
 {
     protected $modelName = 'App\Models\Users';
+    protected $baseUrl = "/users";
     protected $fields = [
         "id" => [
-            "label" => "ID"
+            "label" => "ID",
+            "hidden" => true
         ],
         "name" => [
             "label" => "Name",
-            "sort" => true
+            "sort" => true,
+            "filter" => true
         ],
         "email" => [
             "label" => "Email",
-            "sort" => true
+            "sort" => true,
+            "filter" => true
         ],
         "updated_at" => [
             "label" => "Last Update",
@@ -25,67 +29,76 @@ class Users extends BaseController
         ],
         "login_at" => [
             "label" => "Last Login"
+        ],
+        "user_type" => [
+            "label" => "User Type",
+            "hidden" => true
+        ],
+        "user_type_name" => [
+            "field" => "user_types.name",
+            "label" => "User Type",
+            "sort" => true,
+            "filter" => true
         ]
     ];
+
+    protected function getQueryModel(){
+        $query = parent::getQueryModel();
+        $query->join('user_types','user_types.id=users.user_type');
+        return $query;
+    }
     
     public function index()
     {
-        $pagerGroup = 'users';
-        $pageSize = @$_GET["pagesize_$pagerGroup"]?:10;
-        $query = $this->model
-            ->select($this->selectFields());
-        $filters = $this->processFilters($query,['name','email'],$pagerGroup);
-        $this->processSort($query,$pagerGroup);
-        $items = $query->paginate($pageSize,$pagerGroup);
-        $columns = $this->indexColumns(['name','email','updated_at'],'/users',$pagerGroup);
-
-        return $this->layout('users/index',[
-            "title" => "Users", // page $title
-            "items" => $items,
-            "columns" => $columns,
-            "filters" => $filters,
-            "pager" => $this->model->pager,
-            "pagesize" => $pageSize,
-            "pager_group" => $pagerGroup
-        ]);
+        return $this->table("Users", $this->baseUrl);
     }
-
 
     function view($id){
         $item = $this->getModelById($id);
         return $this->parserLayout('users/view',['item'=>[$item],'title'=>'View User','editurl' => '/users/edit/'.$item['id']]);
     }
 
+    private function getUserTypes(){
+        $userTypes = new \App\Models\UserTypes();
+        $result = [];
+        foreach($userTypes->findAll() as $row){
+            $result[$row["id"]]=$row["name"];
+        }
+        return $result;
+    }
+
     function edit($id){
         $item = $this->getModelById($id);
         $item['password'] = '';
-        return $this->layout('users/form',['item'=>$item, 'errors'=>$this->errors,'title'=>'Edit User']);
+        return $this->layout('users/form',[
+            'item'=>$item, 
+            'userTypes'=> $this->getUserTypes(),
+            'errors'=>$this->errors,
+            'title'=>'Edit User']);
+    }
+
+    function prepareData($data){
+        if (@$data["password"]){
+            $data["password"] = md5($data["password"]);
+        }
+        return $data;
     }
 
     function update($id){
-        $item = $this->getModelById($id);
         $has_password = $this->request->getVar('password');
-        $fields = ['name','email'];
+        $fields = ['name','email','user_type'];
         if ($has_password){
             $fields = array_merge($fields,['password','repeat_password']);
         }
-        $data = $this->request->getVar($fields);
-        $data["id"] = $id;
         $rules = $this->model->getValidationRules(['only'=>$fields]);
         if ($has_password){
             $rules['repeat_password'] = 'matches[password]';
         }
-        $validation = \Config\Services::validation();
-        $validation->setRules($rules);
-        if (!$validation->run($data)){
-            $this->errors = $validation->getErrors();
-            return view('users/form',['item'=>$item, 'errors'=>$this->errors]);
+        $result = $this->doUpdate($id, $fields,$rules);
+        if (!$result){
+            return $this->edit($id);
         }
-        if ($has_password){
-            $data["password"] = md5($data["password"]);
-        }
-        $this->model->update($item["id"],$data);
-        return $this->response->redirect('/users/edit/'.$data['id']);
+        return $this->response->redirect('/users/edit/'.$id);
     }
 
     function new(){
@@ -94,18 +107,13 @@ class Users extends BaseController
     }
 
     function create(){
-        $data = $this->request->getVar(['name','email','password','repeat_password']);
-        $data["user_type"] = 0;
-        $rules = $this->model->getValidationRules(['only'=>['name','email','password','repeat_password']]);
+        $fields = ['name','email','user_type','password','repeat_password'];
+        $rules = $this->model->getValidationRules(['only'=>$fields]);
         $rules['repeat_password'] = 'matches[password]';
-        $validation = \Config\Services::validation();
-        $validation->setRules($rules);
-        if (!$validation->run($data)){
-            $this->errors = $validation->getErrors();
-            return view('users/form',['item'=>$data, 'errors'=>$this->errors]);
+        $id = $this->doCreate($fields,$rules);
+        if (!$id){
+            return $this->create();
         }
-        $data["password"] = md5($data["password"]);
-        $id = $this->model->insert($data);
         return $this->response->redirect('/users/edit/'.$id);
     }
 
