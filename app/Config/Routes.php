@@ -46,6 +46,7 @@ $routes->post('/auth/login', 'Auth::login');
 $routes->get('/auth/login', 'Auth::form');
 $routes->get('/auth/logout', 'Auth::logout');
 $routes->group('', ['filter' => 'auth:admin'], static function ($routes) {
+    
     $routes->get('/users', 'Users::index');
     $routes->get('/users/view/(:num)', 'Users::view/$1');
     $routes->get('/users/edit/(:num)', 'Users::edit/$1');
@@ -53,6 +54,14 @@ $routes->group('', ['filter' => 'auth:admin'], static function ($routes) {
     $routes->get('/users/new', 'Users::new');
     $routes->post('/users/new', 'Users::create/$1');
     $routes->get('/users/delete/(:num)', 'Users::delete/$1');
+    
+    $routes->get('/usertypes', 'UserTypes::index');
+    $routes->get('/usertypes/view/(:num)', 'UserTypes::view/$1');
+    $routes->get('/usertypes/edit/(:num)', 'UserTypes::edit/$1');
+    $routes->post('/usertypes/edit/(:num)', 'UserTypes::update/$1');
+    $routes->get('/usertypes/new', 'UserTypes::new');
+    $routes->post('/usertypes/new', 'UserTypes::create/$1');
+    $routes->get('/usertypes/delete/(:num)', 'UserTypes::delete/$1');
 });
 
 /*

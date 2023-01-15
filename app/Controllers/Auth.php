@@ -43,6 +43,7 @@ class Auth extends BaseController
         $session = session();
         $session->set('auth', $user);
         $session->set('admin', $userType["access"]==4);
+        $session->set('profile', $userType);
         return $this->response->redirect($this->loginRedirect);
     }
 

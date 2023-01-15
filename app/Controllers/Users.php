@@ -103,7 +103,11 @@ class Users extends BaseController
 
     function new(){
         $item = [];
-        return $this->layout('users/form',['item'=>$item]);
+        return $this->layout('users/form',[
+            'title' => 'Create User',
+            'userTypes'=> $this->getUserTypes(),
+            'item'=>$item
+        ]);
     }
 
     function create(){
@@ -112,7 +116,7 @@ class Users extends BaseController
         $rules['repeat_password'] = 'matches[password]';
         $id = $this->doCreate($fields,$rules);
         if (!$id){
-            return $this->create();
+            return $this->new();
         }
         return $this->response->redirect('/users/edit/'.$id);
     }

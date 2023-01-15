@@ -10,6 +10,7 @@
         <a  class="p-2 text-dark" href="/" >Home</a>
         <?php if(session('admin')) { ?>
             <a class="p-2 text-dark" href="/users/" >Users</a>
+            <a class="p-2 text-dark" href="/usertypes/" >User Types</a>
         <?php } ?>
       </nav>
       <?php if(session('auth')) { ?>

@@ -49,6 +49,9 @@ function form_filters($filters=[],$title="Filters"){
             "name" => @$cfg["name"],
             "value" => @$cfg["value"],
             "label" => @$cfg["label"],
+            "options" => @$cfg["options"],
+            "selected" => @$cfg["selected"],
+            "onchange" => "this.form.submit()",
         ];
         $content[] = form_item($item,$control,"form-item col-12 col-md-6 col-lg-4");
     }

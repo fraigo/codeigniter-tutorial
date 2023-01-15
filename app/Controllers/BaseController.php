@@ -124,6 +124,11 @@ abstract class BaseController extends Controller
             }
             $filters[$field]["value"] = $value;
             $filters[$field]["name"] = $filterQuery;
+            if (@$config["options"]){
+                $filters[$field]["control"] = "form_dropdown";
+                $filters[$field]["options"] = ([""=>"All"])+$config["options"];
+                $filters[$field]["selected"] = $value ? [$value] : [];
+            }
         }
         return $filters;
     }
@@ -168,11 +173,11 @@ abstract class BaseController extends Controller
         ];
     }
 
-    protected function indexColumns($actionUrl, $group){
+    protected function indexColumns($route, $group){
         $actionCol = [];
-        if ($actionUrl){
+        if ($route){
             $actionCol = [[
-                "content" => $this->actionColumns($actionUrl),
+                "content" => $this->actionColumns($route),
                 "cellAttributes" => [
                     "class" => "actions text-center text-nowrap",
                     "width" => "100"
@@ -192,7 +197,7 @@ abstract class BaseController extends Controller
         return array_merge($actionCol,$indexCols);
     }
 
-    protected function table($title, $baseUrl)
+    protected function table($title, $route)
     {
         $pagerGroup = $this->model->table;
         $pageSize = @$_GET["pagesize_$pagerGroup"]?:10;
@@ -200,11 +205,12 @@ abstract class BaseController extends Controller
         $filters = $this->processFilters($query,$pagerGroup);
         $this->processSort($query,$pagerGroup);
         $items = $query->paginate($pageSize,$pagerGroup);
-        $columns = $this->indexColumns($baseUrl,$pagerGroup);
+        $columns = $this->indexColumns($route,$pagerGroup);
 
         return $this->layout('table',[
             "title" => $title, // page $title
             "items" => $items,
+            "route" => $route,
             "columns" => $columns,
             "filters" => $filters,
             "pager" => $this->model->pager,

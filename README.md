@@ -456,7 +456,14 @@
     * Generalize `index`, `edit`, `new` and `delete`
     * Modify Users controller to use BaseController methods
     * Setup field config for use with crud operations
-    
+* Setup CRUD for user types
+    * Setup UserTypes controller using the ser controller as template
+    * Add  CRUD routes for `usertypes` (`index`, `edit`, `new`, `delete`)
+    * Add to default template menu a link to User Types `/usertypes/`
+    * Setup Auth controller
+        * Save the user type (profile) in a session variable
+        * Setup admin session variable if user type access is full
+
 
 
 

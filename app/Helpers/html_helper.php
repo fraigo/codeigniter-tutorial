@@ -91,8 +91,8 @@ function htmlRow($row,$columns,$header=false){
             if (@$cfg["content"]){
                 $content = $cfg["content"];
             }
-            if (@$cfg["values"]){
-                $content = @$cfg["values"][@$row[$fld]];
+            if (@$cfg["options"]){
+                $content = @$cfg["options"][@$row[$fld]];
             }
         }
         $cols[] = htmlCell($content,$header,@$cfg["cellAttributes"]);

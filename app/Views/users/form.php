@@ -5,10 +5,10 @@
     echo form_open(isset($item["id"])?'/users/edit/'.$item["id"]:'/users/new', []);
     ?>
     <div class="d-flex justify-content-between mb-4">
-        <h2>Edit User</h2>
+        <h2><?=$title?></h2>
         <div>
             <button type="button" class="btn" onclick="window.history.back(-1)" >Back</button>
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary"><?=@$item["id"]?"Update":"Create"?></button>
         </div>
     </div>
     <?php
