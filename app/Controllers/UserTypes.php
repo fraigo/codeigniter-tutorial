@@ -5,7 +5,7 @@ namespace App\Controllers;
 class UserTypes extends BaseController
 {
     protected $modelName = 'App\Models\UserTypes';
-    protected $baseUrl = "/usertypes";
+    protected $route = "usertypes";
     protected $fields = [
         'id' => [
             "label" => "ID",
@@ -31,7 +31,7 @@ class UserTypes extends BaseController
     
     public function index()
     {
-        return $this->table("Users Types", $this->baseUrl);
+        return $this->table("Users Types", $this->route);
     }
 
     function view($id){

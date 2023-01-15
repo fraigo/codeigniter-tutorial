@@ -463,7 +463,19 @@
     * Setup Auth controller
         * Save the user type (profile) in a session variable
         * Setup admin session variable if user type access is full
-
+* Implement profile access levels
+    * Setup `Auth` filter to implement a filter by access
+        * Filter format is `auth:access,route,level` 
+        * `level` can be: read,edit,create,full(delete) (1-4)
+        * `route` is the module to access. This will be implemented later.
+        * Read user type access level
+        * If level is lower than required, return status 403 (not authorized) 
+    * Modify `app/Config/Routes.php` to check access levels
+        * Use filter `auth:access,{route},{level}`
+        * Separate routes by route name and access levels
+        * Eg: `auth:access,users,1` for routes reading users (`users/index`,`users/view`)
+    * Modify views to hide links to higher level routes
+    
 
 
 

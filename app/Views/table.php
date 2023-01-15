@@ -3,7 +3,9 @@
     <div class="d-flex justify-content-between mb-4">
         <h2><?=$title?></h2>
         <div>
-            <button type="button" class="btn" onclick="document.location=this.getAttribute('data-href')" data-href="./new">New</button>
+            <?php if (@session("profile")["access"]>=3) { ?>
+            <button type="button" class="btn" onclick="document.location=this.getAttribute('data-href')" data-href="/<?=$route?>/new">New</button>
+            <?php } ?>
         </div>
     </div>
     <?php

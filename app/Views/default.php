@@ -8,7 +8,7 @@
       <div class="d-flex justify-content-center align-items-center">
       <nav class="my-2 my-md-0 mr-md-3">
         <a  class="p-2 text-dark" href="/" >Home</a>
-        <?php if(session('admin')) { ?>
+        <?php if(@session('profile')["access"]>=1) { ?>
             <a class="p-2 text-dark" href="/users/" >Users</a>
             <a class="p-2 text-dark" href="/usertypes/" >User Types</a>
         <?php } ?>

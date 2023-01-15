@@ -7,7 +7,7 @@ use App\Controllers\BaseController;
 class Users extends BaseController
 {
     protected $modelName = 'App\Models\Users';
-    protected $baseUrl = "/users";
+    protected $route = "users";
     protected $fields = [
         "id" => [
             "label" => "ID",
@@ -50,7 +50,7 @@ class Users extends BaseController
     
     public function index()
     {
-        return $this->table("Users", $this->baseUrl);
+        return $this->table("Users", $this->route);
     }
 
     function view($id){

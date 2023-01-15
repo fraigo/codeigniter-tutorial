@@ -29,9 +29,17 @@ class Auth implements FilterInterface
             return redirect()->to(site_url('/'));
         } else if ($arguments){
             $isAdmin = session('admin');
+            $profile = session('profile');
             if ($arguments[0]=='admin' && !$isAdmin){
                 $response = \Config\Services::response();
                 return $response->setStatusCode(403);
+            }
+            if ($arguments[0]=='access'){
+                $module = @$arguments[1];
+                if (@$arguments[2]>$profile["access"]){
+                    $response = \Config\Services::response();
+                    return $response->setStatusCode(403);
+                }
             }
         }
 

@@ -41,6 +41,7 @@ abstract class BaseController extends Controller
     protected $model = null;
     protected $fields = [];
     protected $errors = null;
+    protected $route = '';
 
     /**
      * Constructor.
@@ -119,15 +120,18 @@ abstract class BaseController extends Controller
             }
             $filterQuery = "{$group}_{$field}";
             $value = $this->request->getVar($filterQuery);
-            if ($value){
-                $query = $query->like("$tableField",$value);
-            }
             $filters[$field]["value"] = $value;
             $filters[$field]["name"] = $filterQuery;
             if (@$config["options"]){
                 $filters[$field]["control"] = "form_dropdown";
                 $filters[$field]["options"] = ([""=>"All"])+$config["options"];
                 $filters[$field]["selected"] = $value ? [$value] : [];
+                if ($value){
+                    $query = $query->where("$tableField",$value);
+                }
+            }
+            else if ($value){
+                $query = $query->like("$tableField",$value);
             }
         }
         return $filters;
@@ -161,16 +165,21 @@ abstract class BaseController extends Controller
         );
     }
 
-    protected function actionColumns($url){
-        return [
-            ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => "$url/view/{id}"], "content" => '👁'],
-            ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => "$url/edit/{id}"], "content" => '✏️'],
-            ["tag" => "a", "attributes" => [ 
+    protected function actionColumns($route){
+        $actions = [];
+        $actions[] =  ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => "/$route/view/{id}"], "content" => '👁'];
+        $profile = session('profile');
+        if (@$profile["access"]>=2){
+            $actions[] = ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => "/$route/edit/{id}"], "content" => '✏️'];
+        }
+        if (@$profile["access"]>=4){
+            $actions[] = ["tag" => "a", "attributes" => [ 
                 'class' => 'px-sm-1', 
-                'href' => "$url/delete/{id}",
+                'href' => "/$route/delete/{id}",
                 'onclick' => "return confirm('Are you sure you want to delete this item?')"
-            ], "content" => '🗑'],
-        ];
+            ], "content" => '🗑'];
+        };
+        return $actions;
     }
 
     protected function indexColumns($route, $group){
