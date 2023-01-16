@@ -487,9 +487,14 @@
         * Remove unused views 
     * Generalize methods for `index`, `edit`, `new` and `delete`
         * Create default methods in BaseController and remove custom ones in each Controller.
-
-
-
+* Setup module permissions model and controller
+    * Create new migration for `permissions`:
+        * assing modules, access level for each user type (profile)
+    * Update UserData seeder to add Permissions for each user type 
+    * Create new Permissions model
+    * Create Permissions controller
+    * Create routes with `auth:access` filter for all operations
+    * Add Permissions to the main menu
 
 
 ## What is CodeIgniter?

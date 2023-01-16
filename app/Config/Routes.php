@@ -75,6 +75,22 @@ $routes->group('', ['filter' => 'auth:access,usertypes,3'], static function ($ro
 $routes->group('', ['filter' => 'auth:access,usertypes,4'], static function ($routes) {
     $routes->get('/usertypes/delete/(:num)', 'UserTypes::delete/$1');
 });
+$routes->group('', ['filter' => 'auth:access,permissions,1'], static function ($routes) {
+    $routes->get('/permissions', 'Permissions::index');
+    $routes->get('/permissions/view/(:num)', 'Permissions::view/$1');
+});
+$routes->group('', ['filter' => 'auth:access,permissions,2'], static function ($routes) {
+    $routes->get('/permissions/edit/(:num)', 'Permissions::edit/$1');
+    $routes->post('/permissions/edit/(:num)', 'Permissions::update/$1');
+});
+$routes->group('', ['filter' => 'auth:access,permissions,3'], static function ($routes) {
+    $routes->get('/permissions/new', 'Permissions::new');
+    $routes->post('/permissions/new', 'Permissions::create/$1');
+});
+$routes->group('', ['filter' => 'auth:access,permissions,4'], static function ($routes) {
+    $routes->get('/permissions/delete/(:num)', 'Permissions::delete/$1');
+});
+
 
 /*
  * --------------------------------------------------------------------

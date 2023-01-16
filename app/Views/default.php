@@ -10,7 +10,8 @@
         <a  class="p-2 text-dark" href="/" >Home</a>
         <?php if(@session('profile')["access"]>=1) { ?>
             <a class="p-2 text-dark" href="/users/" >Users</a>
-            <a class="p-2 text-dark" href="/usertypes/" >User Types</a>
+            <a class="p-2 text-dark" href="/usertypes/" >Profiles</a>
+            <a class="p-2 text-dark" href="/permissions/" >Permissions</a>
         <?php } ?>
       </nav>
       <?php if(session('auth')) { ?>

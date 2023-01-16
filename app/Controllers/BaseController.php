@@ -283,6 +283,11 @@ abstract class BaseController extends Controller
         return "<script>document.location.replace($loc);</script>";
     }
 
+    function getRules($fields){
+        $rules = $this->model->getValidationRules(['only'=>$fields]);
+        return $rules;
+    }
+
     public function index()
     {
         $this->prepareFields();
@@ -315,17 +320,7 @@ abstract class BaseController extends Controller
 
     function update($id){
         $fields = $this->editFields;
-        $has_password = $this->request->getVar('password');
-        if (!$has_password){
-            $fields = array_diff($fields,['password','repeat_password']);
-        }
-        $rules = $this->model->getValidationRules(['only'=>$fields]);
-        if ($has_password){
-            $rules['repeat_password'] = [
-                "rules" => 'matches[password]',
-                "label" => "Repeat password"
-            ];
-        }
+        $rules = $this->getRules($fields);
         $result = $this->doUpdate($id,$fields,$rules);
         if (!$result){
             return $this->edit($id);
@@ -339,15 +334,10 @@ abstract class BaseController extends Controller
         return $this->layout('form',[
             'route' => $this->route,
             'fields' => $fields,
-            'title' => 'Create User',
+            'title' => "Create $this->entityName",
             'errors' => $this->errors,
             'item'=>$item
         ]);
-    }
-
-    function getRules($fields){
-        $rules = $this->model->getValidationRules(['only'=>$fields]);
-        return $rules;
     }
 
     function create(){

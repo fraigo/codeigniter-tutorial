@@ -10,8 +10,9 @@ class UsersData extends Seeder
     {
         // clear data
         $this->db->table('users')->truncate(); 
+        $this->db->table('permissions')->truncate(); 
         $this->db->table('user_types')->truncate(); 
-
+        
         // User types
         $this->db->table('user_types')->insert([
             "id" => 1,
@@ -37,6 +38,55 @@ class UsersData extends Seeder
         $this->db->table('user_types')->insert([
             "id" => 4,
             "name" => "Admin",
+            "access" => 4,
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s")
+        ]);
+
+        $this->db->table('permissions')->insert([
+            "id" => 1,
+            "user_type_id" => 1,
+            "module" => "users",
+            "access" => 1,
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s")
+        ]);
+        $this->db->table('permissions')->insert([
+            "id" => 2,
+            "user_type_id" => 2,
+            "module" => "users",
+            "access" => 2,
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s")
+        ]);
+        $this->db->table('permissions')->insert([
+            "id" => 3,
+            "user_type_id" => 3,
+            "module" => "users",
+            "access" => 3,
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s")
+        ]);
+        $this->db->table('permissions')->insert([
+            "id" => 4,
+            "user_type_id" => 4,
+            "module" => "users",
+            "access" => 4,
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s")
+        ]);
+        $this->db->table('permissions')->insert([
+            "id" => 5,
+            "user_type_id" => 4,
+            "module" => "usertypes",
+            "access" => 4,
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s")
+        ]);
+        $this->db->table('permissions')->insert([
+            "id" => 6,
+            "user_type_id" => 4,
+            "module" => "permissions",
             "access" => 4,
             "created_at" => date("Y-m-d H:i:s"),
             "updated_at" => date("Y-m-d H:i:s")
