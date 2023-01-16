@@ -8,6 +8,10 @@ class Users extends BaseController
 {
     protected $modelName = 'App\Models\Users';
     protected $route = "users";
+    protected $entityName = 'User';
+    protected $entityGroup = 'Users';
+    protected $viewFields = ['id','name','email','user_type','updated_at','login_at'];
+    protected $editFields = ['name','email','user_type','password','repeat_password'];
     protected $fields = [
         "id" => [
             "label" => "ID",
@@ -23,41 +27,42 @@ class Users extends BaseController
             "sort" => true,
             "filter" => true
         ],
+        "user_type" => [
+            "label" => "Profile",
+            "filter" => true
+        ],
+        "password" => [
+            "label" => "Password",
+            "hidden" => true,
+            "type" => "password",
+            "field" => "",
+        ],
+        "repeat_password" => [
+            "field" => "",
+            "label" => "Repeat Password",
+            "type" => "password",
+            "hidden" => true,
+        ],
         "updated_at" => [
             "label" => "Last Update",
-            "sort" => true
+            "sort" => true,
         ],
         "login_at" => [
             "label" => "Last Login"
-        ],
-        "user_type" => [
-            "label" => "User Type",
-            "hidden" => true
-        ],
-        "user_type_name" => [
-            "field" => "user_types.name",
-            "label" => "User Type",
-            "sort" => true,
-            "filter" => true
         ]
     ];
-
+    
     protected function getQueryModel(){
         $query = parent::getQueryModel();
         $query->join('user_types','user_types.id=users.user_type');
         return $query;
     }
+
+    protected function prepareFields($keys=null){
+        $this->fields["user_type"]["options"] = $this->getUserTypes();
+        return parent::prepareFields($keys);
+    }
     
-    public function index()
-    {
-        return $this->table("Users", $this->route);
-    }
-
-    function view($id){
-        $item = $this->getModelById($id);
-        return $this->parserLayout('users/view',['item'=>[$item],'title'=>'View User','editurl' => '/users/edit/'.$item['id']]);
-    }
-
     private function getUserTypes(){
         $userTypes = new \App\Models\UserTypes();
         $result = [];
@@ -67,14 +72,13 @@ class Users extends BaseController
         return $result;
     }
 
-    function edit($id){
-        $item = $this->getModelById($id);
-        $item['password'] = '';
-        return $this->layout('users/form',[
-            'item'=>$item, 
-            'userTypes'=> $this->getUserTypes(),
-            'errors'=>$this->errors,
-            'title'=>'Edit User']);
+    function getRules($fields){
+        $rules = $this->model->getValidationRules(['only'=>$fields]);
+        $rules['repeat_password'] = [
+            "rules" => 'matches[password]',
+            "label" => "Repeat password"
+        ];
+        return $rules;
     }
 
     function prepareData($data){
@@ -82,49 +86,6 @@ class Users extends BaseController
             $data["password"] = md5($data["password"]);
         }
         return $data;
-    }
-
-    function update($id){
-        $has_password = $this->request->getVar('password');
-        $fields = ['name','email','user_type'];
-        if ($has_password){
-            $fields = array_merge($fields,['password','repeat_password']);
-        }
-        $rules = $this->model->getValidationRules(['only'=>$fields]);
-        if ($has_password){
-            $rules['repeat_password'] = 'matches[password]';
-        }
-        $result = $this->doUpdate($id, $fields,$rules);
-        if (!$result){
-            return $this->edit($id);
-        }
-        return $this->response->redirect('/users/edit/'.$id);
-    }
-
-    function new(){
-        $item = [];
-        return $this->layout('users/form',[
-            'title' => 'Create User',
-            'userTypes'=> $this->getUserTypes(),
-            'item'=>$item
-        ]);
-    }
-
-    function create(){
-        $fields = ['name','email','user_type','password','repeat_password'];
-        $rules = $this->model->getValidationRules(['only'=>$fields]);
-        $rules['repeat_password'] = 'matches[password]';
-        $id = $this->doCreate($fields,$rules);
-        if (!$id){
-            return $this->new();
-        }
-        return $this->response->redirect('/users/edit/'.$id);
-    }
-
-    function delete($id){
-        $item = $this->getModelById($id);
-        $this->model->delete($id);
-        return redirect()->back();
     }
 
 }

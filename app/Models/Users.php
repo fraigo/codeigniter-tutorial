@@ -44,7 +44,7 @@ class Users extends BaseModel
             'rules' => 'required|min_length[6]|password_strength'
         ],
         'user_type' => [
-            'label' => 'User Type',
+            'label' => 'Profile',
             'rules' => 'required|greater_than_equal_to[0]'
         ],
     ];

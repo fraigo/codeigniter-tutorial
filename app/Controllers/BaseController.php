@@ -38,7 +38,11 @@ abstract class BaseController extends Controller
     protected $helpers = ['html','array'];
 
     protected $modelName = '';
+    protected $entityName = 'User';
+    protected $entityGroup = 'Users';
     protected $model = null;
+    protected $viewFields = [];
+    protected $editFields = [];
     protected $fields = [];
     protected $errors = null;
     protected $route = '';
@@ -93,9 +97,22 @@ abstract class BaseController extends Controller
         ]);
     }
 
+    protected function prepareFields($keys=null){
+        $result = [];
+        foreach($this->fields as $fld=>$cfg){
+            if (!$keys || in_array($fld,$keys)){
+                $result[$fld] = $cfg;
+            }
+        }
+        return $result;
+    }
+
     protected function selectFields(){
         $fields = [];
         foreach($this->fields as $fld=>$config){
+            if (@$config["field"]===""){
+                continue;
+            }
             if (@$config["field"]){
                 $fld = $config["field"]." as $fld";
             } else {
@@ -259,6 +276,94 @@ abstract class BaseController extends Controller
         }
         $id = $this->model->insert($data);
         return $id;
+    }
+
+    protected function replaceLocation($location){
+        $loc = json_encode($location);
+        return "<script>document.location.replace($loc);</script>";
+    }
+
+    public function index()
+    {
+        $this->prepareFields();
+        return $this->table($this->entityGroup, $this->route);
+    }
+
+    function view($id){
+        $item = $this->getModelById($id);
+        $fields = $this->prepareFields($this->viewFields);
+        return $this->layout("view",[
+            'item'=>$item,
+            'fields'=>$fields,
+            'title'=>"View $this->entityName",
+            'editurl' => "/$this->route/edit/{$item['id']}"
+        ]);
+    }
+
+    
+    function edit($id){
+        $item = $this->getModelById($id);
+        $fields = $this->prepareFields($this->editFields);
+        return $this->layout('form',[
+            'item'=>$item, 
+            'route'=> $this->route,
+            'fields'=> $fields,
+            'errors'=>$this->errors,
+            'title'=>"Edit $this->entityName"
+        ]);
+    }
+
+    function update($id){
+        $fields = $this->editFields;
+        $has_password = $this->request->getVar('password');
+        if (!$has_password){
+            $fields = array_diff($fields,['password','repeat_password']);
+        }
+        $rules = $this->model->getValidationRules(['only'=>$fields]);
+        if ($has_password){
+            $rules['repeat_password'] = [
+                "rules" => 'matches[password]',
+                "label" => "Repeat password"
+            ];
+        }
+        $result = $this->doUpdate($id,$fields,$rules);
+        if (!$result){
+            return $this->edit($id);
+        }
+        return $this->replaceLocation("/$this->route/edit/$id");
+    }
+
+    function new(){
+        $item = [];
+        $fields = $this->prepareFields($this->editFields);
+        return $this->layout('form',[
+            'route' => $this->route,
+            'fields' => $fields,
+            'title' => 'Create User',
+            'errors' => $this->errors,
+            'item'=>$item
+        ]);
+    }
+
+    function getRules($fields){
+        $rules = $this->model->getValidationRules(['only'=>$fields]);
+        return $rules;
+    }
+
+    function create(){
+        $fields = $this->editFields;
+        $rules = $this->getRules($fields);
+        $id = $this->doCreate($fields,$rules);
+        if (!$id){
+            return $this->new();
+        }
+        return $this->replaceLocation("/$this->route/edit/$id");
+    }
+
+    function delete($id){
+        $item = $this->getModelById($id);
+        $this->model->delete($id);
+        return redirect()->back();
     }
 
 }

@@ -475,7 +475,19 @@
         * Separate routes by route name and access levels
         * Eg: `auth:access,users,1` for routes reading users (`users/index`,`users/view`)
     * Modify views to hide links to higher level routes
-    
+* Generalize view and edit/create forms
+    * Setup field configuration 
+    * Select specific fields for view/edit/create views
+    * Create base views:
+        * View item (`app/Vies/view.php`) 
+        * Edit/create item (`app/Views/form.php`) 
+    * Change view to base views in Controllers:
+        * Change `users/view` and `usertypes/view` to `view` 
+        * Change `users/form` and `usertypes/form` to `form`
+        * Remove unused views 
+    * Generalize methods for `index`, `edit`, `new` and `delete`
+        * Create default methods in BaseController and remove custom ones in each Controller.
+
 
 
 
