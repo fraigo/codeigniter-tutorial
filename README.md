@@ -180,6 +180,7 @@
 * Use and extend the form helper
     * Create `app/Helpers/form_helper.php` to additional form utilities 
         * `form_item($config)` container for a label + input + error message
+        * Implement readonly and disabled attributes
     * Load the form helper: `helper('form')`
     * In `content` section, change HTML form content to PHP calls:
         * Open form: `echo form_open('/auth/login');`

@@ -16,6 +16,8 @@
         if (@$cfg["options"]){
             echo form_item([
                 'label'     => $cfg["label"],
+                'disabled'   => @$cfg["disabled"],
+                'readonly'   => @$cfg["readonly"],
                 'name'      => $fld,
                 'id'        => $fld,
                 'options'   => ([""=>''])+$fields[$fld]["options"],
@@ -25,6 +27,8 @@
         } else {
             echo form_item([
                 'label'     => $cfg["label"],
+                'disabled'   => @$cfg["disabled"],
+                'readonly'   => @$cfg["readonly"],
                 'type'      => @$cfg["type"],
                 'name'      => $fld,
                 'id'        => $fld,

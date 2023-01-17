@@ -2,6 +2,12 @@
 
 function form_item($config,$control="form_input",$class="form-item"){
     $id = @$config["id"];
+    if (@$config["disabled"]===null){
+        unset($config["disabled"]);
+    }
+    if (@$config["readonly"]===null){
+        unset($config["readonly"]);
+    }
     $label = @$config["label"];
     $error = @$config['errors'] ? "<div class='alert alert-danger p-1 mt-1'>".htmlentities(@$config['errors'])."</div>" : '';
     $errors = "<div class=\"form-error\">$error</div>";
@@ -43,6 +49,7 @@ function form_filters($filters=[],$title="Filters"){
     $content[] = '<div class="collapse filterCollapse" ><div class="d-flex flex-wrap">';
     $inputs = [];
     foreach($filters as $field=>$cfg){
+        if (@$cfg["hidden"]) continue;
         $inputs[] = $cfg["name"];
         $control = @$cfg["control"]?:"form_input";
         $item = [
