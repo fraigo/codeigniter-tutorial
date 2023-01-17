@@ -512,8 +512,15 @@
         * Create action in table view
         * View action in main menu links
     * Enforce maximum access level for user editors
-
-    
+* Implement and setup Unit Testing
+    * Install `phpunit`: `composer require --dev phpunit/phpunit`
+    * Copy and rename `phpunit.xml.dist` to `phpunit.xml`
+    * Create test cases in `tests/app`
+    * Create a generic test `tests/_support/TestModel`: list, get, insert, update, delete
+    * Create a model test extending from `\Tests\Support\TestModel`
+        * Create model tests in `tests/app/Models`
+        * Filename ending with Test (eg: `UsersTest.php`)
+        * Setup properties on `setup()`
 
 
 

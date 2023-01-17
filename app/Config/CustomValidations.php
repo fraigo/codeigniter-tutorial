@@ -19,7 +19,7 @@ class CustomValidations {
         $value1 = @$data[$field1];
         $value2 = @$data[$field2];
         $id = @$data[$idField?:"id"];
-        $db = \Config\Database::connect();
+        $db = \Config\Database::connect("default");
         $result = $db->table($table)->where($field1,$value1)->where($field2,$value2)->get()->getResult();
         return $result ? $result[0]->id == $id : true;
     }
