@@ -495,6 +495,17 @@
     * Create Permissions controller
     * Create routes with `auth:access` filter for all operations
     * Add Permissions to the main menu
+* Setup Auth login to retrieve permissions
+    * Read permissions from Permissions model
+    * Store `permissions` session variable
+* Create `auth` helper
+    * Check if user has full access `is_admin()`
+    * Get profile access to modules: `profile_access($module)`
+    * Check if user has access to a module: `module_access($module, $access)`
+* Modify `Auth` filter to check access:
+    * Implement auth filter for `admin` with `is_admin()` 
+    * Implement `permissions` auth filter with `module_access()`
+
 
 
 ## What is CodeIgniter?

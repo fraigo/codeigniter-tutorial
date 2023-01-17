@@ -37,6 +37,10 @@ class Auth extends BaseController
         }
         $userTypes = new \App\Models\UserTypes();
         $userType = $userTypes->find($user["user_type"]);
+        $perm = new \App\Models\Permissions();
+        $permissions = $perm->select(['module','access'])
+            ->where("user_type_id",$user["user_type"])
+            ->findAll();
         $this->model->update($user["id"],[
             "login_at" => gmdate("Y-m-d H:i:s")
         ]);
@@ -44,6 +48,7 @@ class Auth extends BaseController
         $session->set('auth', $user);
         $session->set('admin', $userType["access"]==4);
         $session->set('profile', $userType);
+        $session->set('permissions', array_column($permissions,"access","module"));
         return $this->response->redirect($this->loginRedirect);
     }
 

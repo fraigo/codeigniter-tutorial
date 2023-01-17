@@ -28,15 +28,15 @@ class Auth implements FilterInterface
         if (!session('auth')){
             return redirect()->to(site_url('/'));
         } else if ($arguments){
-            $isAdmin = session('admin');
-            $profile = session('profile');
-            if ($arguments[0]=='admin' && !$isAdmin){
+            helper('auth');
+            if ($arguments[0]=='admin' && is_admin()){
                 $response = \Config\Services::response();
                 return $response->setStatusCode(403);
             }
             if ($arguments[0]=='access'){
                 $module = @$arguments[1];
-                if (@$arguments[2]>$profile["access"]){
+                $access = @$arguments[2];
+                if (!module_access($module, $access)){
                     $response = \Config\Services::response();
                     return $response->setStatusCode(403);
                 }
