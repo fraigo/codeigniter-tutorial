@@ -67,31 +67,7 @@ class UsersData extends Seeder
             "created_at" => date("Y-m-d H:i:s"),
             "updated_at" => date("Y-m-d H:i:s")
         ]);
-        $this->db->table('permissions')->insert([
-            "id" => 4,
-            "user_type_id" => 4,
-            "module" => "users",
-            "access" => 4,
-            "created_at" => date("Y-m-d H:i:s"),
-            "updated_at" => date("Y-m-d H:i:s")
-        ]);
-        $this->db->table('permissions')->insert([
-            "id" => 5,
-            "user_type_id" => 4,
-            "module" => "usertypes",
-            "access" => 4,
-            "created_at" => date("Y-m-d H:i:s"),
-            "updated_at" => date("Y-m-d H:i:s")
-        ]);
-        $this->db->table('permissions')->insert([
-            "id" => 6,
-            "user_type_id" => 4,
-            "module" => "permissions",
-            "access" => 4,
-            "created_at" => date("Y-m-d H:i:s"),
-            "updated_at" => date("Y-m-d H:i:s")
-        ]);
-
+        
         $this->db->table('users')->insert([
             "id" => 1001,
             "name" => "Admin",
@@ -109,6 +85,24 @@ class UsersData extends Seeder
             "created_at" => date("Y-m-d H:i:s"),
             "updated_at" => date("Y-m-d H:i:s"),
             "user_type" => 1, // regular user
+        ]);
+        $this->db->table('users')->insert([
+            "id" => 1003,
+            "name" => "Editor",
+            "email" => "editor@example.com",
+            "password" => md5("Creator.123"),
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s"),
+            "user_type" => 2, // regular user
+        ]);
+        $this->db->table('users')->insert([
+            "id" => 1004,
+            "name" => "Creator",
+            "email" => "creator@example.com",
+            "password" => md5("Creator.123"),
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s"),
+            "user_type" => 3, // regular user
         ]);
 
     }

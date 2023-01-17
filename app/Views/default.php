@@ -1,3 +1,4 @@
+<?php helper('auth'); ?>
 <?= $this->extend('layouts/default') ?>
 <?= $this->section('head') ?>
 <link rel="stylesheet" href="/css/style.css" >
@@ -8,9 +9,13 @@
       <div class="d-flex justify-content-center align-items-center">
       <nav class="my-2 my-md-0 mr-md-3">
         <a  class="p-2 text-dark" href="/" >Home</a>
-        <?php if(@session('profile')["access"]>=1) { ?>
+        <?php if(module_access("users",1)) { ?>
             <a class="p-2 text-dark" href="/users/" >Users</a>
+        <?php } ?>
+        <?php if(module_access("usertypes",1)) { ?>
             <a class="p-2 text-dark" href="/usertypes/" >Profiles</a>
+        <?php } ?>
+        <?php if(module_access("permissions",1)) { ?>
             <a class="p-2 text-dark" href="/permissions/" >Permissions</a>
         <?php } ?>
       </nav>

@@ -10,7 +10,7 @@ class Permissions extends BaseController
     protected $entityGroup = "Permissions";
     protected $viewFields = [];
     protected $editFields = ['user_type_id','module','access'];
-    protected $fields = [
+    public $fields = [
         'id' => [
             "label" => "ID",
             "hidden" => true
@@ -34,14 +34,13 @@ class Permissions extends BaseController
                 2 => "Edit",
                 3 => "Create",
                 4 => "Full"
-            ] 
+            ]
         ]
     ];
 
     protected function prepareFields($keys=null){
         $this->fields["user_type_id"]["options"] = $this->getUserTypes();
         $this->fields["module"]["options"] = [
-            "*" => "All",
             "users" => "Users",
             "usertypes" => "Profiles",
             "permissions" => "Permissions"
@@ -54,18 +53,6 @@ class Permissions extends BaseController
         $result = [];
         foreach($userTypes->findAll() as $row){
             $result[$row["id"]]=$row["name"];
-        }
-        return $result;
-    }
-
-    private function getModules(){
-        $modules = $this->model
-            ->distinct()
-            ->select("module as label, module as value")
-            ->findAll();
-        $result = [];
-        foreach($modules as $row){
-            $result[$row["value"]]=$row["label"];
         }
         return $result;
     }

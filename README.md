@@ -505,6 +505,14 @@
 * Modify `Auth` filter to check access:
     * Implement auth filter for `admin` with `is_admin()` 
     * Implement `permissions` auth filter with `module_access()`
+* Implement permissions in Controllers and views
+    * Use `auth` helper to check module access
+        * Edit actions in table view and item detail view
+        * Create action in table view
+        * View action in main menu links
+    * Enforce maximum access level for user editors
+
+    
 
 
 

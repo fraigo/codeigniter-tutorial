@@ -12,7 +12,7 @@ class Users extends BaseController
     protected $entityGroup = 'Users';
     protected $viewFields = ['id','name','email','user_type','updated_at','login_at'];
     protected $editFields = ['name','email','user_type','password','repeat_password'];
-    protected $fields = [
+    public $fields = [
         "id" => [
             "label" => "ID",
             "hidden" => true
@@ -54,17 +54,26 @@ class Users extends BaseController
     
     protected function getQueryModel(){
         $query = parent::getQueryModel();
+        $access = profile_access("users");
+        if (!is_admin()){
+            $query->where("user_types.access<=$access");
+        }
         $query->join('user_types','user_types.id=users.user_type');
         return $query;
     }
 
     protected function prepareFields($keys=null){
         $this->fields["user_type"]["options"] = $this->getUserTypes();
+        $action = current_url(true)->getSegment(2);
         return parent::prepareFields($keys);
     }
     
     private function getUserTypes(){
         $userTypes = new \App\Models\UserTypes();
+        if (!is_admin()){
+            $access = profile_access("users");
+            $userTypes->where("access<=$access");
+        }
         $result = [];
         foreach($userTypes->findAll() as $row){
             $result[$row["id"]]=$row["name"];
@@ -74,10 +83,18 @@ class Users extends BaseController
 
     function getRules($fields){
         $rules = $this->model->getValidationRules(['only'=>$fields]);
+        $action = current_url(true)->getSegment(2);
         $rules['repeat_password'] = [
             "rules" => 'matches[password]',
             "label" => "Repeat password"
         ];
+        if ($action=="edit"){
+            $password = $this->request->getVar('password');
+            if (!$password){
+                unset($rules["password"]);
+                unset($rules["repeat_password"]);
+            }
+        }
         return $rules;
     }
 

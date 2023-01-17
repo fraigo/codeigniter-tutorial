@@ -35,7 +35,7 @@ abstract class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = ['html','array'];
+    protected $helpers = ['html','array','auth'];
 
     protected $modelName = '';
     protected $entityName = 'User';
@@ -43,7 +43,7 @@ abstract class BaseController extends Controller
     protected $model = null;
     protected $viewFields = [];
     protected $editFields = [];
-    protected $fields = [];
+    public $fields = [];
     protected $errors = null;
     protected $route = '';
 
@@ -141,7 +141,7 @@ abstract class BaseController extends Controller
             $filters[$field]["name"] = $filterQuery;
             if (@$config["options"]){
                 $filters[$field]["control"] = "form_dropdown";
-                $filters[$field]["options"] = ([""=>"All"])+$config["options"];
+                $filters[$field]["options"] = ([""=>""])+$config["options"];
                 $filters[$field]["selected"] = $value ? [$value] : [];
                 if ($value){
                     $query = $query->where("$tableField",$value);
@@ -185,11 +185,10 @@ abstract class BaseController extends Controller
     protected function actionColumns($route){
         $actions = [];
         $actions[] =  ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => "/$route/view/{id}"], "content" => '👁'];
-        $profile = session('profile');
-        if (@$profile["access"]>=2){
+        if (module_access($route,2)){
             $actions[] = ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => "/$route/edit/{id}"], "content" => '✏️'];
         }
-        if (@$profile["access"]>=4){
+        if (module_access($route,4)){
             $actions[] = ["tag" => "a", "attributes" => [ 
                 'class' => 'px-sm-1', 
                 'href' => "/$route/delete/{id}",
@@ -223,7 +222,7 @@ abstract class BaseController extends Controller
         return array_merge($actionCol,$indexCols);
     }
 
-    protected function table($title, $route)
+    protected function getTable()
     {
         $pagerGroup = $this->model->table;
         $pageSize = @$_GET["pagesize_$pagerGroup"]?:10;
@@ -231,18 +230,20 @@ abstract class BaseController extends Controller
         $filters = $this->processFilters($query,$pagerGroup);
         $this->processSort($query,$pagerGroup);
         $items = $query->paginate($pageSize,$pagerGroup);
-        $columns = $this->indexColumns($route,$pagerGroup);
+        $columns = $this->indexColumns($this->route,$pagerGroup);
 
-        return $this->layout('table',[
-            "title" => $title, // page $title
+        $data = [
+            "title" => $this->entityGroup, // page $title
             "items" => $items,
-            "route" => $route,
+            "route" => $this->route,
             "columns" => $columns,
             "filters" => $filters,
             "pager" => $this->model->pager,
             "pagesize" => $pageSize,
             "pager_group" => $pagerGroup
-        ]);
+        ];
+
+        return $data;
     }
 
     function prepareData($data){
@@ -291,13 +292,14 @@ abstract class BaseController extends Controller
     public function index()
     {
         $this->prepareFields();
-        return $this->table($this->entityGroup, $this->route);
+        return $this->layout('table',$this->getTable());
     }
 
     function view($id){
         $item = $this->getModelById($id);
         $fields = $this->prepareFields($this->viewFields);
         return $this->layout("view",[
+            'route'=>$this->route,
             'item'=>$item,
             'fields'=>$fields,
             'title'=>"View $this->entityName",

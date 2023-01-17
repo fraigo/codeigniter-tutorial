@@ -10,7 +10,7 @@ class UserTypes extends BaseController
     protected $entityGroup = "Profiles";
     protected $viewFields = ['id','name','access'];
     protected $editFields = ['name','access'];
-    protected $fields = [
+    public $fields = [
         'id' => [
             "label" => "ID",
             "hidden" => true
@@ -32,5 +32,23 @@ class UserTypes extends BaseController
             ] 
         ]
     ];
+    
+    function view($id){
+        $item = $this->getModelById($id);
+        $fields = $this->prepareFields($this->viewFields);
+        $perm = new \App\Controllers\Permissions();
+        $perm->initController($this->request, $this->response, $this->logger);
+        $_REQUEST["permissions_user_type_id"] = 1;
+        $perm->prepareFields();
+        $perm->fields['user_type_id']["hidden"] = true;
+        $table = view('table',$perm->getTable());
+        return $this->layout("view",[
+            'item'=>$item,
+            'fields'=>$fields,
+            'title'=>"View $this->entityName",
+            'editurl' => "/$this->route/edit/{$item['id']}",
+            'details' => $table
+        ]);
+    }
 
 }
