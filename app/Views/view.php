@@ -22,6 +22,6 @@
             ?></div>
         </div>
         <?php } ?>
-        <?php echo @$details ?>
     </div>
+    <?php echo @$details ?>
 </header>

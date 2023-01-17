@@ -1,5 +1,5 @@
 <header class="header">
-    <div class="container-fluid">
+    <div class="<?=@$container?:'container'?>">
     <div class="d-flex justify-content-between mb-4">
         <h2><?=$title?></h2>
         <div>

@@ -69,6 +69,10 @@ abstract class BaseController extends Controller
         return $item;
     }
 
+    protected function getDetails($data){
+        return null;
+    }
+
     protected function getModelById($id){
         $table = $this->model->table;
         $item = $this->getQueryModel()
@@ -81,6 +85,9 @@ abstract class BaseController extends Controller
     }
 
     protected function layout($view, $data=[], $layout='default'){ 
+        if (!@$data["details"]){
+            $data["details"] = $this->getDetails($data);
+        }
         return view($layout, [
             'content'=> view($view,$data)
         ]);
@@ -222,7 +229,7 @@ abstract class BaseController extends Controller
         return array_merge($actionCol,$indexCols);
     }
 
-    protected function getTable()
+    protected function getTable($container=null)
     {
         $pagerGroup = $this->model->table;
         $pageSize = @$_GET["pagesize_$pagerGroup"]?:10;
@@ -240,7 +247,8 @@ abstract class BaseController extends Controller
             "filters" => $filters,
             "pager" => $this->model->pager,
             "pagesize" => $pageSize,
-            "pager_group" => $pagerGroup
+            "pager_group" => $pagerGroup,
+            "container" => $container,
         ];
 
         return $data;
@@ -292,7 +300,7 @@ abstract class BaseController extends Controller
     public function index()
     {
         $this->prepareFields();
-        return $this->layout('table',$this->getTable());
+        return $this->layout('table',$this->getTable("container-lg"));
     }
 
     function view($id){

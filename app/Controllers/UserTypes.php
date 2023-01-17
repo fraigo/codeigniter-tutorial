@@ -32,23 +32,17 @@ class UserTypes extends BaseController
             ] 
         ]
     ];
-    
-    function view($id){
-        $item = $this->getModelById($id);
-        $fields = $this->prepareFields($this->viewFields);
+
+    function getDetails($data){
+        if (!@$data["item"]){
+            return null;
+        }
         $perm = new \App\Controllers\Permissions();
         $perm->initController($this->request, $this->response, $this->logger);
-        $_REQUEST["permissions_user_type_id"] = 1;
+        $_REQUEST["permissions_user_type_id"] = $data["item"]['id'];
         $perm->prepareFields();
         $perm->fields['user_type_id']["hidden"] = true;
-        $table = view('table',$perm->getTable());
-        return $this->layout("view",[
-            'item'=>$item,
-            'fields'=>$fields,
-            'title'=>"View $this->entityName",
-            'editurl' => "/$this->route/edit/{$item['id']}",
-            'details' => $table
-        ]);
+        return view('table',$perm->getTable());
     }
 
 }
