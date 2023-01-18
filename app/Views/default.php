@@ -4,28 +4,40 @@
 <link rel="stylesheet" href="/css/style.css" >
 <?= $this->endSection() ?>
 <?= $this->section('header') ?>
-<div class="d-flex flex-column flex-md-row align-items-sm-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-      <h5 class="my-0 mr-md-auto font-weight-normal" style="line-height:2em;max-width: 200px;">My Web Application</h5>
-      <div class="d-flex justify-content-center align-items-center">
-      <nav class="my-2 my-md-0 mr-md-3">
-        <a  class="p-2 text-dark" href="/" >Home</a>
+<nav class="navbar navbar-expand d-flex flex-column flex-sm-row align-items-sm-center border-bottom box-shadow mb-3">
+  <a class="navbar-brand" >My Web Application</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+    <ul class="navbar-nav ml-auto mr-auto mr-sm-1">
+      <li class="nav-item active">
+        <a class="nav-link text-dark" href="/">Home</a>
+      </li>
+      <?php if(module_access("users",1)) { ?>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown03">
         <?php if(module_access("users",1)) { ?>
-            <a class="p-2 text-dark" href="/users/" >Users</a>
+          <a class="dropdown-item" href="/users">Users</a>
         <?php } ?>
-        <?php if(module_access("usertypes",1)) { ?>
-            <a class="p-2 text-dark" href="/usertypes/" >Profiles</a>
+        <?php if(module_access("profiles",1)) { ?>
+          <a class="dropdown-item" href="/usertypes">Profiles</a>
         <?php } ?>
         <?php if(module_access("permissions",1)) { ?>
-            <a class="p-2 text-dark" href="/permissions/" >Permissions</a>
+          <a class="dropdown-item" href="/permissions">Permissions</a>
         <?php } ?>
-      </nav>
+        </div>
+      </li>
+      <?php } ?>
+      <li class="ml-2">
       <?php if(session('auth')) { ?>
         <a class="btn menu-login btn-outline-primary" href="/auth/logout">Log Out</a>
       <?php } else { ?>
         <a class="btn menu-login btn-outline-primary" href="/auth/login">Log In</a>
       <?php } ?>
-      </div>
-</div>
+      </li>
+    </ul>
+</nav>
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
 <?= $content ?>

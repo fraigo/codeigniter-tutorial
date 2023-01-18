@@ -32,6 +32,7 @@ class Users extends BaseController
             "filter" => true
         ],
         "password" => [
+            "header" => "Change Password",
             "label" => "Password",
             "hidden" => true,
             "type" => "password",

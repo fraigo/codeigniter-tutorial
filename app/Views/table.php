@@ -4,7 +4,7 @@
         <h2><?=$title?></h2>
         <div>
             <?php if (module_access($route,3)) { ?>
-            <button type="button" class="btn" onclick="document.location=this.getAttribute('data-href')" data-href="/<?=$route?>/new">New</button>
+            <button type="button" class="btn btn-secondary" onclick="document.location=this.getAttribute('data-href')" data-href="/<?=$route?>/new">New</button>
             <?php } ?>
         </div>
     </div>

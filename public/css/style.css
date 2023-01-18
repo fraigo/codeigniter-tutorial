@@ -7,20 +7,6 @@ html, body {
     display: flex;
     flex-direction: column;
 }
-div.header{
-    background-color: #eee;
-    line-height: 3em;
-    padding: 0 1rem;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-@media (max-width: 767px) {
-    div.header nav{
-        flex: 1 1 100%;
-        text-align: center;
-    }
-}
 a {
     text-decoration: none;
 }
@@ -28,23 +14,15 @@ a[disabled] {
     opacity: 0.5;
     pointer-events: none;
 }
-div.header a{
-    display: inline-block;
-    margin: 0 8px;
-}
-main{
-    padding: 1rem;
-    flex: 1;
-}
-footer{
-    background-color: #444;
-    color: #eee;
-    line-height: 3em;
-    padding: 0 1rem;
-}
+
 .form-small{
     max-width: 400px;
     margin: 0 auto;
+}
+.form-header{
+    font-weight: bold;
+    margin: 1em 0;
+    font-size: 1.25rem;
 }
 .form-item{
     display: flex;
@@ -134,7 +112,7 @@ ul.pagination li.active{
     font-weight: bold;
 }
 
-@media(max-width:767px){
+@media(max-width:575px){
     .menu-login{
         position: absolute;
         right:1rem;
