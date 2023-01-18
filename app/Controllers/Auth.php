@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use CodeIgniter\Cookie\Cookie;
 
 class Auth extends BaseController
 {
@@ -45,6 +46,11 @@ class Auth extends BaseController
             "login_at" => gmdate("Y-m-d H:i:s")
         ]);
         $session = session();
+        if (@$data["remember"]){
+            $this->response->setCookie('remember_email',$data["email"],60*60*24*7);
+        } else {
+            $this->response->deleteCookie('remember_email');
+        }
         $session->set('auth', $user);
         $session->set('admin', $userType["access"]==4);
         $session->set('profile', $userType);

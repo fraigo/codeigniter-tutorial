@@ -62,6 +62,15 @@ a[disabled] {
     box-sizing: border-box;
     flex: 1;
 }
+.form-item input[type='checkbox']{
+    height: 2em;
+    width: 2em;
+    flex: 0;
+}
+.form-item input[type='checkbox'] + label{
+    margin: 0;
+    padding-left: 6px;
+}
 .form-errors{
     margin: 8px 0;
     line-height: 1.4em;

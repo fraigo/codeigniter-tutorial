@@ -525,6 +525,11 @@
     * Useful to send data to the next request, read and clear data
     * Save data using `session()->setFlashData('variable','content')`
     * Retrieve data in the next request using `session()->getFlashData('variable')`
+* Setting and reading cookies
+    * Set a cookie to remember the user email login
+    * Add a checkbox in Auth controller login `form` view with 'Remember me' label
+    * In controller, set cookie with `$this->response->setCookie('name','value'[,expirationInSeconds])`
+    * In view, load `cookie` helper and get cookie value using `get_cookie('name')`
 
 
 
