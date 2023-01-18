@@ -521,6 +521,10 @@
         * Create model tests in `tests/app/Models`
         * Filename ending with Test (eg: `UsersTest.php`)
         * Setup properties on `setup()`
+* Setup session flash variables
+    * Useful to send data to the next request, read and clear data
+    * Save data using `session()->setFlashData('variable','content')`
+    * Retrieve data in the next request using `session()->getFlashData('variable')`
 
 
 

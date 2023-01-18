@@ -324,6 +324,7 @@ abstract class BaseController extends Controller
             'route'=> $this->route,
             'fields'=> $fields,
             'errors'=>$this->errors,
+            'success' => session()->getFlashdata('success'),
             'title'=>"Edit $this->entityName"
         ]);
     }
@@ -335,6 +336,7 @@ abstract class BaseController extends Controller
         if (!$result){
             return $this->edit($id);
         }
+        session()->setFlashData('success','Update successfull');
         return $this->replaceLocation("/$this->route/edit/$id");
     }
 
@@ -345,6 +347,7 @@ abstract class BaseController extends Controller
             'route' => $this->route,
             'fields' => $fields,
             'title' => "Create $this->entityName",
+            'success' => session()->getFlashdata('success'),
             'errors' => $this->errors,
             'item'=>$item
         ]);
@@ -357,6 +360,7 @@ abstract class BaseController extends Controller
         if (!$id){
             return $this->new();
         }
+        session()->setFlashData('success','Create successfull');
         return $this->replaceLocation("/$this->route/edit/$id");
     }
 

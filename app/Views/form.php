@@ -11,6 +11,9 @@
             <button type="submit" class="btn btn-primary"><?=@$item["id"]?"Update":"Create"?></button>
         </div>
     </div>
+    <?php if (@$success){ ?>
+    <div class="alert alert-success p-1 mt-1"><?=$success?></div>
+    <?php  } ?>
     <?php
     foreach($fields as $fld=>$cfg){
         if (@$cfg["header"]){
