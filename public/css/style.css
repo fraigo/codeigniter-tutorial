@@ -175,3 +175,31 @@ table tbody tr:nth-child(2n+1){
         display: inherit !important;
     }
 }
+
+
+
+@media (prefers-color-scheme: dark) {
+
+    body{
+        background-color: #222;
+    }
+    .dropdown-menu{
+        background-color: #222;
+    }
+    body, th, td{
+        color: #fff;
+    }
+    .dropdown-item{
+        color: #fff;
+    }
+    .text-dark{
+        color: #aaa !important;
+    }
+    a.text-dark:focus, a.text-dark:hover{
+        color: #eee !important;
+    }
+    .dropdown-item:focus, .dropdown-item:hover {
+        color: #eee;
+        background-color: #444;
+    }
+}
