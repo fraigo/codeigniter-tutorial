@@ -10,6 +10,8 @@ class TestModel extends CIUnitTestCase
     protected $model = null;
     protected $insertOk = [];
     protected $insertError = [];
+    protected $updateOk = [];
+    protected $updateError = [];
     static $insertId;
 
     protected function setUp(): void
@@ -58,8 +60,17 @@ class TestModel extends CIUnitTestCase
     public function testUpdate()
     {
         $item = $this->model->where("id",static::$insertId)->first();
-        $result = $this->model->update(static::$insertId,$item);
-        $this->assertGreaterThan(0,$result,'Update Error');
+        $result = $this->model->update(static::$insertId,$this->updateOk);
+        $this->assertEquals(1,$result,'Update Error');
+    }
+
+    /**
+     * @depends testUpdate
+     */
+    public function testUpdateError()
+    {
+        $result = $this->model->update(static::$insertId,$this->updateError);
+        $this->assertEquals(0,$result,'Update Error');
     }
 
     /**

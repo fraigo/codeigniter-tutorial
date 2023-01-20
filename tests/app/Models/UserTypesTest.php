@@ -12,6 +12,10 @@ class UserTypesTest extends \Tests\Support\TestModel
     {
         parent::setUp();
         $faker = \Faker\Factory::create();
+        $item = $this->model->where('name','UserType')->first();
+        if ($item){
+            $this->model->delete($item['id']);
+        }
         $this->insertOk = [
             'name' => 'UserType',
             'access' => 1
@@ -19,6 +23,12 @@ class UserTypesTest extends \Tests\Support\TestModel
         $this->insertError = [
             'name' => 'UserType',
             'access' => null
+        ];
+        $this->updateOk = [
+            'name' => 'UserTypeUpdated',
+        ];
+        $this->updateError = [
+            'name' => null,
         ];
     }
     

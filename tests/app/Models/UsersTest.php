@@ -16,14 +16,41 @@ class UsersTest extends \Tests\Support\TestModel
         $this->insertOk = [
             'name' => 'Test Example',
             'email' => $email,
-            'password' => md5('Test.123'),
+            'password' => 'Test.123',
             'user_type' => 1,
         ];
         $this->insertError = [
             'name' => 'Test Example',
-            'email' => md5('Test.123'),
+            'email' => 'Test.123',
             'user_type' => 1,
         ];
+        $this->updateOk = [
+            'password' => 'Test.12345',
+        ];
+        $this->updateError = [
+            'name' => null,
+        ];
     }
+
+    /**
+     * @depends testInsert
+     */
+    public function testHashPasswordInsert()
+    {
+        $item = $this->model->where("id",static::$insertId)->first();
+        $plainPassword = $this->insertOk["password"];
+        $this->assertEquals($item['password'],md5($plainPassword),'Password Hash Error');
+    }
+
+    /**
+     * @depends testUpdate
+     */
+    public function testHashPasswordUpdate()
+    {
+        $item = $this->model->where("id",static::$insertId)->first();
+        $plainPassword = $this->updateOk["password"];
+        $this->assertEquals($item['password'],md5($plainPassword),'Password Hash Error');
+    }
+
     
 }

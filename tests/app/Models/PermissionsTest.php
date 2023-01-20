@@ -12,6 +12,10 @@ class PermissionsTest extends \Tests\Support\TestModel
     {
         parent::setUp();
         $faker = \Faker\Factory::create();
+        $item = $this->model->where('module','extra')->first();
+        if ($item){
+            $this->model->delete($item['id']);
+        }
         $this->insertOk = [
             'user_type_id' => 1,
             'module' => 'extra',
@@ -20,6 +24,12 @@ class PermissionsTest extends \Tests\Support\TestModel
         $this->insertError = [
             'user_type_id' => 1,
             'module' => 'extra',
+        ];
+        $this->updateOk = [
+            'module' => 'extra1',
+        ];
+        $this->updateError = [
+            'module' => null,
         ];
     }
     
