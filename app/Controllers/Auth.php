@@ -145,7 +145,7 @@ class Auth extends BaseController
         }
         $data = [
             "password_token" => "",
-            "password" => md5($data["new_password"])
+            "password" => $data["new_password"]
         ];
         $result = $this->model->update($user['id'],$data);
         if (!$result){

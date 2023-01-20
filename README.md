@@ -587,7 +587,11 @@
     * Add routes for `reset()` and `doReset()` methods in `Auth` controller:
         * Reset form view `$routes->get('/auth/reset/(:any)', 'Auth::reset/$1');`
         * Reset password processing: `$routes->post('/auth/reset/(:any)', 'Auth::doReset');`
-
+* Prepare model data before insert/update
+    * Create method `hashPassword($data)` in `User` model to implement password hashing
+    * Add event callbacks for insert/update events in `User` model:
+        * Set `beforeInsert` and `beforeUpdate` to `['hashPassword']`
+    * Remove references to password hashing in controllers
     
 
 

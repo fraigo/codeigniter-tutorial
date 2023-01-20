@@ -59,13 +59,20 @@ class Users extends BaseModel
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
+    protected $beforeInsert   = ['hashPassword'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
+    protected $beforeUpdate   = ['hashPassword'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    protected function hashPassword($data){
+        if (@$data["data"]["password"]){
+            @$data["data"]["password"] = md5($data["data"]["password"]);
+        }
+        return $data;
+    }
 
 }

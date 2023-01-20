@@ -100,9 +100,7 @@ class Users extends BaseController
     }
 
     function prepareData($data){
-        if (@$data["password"]){
-            $data["password"] = md5($data["password"]);
-        } else {
+        if (!@$data["password"]){
             unset($data["password"]);
         }
         return $data;
