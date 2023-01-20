@@ -41,6 +41,11 @@ class CreateUsers extends Migration
                 'type'           => 'DATETIME',
                 'null'           => true,
             ],
+            'password_token' => [
+                'type'           => 'VARCHAR',
+                'constraint'     => 64,
+                'null'           => true,
+            ]
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey(['email']);

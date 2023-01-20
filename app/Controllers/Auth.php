@@ -15,6 +15,10 @@ class Auth extends BaseController
         return $this->layout('auth/form',['errors'=>$this->errors],'login');
     }
 
+    public function recover(){
+        return $this->layout('auth/recovery',['errors'=>$this->errors,'success'=>session()->getFlashData('success')],'login');
+    }
+
     public function login()
     {
         $data = $this->request->getVar();
@@ -64,4 +68,49 @@ class Auth extends BaseController
         $session->set('admin', null);
         return $this->response->redirect($this->logoutRedirect);
     }
+
+    function doRecover(){
+        $data = $this->request->getVar();
+        $rules = [
+            "email" => "required|valid_email",
+        ];
+        $validation = \Config\Services::validation();
+        $validation->setRules($rules);
+        if (!$validation->run($data)){
+            $this->errors = $validation->getErrors();
+            return $this->recover();
+        }
+        $user = $this->model
+            ->where("email",$data["email"])
+            ->first();
+        $token = null;
+        if ($user){
+            $token = md5(date("Y-m-d H:i:s").rand(1000000,9999999));
+            $result = $this->model->update($user['id'],[
+                "password_token" => $token
+            ]);
+            if (!$result){
+                $this->errors = [
+                    "email" => "Cannot update user"
+                ];
+                return $this->recover();
+            }
+            helper('email');
+            $result = send_email($data["email"], "Password Recovery request", "email/recovery",[
+                "name" => $user["name"],
+                "url" => base_url()."/auth/reset/$token"
+            ]);
+            if (!$result){
+                $this->errors = [
+                    "email" => "Send Error"
+                ];
+                return $this->recover();
+            }
+
+        }
+        session()->setFlashData("success","If your email is registered, you will receive an email with account recovery instructions.");
+        return redirect()->back();
+    }
+
+
 }

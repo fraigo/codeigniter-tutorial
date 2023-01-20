@@ -8,7 +8,7 @@
         'label' => null,
         'name'      => 'email',
         'placeholder' => 'Email Address',
-        'class'     => 'form-control',
+        'class'     => 'form-control top-control',
         'id'        => 'email',
         'type'      => 'email',
         'onfocus'   => 'this.select()',
@@ -17,7 +17,7 @@
     echo form_input([
         'type' => 'password',
         'label' => null,
-        'class'     => 'form-control',
+        'class'     => 'form-control bottom-control',
         'name'      => 'password',
         'placeholder' => 'Password',
         'id'        => 'password',
@@ -38,5 +38,10 @@
         'value' => 'Log In',
         'class' => 'btn btn-primary col-12'
     ]);
+    ?>
+    <div class="text-center">
+        <a href="./recover">Forgot your password?</a>
+    </div>
+    <?
     echo form_close();
     ?>

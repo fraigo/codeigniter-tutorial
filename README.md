@@ -542,7 +542,34 @@
         * Set recipient (`$email->setTo($to)`) and subject(`$email->setSubject($subject)`)
         * Setup the message body from a view `$email->setMessage(view($view,$data))` or directly by a `string` value
         * Send message using `send()` method: `$email->send()`
-
+* Setup Auth controller to support password recovery
+    * Modify or add migration to create a new field `password_token` in `users` table
+    * Run migration to create the new field
+    * Update `app/Models/Users` model to include the new field and validations if needed
+    * Create a view for password recovery `app/Views/auth/recovery.php`
+        * Setup an `email` field to request password recovery
+        * Form action to `/auth/recovery` (POST)
+    * Create a view to generate the email recovery message (`app/Views/email/recovery.php`)
+        * Include the user `$name` and the `$link` for account recovery as parameters.
+        * You can use HTML if `$mailType` is `'html'` in `app/Config/Email.php`
+    * Update `Auth` controller to add a `recover()` method:
+        * Render view `auth/recovery`
+    * Modify `Auth` controller to create a `doRecover()` method:
+        * Read `email` value from recovery form
+        * Validate email. In any error, return the form again with errors `$this->recover()`
+        * If valid, search in user model for the email address: `$user = $this->model->where('email',$email)->first()`
+        * If a user is found, send a recovery email using the `email` helper:
+            * Recipient will be `$user['email']` 
+            * Subject is `Password Recovery`
+            * View is set to `email/recovery`
+            * Generate a password `$token` and update `password_token` field with this value in the model
+            * Include parameters like `name` and `url` for the view
+        * If `send_email()` fails (returns `false`) return to the form with error
+        * No matter whether a user is found or not, a success message will be set
+    * Modify `app/Config/Routes.php` to include :
+        * Recovery form view `$routes->get('/auth/recover', 'Auth::recover');`
+        * Recovery processing: `$routes->post('/auth/recover', 'Auth::doRecover');`
+    * Modify login form view to include a link to Recover password `/auth/recover`
 
 
 ## What is CodeIgniter?

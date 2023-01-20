@@ -20,6 +20,7 @@ class Users extends BaseModel
         'password',
         'user_type',
         'login_at',
+        'password_token'
     ];
 
     // Dates
@@ -47,6 +48,10 @@ class Users extends BaseModel
             'label' => 'Profile',
             'rules' => 'required|greater_than_equal_to[0]'
         ],
+        'password_token' => [
+            'label' => 'Password Token',
+            'rules' => 'max_length[64]'
+        ]
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
@@ -62,4 +67,5 @@ class Users extends BaseModel
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
 }
