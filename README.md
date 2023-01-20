@@ -536,6 +536,12 @@
         * `$SMTPHost`, `$SMTPPort`, `$SMTPUser`, `SSMTPPass`: To configure `smtp` protocol
         * `$SMTPCrypto` : To select which secure protocol use for `smtp`: `tls` or `ssl`
         * `$mailType`: `html` to send HTML-formatted emails, `text` for plain text emails (no format).
+    * Create email helper function
+        * Get email instance `$email = \Config\Services::email();`
+        * Setup sender `$email->setFrom('admin@examle.com', 'Admin');` (generally the same domain of the server)
+        * Set recipient (`$email->setTo($to)`) and subject(`$email->setSubject($subject)`)
+        * Setup the message body from a view `$email->setMessage(view($view,$data))` or directly by a `string` value
+        * Send message using `send()` method: `$email->send()`
 
 
 
