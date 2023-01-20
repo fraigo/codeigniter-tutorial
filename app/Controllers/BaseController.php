@@ -271,7 +271,7 @@ abstract class BaseController extends Controller
         }
         $data = $this->prepareData($data);
         $result = $this->model->update($item["id"],$data);
-        return $data;
+        return $result;
     }
 
     function doCreate($fields, $rules=null){
@@ -283,6 +283,7 @@ abstract class BaseController extends Controller
             $this->errors = $validation->getErrors();
             return false;
         }
+        $data = $this->prepareData($data);
         $id = $this->model->insert($data);
         return $id;
     }

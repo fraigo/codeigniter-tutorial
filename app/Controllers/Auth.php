@@ -19,6 +19,16 @@ class Auth extends BaseController
         return $this->layout('auth/recovery',['errors'=>$this->errors,'success'=>session()->getFlashData('success')],'login');
     }
 
+    public function reset($token){
+        $user = $this->model->where('password_token',$token)->first();
+        return $this->layout('auth/reset',[
+            'errors'=>$this->errors,
+            'success'=>session()->getFlashData('success'),
+            'token'=>$token,
+            'user'=>$user
+        ],'login');
+    }
+
     public function login()
     {
         $data = $this->request->getVar();
@@ -112,5 +122,37 @@ class Auth extends BaseController
         return redirect()->back();
     }
 
-
+    function doReset($token){
+        $data = $this->request->getVar();
+        $user = $this->model
+            ->where("password_token",$token)
+            ->first();
+        if (!$user){
+            return $this->reset($token);
+        }
+        $rules = [
+            "new_password" => $this->model->getValidationRules()['password'],
+            "repeat_password" => [
+                "rules" => 'matches[new_password]',
+                "label" => "Repeat password"
+            ]
+        ];
+        $validation = \Config\Services::validation();
+        $validation->setRules($rules);
+        if (!$validation->run($data)){
+            $this->errors = $validation->getErrors();
+            return $this->reset($token);
+        }
+        $data = [
+            "password_token" => "",
+            "password" => md5($data["new_password"])
+        ];
+        $result = $this->model->update($user['id'],$data);
+        if (!$result){
+            $this->errors = ["user"=>"Cannot update user with password"];
+            return $this->reset($token);
+        }
+        session()->setFlashData("success","Your account password was reset.");
+        return redirect()->back();
+    }
 }

@@ -570,6 +570,26 @@
         * Recovery form view `$routes->get('/auth/recover', 'Auth::recover');`
         * Recovery processing: `$routes->post('/auth/recover', 'Auth::doRecover');`
     * Modify login form view to include a link to Recover password `/auth/recover`
+    * Create a form view to reset the password `app/Views/auth/reset.php`
+        * If no `$user` is found, display message 'Token is invalid or has expired'
+        * If the `$user` exists, display form with `new_password` and `repeat_passsword`
+        * If `$success`, display a success message 'Your password was successfully changed`
+    * Add a method `reset($token)` to the `Auth` controller:
+        * Find a `$user` where `$token` matches `password_token`
+        * Render the view `auth/reset` with `$token` and `$user` data
+    * Add method `doReset($token)` to process the new password
+        * Verify if `$token` is still valid
+        * Vefify `new_password` is valid and `repeat_password` matches
+        * If password passes verification, update user model:
+            * Set `password` 
+            * Clear `password_token`
+        * If any error ocurrs, display the reset form again with errors.
+    * Add routes for `reset()` and `doReset()` methods in `Auth` controller:
+        * Reset form view `$routes->get('/auth/reset/(:any)', 'Auth::reset/$1');`
+        * Reset password processing: `$routes->post('/auth/reset/(:any)', 'Auth::doReset');`
+
+    
+
 
 
 ## What is CodeIgniter?

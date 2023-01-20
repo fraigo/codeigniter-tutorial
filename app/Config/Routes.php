@@ -46,6 +46,8 @@ $routes->post('/auth/login', 'Auth::login');
 $routes->get('/auth/login', 'Auth::form');
 $routes->get('/auth/recover', 'Auth::recover');
 $routes->post('/auth/recover', 'Auth::doRecover');
+$routes->get('/auth/reset/(:any)', 'Auth::reset/$1');
+$routes->post('/auth/reset/(:any)', 'Auth::doReset/$1');
 $routes->get('/auth/logout', 'Auth::logout');
 $routes->group('', ['filter' => 'auth:access,users,1'], static function ($routes) {
     $routes->get('/users', 'Users::index');
