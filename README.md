@@ -530,6 +530,12 @@
     * Add a checkbox in Auth controller login `form` view with 'Remember me' label
     * In controller, set cookie with `$this->response->setCookie('name','value'[,expirationInSeconds])`
     * In view, load `cookie` helper and get cookie value using `get_cookie('name')`
+* Setup Email 
+    * Modify `app/Config/Email.php` to set up email parameters:
+        * `$protocol`: Send email via `mail` command, `sendmail` command or via `smtp` server
+        * `$SMTPHost`, `$SMTPPort`, `$SMTPUser`, `SSMTPPass`: To configure `smtp` protocol
+        * `$SMTPCrypto` : To select which secure protocol use for `smtp`: `tls` or `ssl`
+        * `$mailType`: `html` to send HTML-formatted emails, `text` for plain text emails (no format).
 
 
 
