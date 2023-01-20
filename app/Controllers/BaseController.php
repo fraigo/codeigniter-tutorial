@@ -322,7 +322,7 @@ abstract class BaseController extends Controller
         $fields = $this->prepareFields($this->editFields);
         return $this->layout('form',[
             'item'=>$item, 
-            'route'=> $this->route,
+            'action'=> current_url(),
             'fields'=> $fields,
             'errors'=>$this->errors,
             'success' => session()->getFlashdata('success'),
@@ -338,14 +338,14 @@ abstract class BaseController extends Controller
             return $this->edit($id);
         }
         session()->setFlashData('success','Update successfull');
-        return $this->replaceLocation("/$this->route/edit/$id");
+        return $this->replaceLocation(current_url());
     }
 
     function new(){
         $item = [];
         $fields = $this->prepareFields($this->editFields);
         return $this->layout('form',[
-            'route' => $this->route,
+            'action' => "/$this->route/new",
             'fields' => $fields,
             'title' => "Create $this->entityName",
             'success' => session()->getFlashdata('success'),

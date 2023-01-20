@@ -68,6 +68,16 @@ class Users extends BaseController
         $action = current_url(true)->getSegment(2);
         return parent::prepareFields($keys);
     }
+
+    public function profile($id){
+        $this->entityName = "My Profile";
+        return $this->edit($id);
+    }
+
+    public function updateProfile($id){
+        $this->entityName = "My Profile";
+        return $this->update($id);
+    }
     
     private function getUserTypes(){
         $userTypes = new \App\Models\UserTypes();
@@ -89,7 +99,7 @@ class Users extends BaseController
             "rules" => 'matches[password]',
             "label" => "Repeat password"
         ];
-        if ($action=="edit"){
+        if ($action=="edit" || $action=="profile"){
             $password = $this->request->getVar('password');
             if (!$password){
                 unset($rules["password"]);

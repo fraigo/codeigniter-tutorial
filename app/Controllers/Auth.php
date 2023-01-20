@@ -19,6 +19,18 @@ class Auth extends BaseController
         return $this->layout('auth/recovery',['errors'=>$this->errors,'success'=>session()->getFlashData('success')],'login');
     }
 
+    public function profile(){
+        $userController = new Users();
+        $userController->initController($this->request,$this->response,$this->logger);
+        return $userController->profile(session('auth')['id']);
+    }
+    
+    public function updateProfile(){
+        $userController = new Users();
+        $userController->initController($this->request,$this->response,$this->logger);
+        return $userController->updateProfile(session('auth')['id']);
+    }
+    
     public function reset($token){
         $user = $this->model->where('password_token',$token)->first();
         return $this->layout('auth/reset',[

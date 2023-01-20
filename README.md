@@ -592,7 +592,18 @@
     * Add event callbacks for insert/update events in `User` model:
         * Set `beforeInsert` and `beforeUpdate` to `['hashPassword']`
     * Remove references to password hashing in controllers
-    
+* Implement profile update (current user)
+    * Add to `Auth` controller methods `profile()` and `updateProfile()`
+    * Each one calls an instance of User Controller
+        * Init User controller
+        * Get user id from `auth` session variable (`session('auth')['id]`)
+        * Call to `Users::profile($id)` or `Users::updateProfile($id)`
+    * Implement  `profile($id)` and `updateProfile($id)` in User controller
+        * Setup entity name to 'My Profile'
+        * Call to methods `edit($id)` and `update($id)` in each one
+    * Add routes for `auth/profile` (GET) and `auth/profile` (POST) 
+        * Setup inside filter `auth` (logged in user)
+    * Add 'My Profile' menu to default view (when `auth` session is active)
 
 
 

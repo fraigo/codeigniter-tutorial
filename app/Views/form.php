@@ -2,7 +2,7 @@
     <div class="container">
     <?php
     helper(['html','form']);
-    echo form_open(isset($item["id"])?"/$route/edit/{$item["id"]}":"/$route/new", []);
+    echo form_open($action, []);
     ?>
     <div class="d-flex justify-content-between mb-4">
         <h2><?=$title?></h2>
