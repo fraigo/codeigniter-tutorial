@@ -4,8 +4,8 @@
             <h2><?=$title?></h2>
             <div>
                 <button type="button" class="btn btn-secondary" onclick="window.history.back(-1)" >Back</button>
-                <?php if (module_access($route,2)) { ?>
-                <button class="btn btn-primary" onclick="document.location=this.getAttribute('data-href')" data-href="<?="/$route/edit/{$item['id']}"?>">Edit</button>
+                <?php if (@$editLink) { ?>
+                <button class="btn btn-primary" onclick="document.location=this.getAttribute('data-href')" data-href="<?=$editLink?>">Edit</button>
                 <?php } ?>
             </div>
         </div>

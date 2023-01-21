@@ -15,7 +15,7 @@
       </li>
       <?php if(session("auth")) { ?>
       <li class="nav-item active">
-        <a class="nav-link text-dark" href="/auth/profile">My Profile</a>
+        <a class="nav-link text-dark" href="/profile">My Profile</a>
       </li>
       <?php } ?>
       <?php if(module_access("users",1)) { ?>

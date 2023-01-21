@@ -51,6 +51,7 @@ abstract class BaseController extends ResourceController
     protected $formFilters = [];
     protected $pageSize = 10;
     protected $pageGroup = null;
+    protected $editLink = null;
 
     /**
      * Constructor.
@@ -378,8 +379,11 @@ abstract class BaseController extends ResourceController
         if ($this->isJson()){
             return $this->JSONResponse($item);
         }
+        if (!$this->editLink && module_access($this->route,2)){
+            $this->editLink = "/$this->route/edit/{$item['id']}";
+        }
         return $this->layout("view",[
-            'route'=>$this->route,
+            'editLink'=>$this->editLink,
             'item'=>$item,
             'fields'=>$fields,
             'title'=>"View $this->entityName",
@@ -405,6 +409,11 @@ abstract class BaseController extends ResourceController
         $fields = $this->editFields;
         if ($this->isJSON()){
             $jsonData = $this->request->getJSON(true);
+            if (!is_array($jsonData)){
+                return $this->JSONResponse(null,400,[
+                    "message"=>"Invalid request"
+                ]);
+            }
             $fields = array_intersect($fields,array_keys($jsonData));
         }
         $rules = $this->getRules($fields);

@@ -24,6 +24,12 @@ class Auth extends BaseController
         $userController->initController($this->request,$this->response,$this->logger);
         return $userController->profile(session('auth')['id']);
     }
+
+    public function editProfile(){
+        $userController = new Users();
+        $userController->initController($this->request,$this->response,$this->logger);
+        return $userController->editProfile(session('auth')['id']);
+    }
     
     public function updateProfile(){
         $userController = new Users();

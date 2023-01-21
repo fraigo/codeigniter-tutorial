@@ -71,6 +71,12 @@ class Users extends BaseController
 
     public function profile($id){
         $this->entityName = "My Profile";
+        $this->editLink = "/profile/edit";
+        return $this->view($id);
+    }
+
+    public function editProfile($id){
+        $this->entityName = "My Profile";
         return $this->edit($id);
     }
 

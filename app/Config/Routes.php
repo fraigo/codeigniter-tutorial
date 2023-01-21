@@ -51,8 +51,11 @@ $routes->post('/auth/reset/(:any)', 'Auth::doReset/$1');
 $routes->get('/auth/logout', 'Auth::logout');
 
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
-    $routes->get('/auth/profile', 'Auth::profile');
-    $routes->post('/auth/profile', 'Auth::updateProfile');
+    $routes->get('/profile', 'Auth::profile');
+    $routes->get('/profile/edit', 'Auth::editProfile');
+    $routes->post('/profile/edit', 'Auth::updateProfile');
+    $routes->get('/api/profile', 'Auth::profile');
+    $routes->put('/api/profile', 'Auth::updateProfile');
 });
 
 $routes->group('', ['filter' => 'auth:access,users,1'], static function ($routes) {

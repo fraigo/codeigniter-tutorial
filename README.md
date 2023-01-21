@@ -631,6 +631,9 @@
         * Detect if the request is a JSON api requesst (`isJson($request)`)
         * Return a JSON response with status code 403: `$response->setStatusCode(403)->setJSON([])`
     * Implement a JSON response for `Auth` controller methods (login/logout)
+* Implement JSON responses for profile view and edit
+    * In `User` controller , detect if the request is a JSON api requesst
+    * Return JSON responses for successful or failed results
 
 
 
