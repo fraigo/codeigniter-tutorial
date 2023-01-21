@@ -26,23 +26,41 @@ class Auth implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         if (!session('auth')){
+            if ($this->isJson($request)){
+                return $this->reject($request);
+            }
             return redirect()->to(site_url('/'));
         } else if ($arguments){
             helper('auth');
             if ($arguments[0]=='admin' && is_admin()){
-                $response = \Config\Services::response();
-                return $response->setStatusCode(403);
+                return $this->reject($request); 
             }
             if ($arguments[0]=='access'){
                 $module = @$arguments[1];
                 $access = @$arguments[2];
                 if (!module_access($module, $access)){
-                    $response = \Config\Services::response();
-                    return $response->setStatusCode(403);
+                    return $this->reject($request);
                 }
             }
         }
+    }
 
+    private function isJson($request){
+        $url = current_url(true);
+        return $url->getSegment(1) == 'api' || strpos($request->getHeaderLine('Content-Type'), 'application/json') !== false;
+    }
+
+    private function reject($request){
+        $response = \Config\Services::response();
+        if ($this->isJson($request)){
+            return $response->setStatusCode(403)->setJSON([
+                "success"=>false,
+                "errors"=>[
+                    "auth" => "Access Forbidden"
+                ],
+            ]);
+        }
+        return $response->setStatusCode(403);
     }
 
     /**

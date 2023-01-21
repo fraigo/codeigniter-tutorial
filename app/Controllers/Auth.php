@@ -43,7 +43,13 @@ class Auth extends BaseController
 
     public function login()
     {
-        $data = $this->request->getVar();
+        $data = json_decode(json_encode($this->request->getVar()),true);
+        if (!is_array($data)){
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,["message"=>"Invalid Request"]);
+            }
+            $data=[];
+        }
         $rules = [
             "email" => "required|valid_email",
             "password" => "required",
@@ -52,6 +58,9 @@ class Auth extends BaseController
         $validation->setRules($rules);
         if (!$validation->run($data)){
             $this->errors = $validation->getErrors();
+            if ($this->isJson()){
+                return $this->JSONResponse(null,401,$this->errors);
+            }
             return $this->form();
         }
         $user = $this->model
@@ -77,10 +86,22 @@ class Auth extends BaseController
         } else {
             $this->response->deleteCookie('remember_email');
         }
+        unset($user["password"]);
+        unset($user["password_token"]);
+        unset($userType["created_at"]);
+        unset($userType["updated_at"]);
         $session->set('auth', $user);
         $session->set('admin', $userType["access"]==4);
         $session->set('profile', $userType);
         $session->set('permissions', array_column($permissions,"access","module"));
+        if ($this->isJson()){
+            return $this->JSONResponse([
+                "user" => $user,
+                "profile" => $userType,
+                "permissions" => $permissions,
+                "token" => session_id()
+            ]);
+        }
         return $this->response->redirect($this->loginRedirect);
     }
 
@@ -88,6 +109,9 @@ class Auth extends BaseController
         $session = session();
         $session->set('auth', null);
         $session->set('admin', null);
+        if ($this->isJson()){
+            return $this->JSONResponse([]);
+        }
         return $this->response->redirect($this->logoutRedirect);
     }
 

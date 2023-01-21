@@ -626,7 +626,11 @@
         * For index action, add `api/users` (list items) and `api/users/ID` for single items
         * In the edit actions, add `api/users/ID` (PUT) and for create add `api/users` (POST)
         * For delete, add `api/users/ID` (DELETE method)
-
+* Implement authentication responses for REST API requests
+    * Implement a JSON error response when authentication or access is rejected in `Auth` filter
+        * Detect if the request is a JSON api requesst (`isJson($request)`)
+        * Return a JSON response with status code 403: `$response->setStatusCode(403)->setJSON([])`
+    * Implement a JSON response for `Auth` controller methods (login/logout)
 
 
 
