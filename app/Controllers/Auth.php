@@ -148,13 +148,14 @@ class Auth extends BaseController
                 return $this->recover();
             }
             helper('email');
-            $result = send_email($data["email"], "Password Recovery request", "email/recovery",[
+            $errors = send_email($data["email"], "Password Recovery request", "email/recovery",[
                 "name" => $user["name"],
                 "url" => base_url()."/auth/reset/$token"
             ]);
-            if (!$result){
+            if ($errors){
+                $error = explode("<br>",$errors)[0];
                 $this->errors = [
-                    "email" => "Send Error"
+                    "message" => "Send Error: $error"
                 ];
                 return $this->recover();
             }

@@ -1,6 +1,6 @@
 <?php
 ?>
-<table bgcolor="#eeeeee" width="100%">
+<table bgcolor="#eeeeee" width="100%" style="width: 100%">
     <tr>
         <td></td>
         <td width="600">
@@ -15,7 +15,7 @@ We received a request to reset for your account.<br>
 <div>&nbsp;</div>
 You can reset your password by clicking the link below:<br>
 <div>&nbsp;</div>
-<?=$url?><br>
+<a href="<?=$url?>"><?=$url?></a>
 <div>&nbsp;</div>
 <b>Admin Team</b><br>
 <?=base_url()?>

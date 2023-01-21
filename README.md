@@ -634,7 +634,19 @@
 * Implement JSON responses for profile view and edit
     * In `User` controller , detect if the request is a JSON api requesst
     * Return JSON responses for successful or failed results
-
+* Debug email messages in Local SMTP Server
+    * Install NodeMailer App from https://nodemailer.com/app/
+    * Run the application
+    * Create a new project, use the default name
+    * Go to menu Server -> Start Server
+    * Go to the left panel "Local Server"
+    * Use the configuration parameters there for your Email config (`app/Config/Email.php`)
+        * `$protocol = 'smtp'`
+        * `$SMTPHost = 'localhost'`
+        * `$SMTPUser = 'project.1'`
+        * `$SMTPPass = 'secret.1'`
+        * `$SMTPCrypto = ''`
+    * Test the email server going to `/auth/recover`
 
 
 ## What is CodeIgniter?

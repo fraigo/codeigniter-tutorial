@@ -7,5 +7,8 @@ function send_email($to, $subject, $view, $data=[]){
     $email->setSubject($subject);
     $email->setMessage(view($view,$data));
     $result = $email->send();
-    return $result;
+    if ($result) {
+        return null;
+    }
+    return $email->printDebugger([]);
 }
