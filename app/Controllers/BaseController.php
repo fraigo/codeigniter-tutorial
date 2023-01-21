@@ -7,6 +7,8 @@ use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\RESTful\ResourceController;
+use CodeIgniter\I18n\Time;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -19,7 +21,7 @@ use Psr\Log\LoggerInterface;
  *
  * For security be sure to declare any new methods as protected or private.
  */
-abstract class BaseController extends Controller
+abstract class BaseController extends ResourceController
 {
     /**
      * Instance of the main Request object.
@@ -46,6 +48,9 @@ abstract class BaseController extends Controller
     public $fields = [];
     protected $errors = null;
     protected $route = '';
+    protected $formFilters = [];
+    protected $pageSize = 10;
+    protected $pageGroup = null;
 
     /**
      * Constructor.
@@ -60,6 +65,7 @@ abstract class BaseController extends Controller
         $modelName = $this->modelName;
         if ($this->modelName){
             $this->model = new $modelName();
+            $this->pageGroup = $this->model->table;
         }
     }
 
@@ -79,6 +85,10 @@ abstract class BaseController extends Controller
             ->where("$table.id", $id)
             ->first();
         if (!$item){
+            if ($this->isJson()){
+                $this->JSONResponse(null,404,["message"=>"Not found"])->send();
+                die();
+            }
             throw new \CodeIgniter\Exceptions\PageNotFoundException();
         }
         return $item;
@@ -158,6 +168,7 @@ abstract class BaseController extends Controller
                 $query = $query->like("$tableField",$value);
             }
         }
+        $this->formFilters = $filters;
         return $filters;
     }
 
@@ -229,14 +240,40 @@ abstract class BaseController extends Controller
         return array_merge($actionCol,$indexCols);
     }
 
+    function isJson(){
+        $url = current_url(true);
+        return $url->getSegment(1) == 'api' || strpos($this->request->getHeaderLine('Content-Type'), 'application/json') !== false;
+    }
+
+    protected function getAction(){
+        $url = current_url(true);
+        if ($this->isJson()) {
+            $method = $_SERVER['REQUEST_METHOD'];
+            if (in_array($method,['POST', 'PUT'])){
+                return "edit";
+            }
+            return "";
+        } else {
+            return $url->getSegment(2);
+        }
+    }
+
+    protected function getItems(){
+        $pagerGroup = $this->pageGroup;
+        $pagerQuery = $pagerGroup == 'default' ? 'pagesize' : "pagesize_$pagerGroup";
+        $this->pageSize = @$_GET["$pagerQuery"]?:$this->pageSize;
+        $query = $this->getQueryModel();
+        $this->processFilters($query,$pagerGroup);
+        $this->processSort($query,$pagerGroup);
+        $items = $query->paginate($this->pageSize,$pagerGroup);
+        return $items;
+    }
+
     protected function getTable($container=null)
     {
         $pagerGroup = $this->model->table;
-        $pageSize = @$_GET["pagesize_$pagerGroup"]?:10;
-        $query = $this->getQueryModel();
-        $filters = $this->processFilters($query,$pagerGroup);
-        $this->processSort($query,$pagerGroup);
-        $items = $query->paginate($pageSize,$pagerGroup);
+        $items = $this->getItems();
+        $filters = $this->formFilters;
         $columns = $this->indexColumns($this->route,$pagerGroup);
 
         $data = [
@@ -246,7 +283,7 @@ abstract class BaseController extends Controller
             "columns" => $columns,
             "filters" => $filters,
             "pager" => $this->model->pager,
-            "pagesize" => $pageSize,
+            "pagesize" => $this->pageSize,
             "pager_group" => $pagerGroup,
             "container" => $container,
         ];
@@ -298,15 +335,49 @@ abstract class BaseController extends Controller
         return $rules;
     }
 
+    protected function JSONResponse($data, $status=200, $errors=null){
+        $response = [
+            "success" => ($errors === null),
+            "date" => date("Y-m-d H:i:s"),
+        ];
+        if ($errors){
+            $response["errors"] = $errors;
+        } else {
+            $response["data"] = $data;
+        }
+        return $this->response->setStatusCode($status)->setJSON($response);
+    }
+
     public function index()
     {
         $this->prepareFields();
+        if ($this->isJson()){
+            $this->pageSize = 100;
+            $this->pageGroup = 'default';
+            $items = $this->getItems();
+            $page = $this->model->pager->getCurrentPage();
+            $pages = $this->model->pager->getPageCount();
+            $next = current_url(true)->addQuery("page",$page+1)->__toString();
+            $result = [
+                "items" => $items,
+                "fields" => $this->fields,
+                "page" => $page,
+                "pages" => $pages,
+                "next" => $pages>$page ? $next : null,
+                "pagesize" => $this->pageSize,
+            ];
+            
+            return $this->JSONResponse($result);
+        }
         return $this->layout('table',$this->getTable("container-lg"));
     }
 
-    function view($id){
+    public function view($id){
         $item = $this->getModelById($id);
         $fields = $this->prepareFields($this->viewFields);
+        if ($this->isJson()){
+            return $this->JSONResponse($item);
+        }
         return $this->layout("view",[
             'route'=>$this->route,
             'item'=>$item,
@@ -317,7 +388,7 @@ abstract class BaseController extends Controller
     }
 
     
-    function edit($id){
+    public function edit($id=null){
         $item = $this->getModelById($id);
         $fields = $this->prepareFields($this->editFields);
         return $this->layout('form',[
@@ -330,12 +401,22 @@ abstract class BaseController extends Controller
         ]);
     }
 
-    function update($id){
+    function update($id=null){
         $fields = $this->editFields;
+        if ($this->isJSON()){
+            $jsonData = $this->request->getJSON(true);
+            $fields = array_intersect($fields,array_keys($jsonData));
+        }
         $rules = $this->getRules($fields);
         $result = $this->doUpdate($id,$fields,$rules);
         if (!$result){
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
             return $this->edit($id);
+        }
+        if ($this->isJson()){
+            return $this->JSONResponse($this->getModelById($id));
         }
         session()->setFlashData('success','Update successfull');
         return $this->replaceLocation(current_url());
@@ -359,15 +440,24 @@ abstract class BaseController extends Controller
         $rules = $this->getRules($fields);
         $id = $this->doCreate($fields,$rules);
         if (!$id){
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
             return $this->new();
+        }
+        if ($this->isJson()){
+            return $this->JSONResponse($this->getModelById($id));
         }
         session()->setFlashData('success','Create successfull');
         return $this->replaceLocation("/$this->route/edit/$id");
     }
 
-    function delete($id){
+    function delete($id=null){
         $item = $this->getModelById($id);
-        $this->model->delete($id);
+        $result = $this->model->delete($id);
+        if ($this->isJson()){
+            return $this->JSONResponse($item);
+        }
         return redirect()->back();
     }
 

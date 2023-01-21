@@ -604,6 +604,29 @@
     * Add routes for `auth/profile` (GET) and `auth/profile` (POST) 
         * Setup inside filter `auth` (logged in user)
     * Add 'My Profile' menu to default view (when `auth` session is active)
+* Implement a RESTful controller
+    * Change BaseController to extend from `CodeIgniter\RESTful\ResourceController`
+        * Modify `edit($id)`, `update($id)` and `delete($id)` methods to use a default `($id=null)` (compatible with `BaseResourceController`)
+        * Create method to return detect if the request is JSON `isJSON()`
+            * `return strpos($this->request->getHeaderLine('Content-Type'), 'application/json') !== false;`
+        * Create a method to return JSON data instead of views `JSONResonse($data,$status,$errors)`
+            * `return $this->response->setStatusCode($status)->setJSON($response);`
+        * Extend the `index()` method to return JSON results for REST API requests
+            * When pagination is used, set the pager group to `'default'`
+            * Also, return the current `$page` number, number of `$pages` and `$next` page URL:
+                * `$page = $this->model->pager->getCurrentPage('default');`
+                * `$pages = $this->model->pager->getPageCount('default');`
+                * `$next = current_url(true)->addQuery("page",$page+1);`
+        * Change `getModelById($id)` to return a JSON error if no item is found for API requests
+        * Modify `update($id)` and `create($id)` methods to read JSON data and return a JSON object for the item requested
+        * Change `delete($id)` method to return a JSON response after a delete REST api request
+    * Change other controllers (`Users`) to accomodate changes in BaseController
+    * Add routes for REST API commands. Eg: for `users` 
+        * Use the same access permissions of the regular request actions
+        * For index action, add `api/users` (list items) and `api/users/ID` for single items
+        * In the edit actions, add `api/users/ID` (PUT) and for create add `api/users` (POST)
+        * For delete, add `api/users/ID` (DELETE method)
+
 
 
 

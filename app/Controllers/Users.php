@@ -94,7 +94,7 @@ class Users extends BaseController
 
     function getRules($fields){
         $rules = $this->model->getValidationRules(['only'=>$fields]);
-        $action = current_url(true)->getSegment(2);
+        $action = $this->getAction();
         $rules['repeat_password'] = [
             "rules" => 'matches[password]',
             "label" => "Repeat password"
