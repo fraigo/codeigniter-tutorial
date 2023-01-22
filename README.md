@@ -661,6 +661,22 @@
     * Detect json request and send JSON error.
     * Update 404 error view to show the request error.
     * Setup API endpoints for login/logout: `/api/auth/login`, `api/auth/logout`
+* Setup authentication by token + global login helper
+    * Modify `auth` helper to include:
+        * `create_token()` function to generate new tokens
+        * `do_login($id)` to process login info for by user ID
+            * Saves `user` and `profile` data
+        * `clear_login()` to remove `user` and `profile` data
+        * `check_login()` to perform authentication token check and do login
+        * `logged_in()` to check if user data is present
+        * `current_user()` to return logged in user + profile data
+        * `user_id()` to return the current user ID
+    * Modify existing `auth` helper functions to accomodate session variables
+    * Modify `Auth` controller to use `do_login($id)` to process login data
+    * Modify `Auth` filter 
+        * Use `auth` function to check login by token
+    * Setup a common reject method to return when access is forbidden or invalid.
+    * Modify views to use new `auth` helper methods to check login info
 
 ## What is CodeIgniter?
 

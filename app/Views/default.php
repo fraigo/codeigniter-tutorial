@@ -13,7 +13,7 @@
       <li class="nav-item active">
         <a class="nav-link text-dark" href="/">Home</a>
       </li>
-      <?php if(session("auth")) { ?>
+      <?php if(logged_in()) { ?>
       <li class="nav-item active">
         <a class="nav-link text-dark" href="/profile">My Profile</a>
       </li>
@@ -35,7 +35,7 @@
       </li>
       <?php } ?>
       <li class="ml-2">
-      <?php if(session('auth')) { ?>
+      <?php if(logged_in()) { ?>
         <a class="btn menu-login btn-outline-primary" href="/auth/logout">Log Out</a>
       <?php } else { ?>
         <a class="btn menu-login btn-outline-primary" href="/auth/login">Log In</a>

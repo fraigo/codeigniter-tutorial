@@ -25,21 +25,22 @@ class Auth implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (!session('auth')){
+        helper('auth');
+        check_login($request);
+        if (!logged_in()){
             if ($this->isJson($request)){
-                return $this->reject($request);
+                return $this->reject($request,401,"Not Logged In");
             }
             return redirect()->to(site_url('/'));
         } else if ($arguments){
-            helper('auth');
             if ($arguments[0]=='admin' && is_admin()){
-                return $this->reject($request); 
+                return $this->reject($request,403,"Not Admin"); 
             }
             if ($arguments[0]=='access'){
                 $module = @$arguments[1];
                 $access = @$arguments[2];
                 if (!module_access($module, $access)){
-                    return $this->reject($request);
+                    return $this->reject($request,403,"Access Forbidden ($module)");
                 }
             }
         }
@@ -50,13 +51,13 @@ class Auth implements FilterInterface
         return $url->getSegment(1) == 'api' || strpos($request->getHeaderLine('Content-Type'), 'application/json') !== false;
     }
 
-    private function reject($request){
+    private function reject($request,$status=403,$message=null){
         $response = \Config\Services::response();
         if ($this->isJson($request)){
-            return $response->setStatusCode(403)->setJSON([
+            return $response->setStatusCode($status)->setJSON([
                 "success"=>false,
                 "errors"=>[
-                    "auth" => "Access Forbidden"
+                    "auth" => $message ?: "Access Forbidden"
                 ],
             ]);
         }
