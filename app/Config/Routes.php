@@ -20,11 +20,22 @@ $routes->setDefaultNamespace('App\Controllers');
 $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
-$routes->set404Override(static function () {
+$routes->set404Override(static function ($error) {
+    $request = \Config\Services::request();
     $response = \Config\Services::response();
     $response->setStatusCode(404);
+    if (current_url(true)->getSegment(1)=="api"){
+        $response->setJSON([
+            "success"=>false,
+            "errors"=>[
+                "message"=>"Not found",
+                "details"=>$error
+            ]
+        ])->send();
+        die();
+    }
     return view('default',[
-        'content'=> view('errors/html/error_404',['title'=>'Not Found'])
+        'content'=> view('errors/html/error_404',['title'=>'Not Found','error'=>$error])
     ]);
 });
 // The Auto Routing (Legacy) is very dangerous. It is easy to create vulnerable apps
@@ -43,12 +54,14 @@ $routes->set404Override(static function () {
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->post('/auth/login', 'Auth::login');
+$routes->post('/api/auth/login', 'Auth::login');
 $routes->get('/auth/login', 'Auth::form');
 $routes->get('/auth/recover', 'Auth::recover');
 $routes->post('/auth/recover', 'Auth::doRecover');
 $routes->get('/auth/reset/(:any)', 'Auth::reset/$1');
 $routes->post('/auth/reset/(:any)', 'Auth::doReset/$1');
 $routes->get('/auth/logout', 'Auth::logout');
+$routes->get('/api/auth/logout', 'Auth::logout');
 
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/profile', 'Auth::profile');

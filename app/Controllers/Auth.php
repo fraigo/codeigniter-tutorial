@@ -94,6 +94,9 @@ class Auth extends BaseController
                     ->first();
         if (!$user){
             $this->errors = ["password"=>"User or password is incorrect"];
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
             return $this->form();
         }
         $userTypes = new \App\Models\UserTypes();

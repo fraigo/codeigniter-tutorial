@@ -657,7 +657,10 @@
     * Create a migration to add a new field `auth_token` in `users` table
     * Update User model to include `auth_token` field
     * Edit `Auth` controller `login()` method to set `auth_token` when no token is set
-
+* Setup 404 error for JSON/Api requests
+    * Detect json request and send JSON error.
+    * Update 404 error view to show the request error.
+    * Setup API endpoints for login/logout: `/api/auth/login`, `api/auth/logout`
 
 ## What is CodeIgniter?
 
