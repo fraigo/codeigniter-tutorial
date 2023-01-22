@@ -51,6 +51,20 @@ class Auth extends BaseController
         ],'login');
     }
 
+    private function createToken(){
+        // Generate 16 bytes (128 bits) of random data or use the data passed into the function.
+        $data = $data ?? random_bytes(16);
+        assert(strlen($data) == 16);
+    
+        // Set version to 0100
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+        // Set bits 6-7 to 10
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+    
+        // Output the 36 character UUID.
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
+
     public function login()
     {
         $data = json_decode(json_encode($this->request->getVar()),true);
@@ -74,6 +88,7 @@ class Auth extends BaseController
             return $this->form();
         }
         $user = $this->model
+                    ->select(['id','name','email','user_type','auth_token','login_at'])
                     ->where("email",$data["email"])
                     ->where("password",md5($data["password"]))
                     ->first();
@@ -82,25 +97,28 @@ class Auth extends BaseController
             return $this->form();
         }
         $userTypes = new \App\Models\UserTypes();
-        $userType = $userTypes->find($user["user_type"]);
+        $userType = $userTypes
+                    ->select(['name','access'])
+                    ->find($user["user_type"]);
         $perm = new \App\Models\Permissions();
         $permissions = $perm->select(['module','access'])
             ->where("user_type_id",$user["user_type"])
             ->findAll();
-        $this->model->update($user["id"],[
-            "login_at" => gmdate("Y-m-d H:i:s")
-        ]);
+        $userData = [
+            "login_at" => gmdate("Y-m-d H:i:s"),
+        ];
+        if ($this->isJson() && !$user["auth_token"]){
+            $userData["auth_token"] = $this->createToken();
+        }
+        $this->model->update($user["id"],$userData);
+        $token = @$userData["auth_token"]?:$user["auth_token"];
         $session = session();
         if (@$data["remember"]){
             $this->response->setCookie('remember_email',$data["email"],60*60*24*7);
         } else {
             $this->response->deleteCookie('remember_email');
         }
-        unset($user["password"]);
-        unset($user["password_token"]);
-        unset($user["password_token_expires"]);
-        unset($userType["created_at"]);
-        unset($userType["updated_at"]);
+        unset($user["auth_token"]);
         $session->set('auth', $user);
         $session->set('admin', $userType["access"]==4);
         $session->set('profile', $userType);
@@ -110,7 +128,7 @@ class Auth extends BaseController
                 "user" => $user,
                 "profile" => $userType,
                 "permissions" => $permissions,
-                "token" => session_id()
+                "token" => $token
             ]);
         }
         return $this->response->redirect($this->loginRedirect);
@@ -142,7 +160,7 @@ class Auth extends BaseController
             ->first();
         $token = null;
         if ($user){
-            $token = md5(date("Y-m-d H:i:s").rand(1000000,9999999));
+            $token = $this->createToken();
             $result = $this->model->update($user['id'],[
                 "password_token" => $token,
                 "password_token_expires" => Time::parse("+6 hours")->toDateTimeString()
@@ -195,6 +213,7 @@ class Auth extends BaseController
         }
         $data = [
             "password_token" => "",
+            "password_token_expires" => "",
             "password" => $data["new_password"]
         ];
         $result = $this->model->update($user['id'],$data);

@@ -653,6 +653,10 @@
     * Edit `Auth` controller `doRecover()` method to set `password_token_expires` to a future date (eg: +6 hours)
         * `$user["password_token_expires"] = Time::parse("+6 hours")->toDateTimeString()`
     * Modify `Auth` controller `reset()` and `doReset()` to check if `password_token_expires` is after the current date/time (not expired)
+* Create authentication token
+    * Create a migration to add a new field `auth_token` in `users` table
+    * Update User model to include `auth_token` field
+    * Edit `Auth` controller `login()` method to set `auth_token` when no token is set
 
 
 ## What is CodeIgniter?

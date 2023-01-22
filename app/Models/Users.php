@@ -21,7 +21,8 @@ class Users extends BaseModel
         'user_type',
         'login_at',
         'password_token',
-        'password_token_expires'
+        'password_token_expires',
+        'auth_token'
     ];
 
     // Dates
@@ -52,6 +53,10 @@ class Users extends BaseModel
         'password_token' => [
             'label' => 'Password Token',
             'rules' => 'max_length[64]'
+        ],
+        'auth_token' => [
+            'label' => 'Auth Token',
+            'rules' => 'max_length[128]'
         ]
     ];
     protected $validationMessages   = [];
