@@ -45,6 +45,10 @@ class CreateUsers extends Migration
                 'type'           => 'VARCHAR',
                 'constraint'     => 64,
                 'null'           => true,
+            ],
+            'password_token_expires' => [
+                'type'           => 'DATETIME',
+                'null'           => true,
             ]
         ]);
         $this->forge->addKey('id', true);

@@ -647,6 +647,12 @@
         * `$SMTPPass = 'secret.1'`
         * `$SMTPCrypto = ''`
     * Test the email server going to `/auth/recover`
+* Setup password reset token expiration
+    * Create a migration to add a new field `password_token_expires` in `users` table
+    * Update User model to include `password_token_expires` field
+    * Edit `Auth` controller `doRecover()` method to set `password_token_expires` to a future date (eg: +6 hours)
+        * `$user["password_token_expires"] = Time::parse("+6 hours")->toDateTimeString()`
+    * Modify `Auth` controller `reset()` and `doReset()` to check if `password_token_expires` is after the current date/time (not expired)
 
 
 ## What is CodeIgniter?

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\Cookie\Cookie;
+use CodeIgniter\I18n\Time;
 
 class Auth extends BaseController
 {
@@ -38,7 +39,10 @@ class Auth extends BaseController
     }
     
     public function reset($token){
-        $user = $this->model->where('password_token',$token)->first();
+        $user = $this->model
+            ->where('password_token',$token)
+            ->where("password_token_expires>",Time::now()->toDateTimeString())
+            ->first();
         return $this->layout('auth/reset',[
             'errors'=>$this->errors,
             'success'=>session()->getFlashData('success'),
@@ -94,6 +98,7 @@ class Auth extends BaseController
         }
         unset($user["password"]);
         unset($user["password_token"]);
+        unset($user["password_token_expires"]);
         unset($userType["created_at"]);
         unset($userType["updated_at"]);
         $session->set('auth', $user);
@@ -139,7 +144,8 @@ class Auth extends BaseController
         if ($user){
             $token = md5(date("Y-m-d H:i:s").rand(1000000,9999999));
             $result = $this->model->update($user['id'],[
-                "password_token" => $token
+                "password_token" => $token,
+                "password_token_expires" => Time::parse("+6 hours")->toDateTimeString()
             ]);
             if (!$result){
                 $this->errors = [
@@ -169,6 +175,7 @@ class Auth extends BaseController
         $data = $this->request->getVar();
         $user = $this->model
             ->where("password_token",$token)
+            ->where("password_token_expires>",Time::now()->toDateTimeString())
             ->first();
         if (!$user){
             return $this->reset($token);

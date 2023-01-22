@@ -20,7 +20,8 @@ class Users extends BaseModel
         'password',
         'user_type',
         'login_at',
-        'password_token'
+        'password_token',
+        'password_token_expires'
     ];
 
     // Dates
@@ -42,7 +43,7 @@ class Users extends BaseModel
         ],
         'password' => [
             'label' => 'Password',
-            'rules' => 'required|min_length[6]|password_strength'
+            'rules' => 'required|max_length[32]'
         ],
         'user_type' => [
             'label' => 'Profile',

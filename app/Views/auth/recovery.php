@@ -8,7 +8,13 @@
     </p>
     <?php if (@$success){ ?>
     <div class="alert alert-success p-1 mt-1 text-center"><?=$success?></div>
-    <?php  } ?>
+    <p class="text-center">
+        <a href="/auth/login" class="btn btn-primary">Back to Log In</a>
+    </p>
+    <p class="text-center">
+        <a href="/auth/recover">Request Password Reset Again</a>
+    </p>
+    <?php  } else { ?>
     <?php
     echo form_input([
         'label' => null,
@@ -27,9 +33,10 @@
         'class' => 'btn btn-primary col-12'
     ]);
     ?>
-    <div class="text-center">
+    <p class="text-center">
         <a href="/auth/login">Back to Log In</a>
-    </div>
-    <?
+    </p>
+    <?php
+    }
     echo form_close();
     ?>
