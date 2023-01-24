@@ -75,7 +75,9 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
 $appRoutes = [
     "users" => "Users",
     "usertypes" => "UserTypes",
-    "permissions" => "Permissions"
+    "permissions" => "Permissions",
+    "lists" => "Lists",
+    "listoptions" => "ListOptions",
 ];
 
 foreach($appRoutes as $route => $controller){

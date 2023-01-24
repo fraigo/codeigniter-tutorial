@@ -42,6 +42,7 @@ class UserTypes extends BaseController
         $_REQUEST["permissions_user_type_id"] = $data["item"]['id'];
         $controller->prepareFields();
         $controller->fields['user_type_id']["hidden"] = true;
+        $controller->viewLink = "/permissions/view/{id}?user_type_id={$data["item"]['id']}";
         $controller->newLink = "/permissions/new?user_type_id={$data["item"]['id']}";
         $controller->editLink = "/permissions/edit/{id}?user_type_id={$data["item"]['id']}";
         return view('table',$controller->getTable(""));

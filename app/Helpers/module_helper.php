@@ -5,5 +5,7 @@ function module_list(){
         "users" => "Users",
         "usertypes" => "User Types",
         "permissions" => "Permissions",
+        "lists" => "Lists",
+        "listoptions" => "ListOptions",
     ];
 }

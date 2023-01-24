@@ -720,7 +720,18 @@
     * Setup BaseController `editLink` and `newLink` attributes to allow overwrite default links in table view
     * Modify `new` and `edit` methods to allow set and fix related fields
     * Setup Controller `getDetails()` to overwrite view/new/edit links
-
+* Implement system lists
+    * Create migration for `lists` table (list header): `php spark make:migration CreateLists`
+        * Setup a list `name` (and description)
+    * Create migration for `list_options` table (list details): `php spark make:migration CreateListOptions`
+        * Setup `list_id`, item `name` and `value` fields
+    * Run migrations: `php spark migrate`
+    * Create models for Lists and ListOptions
+    * Setup controllers for Lists and ListOptions
+    * Setup `getDetails()` in Lists controller using `ListOptions` controller
+    * Add new modules to module helper `module_list()` function
+    * Add CRUD routes for `lists` and `listoptions`
+    * Creaet Unit tests for both models
 
 ## What is CodeIgniter?
 
