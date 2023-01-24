@@ -39,18 +39,9 @@ class Permissions extends BaseController
     ];
 
     protected function prepareFields($keys=null){
-        $this->fields["user_type_id"]["options"] = $this->getUserTypes();
+        $this->fields["user_type_id"]["options"] = $this->getListOptions('\App\Models\UserTypes','name');
         $this->fields["module"]["options"] = module_list();
         return parent::prepareFields($keys);
-    }
-    
-    private function getUserTypes(){
-        $userTypes = new \App\Models\UserTypes();
-        $result = [];
-        foreach($userTypes->findAll() as $row){
-            $result[$row["id"]]=$row["name"];
-        }
-        return $result;
     }
 
 }

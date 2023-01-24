@@ -95,6 +95,15 @@ abstract class BaseController extends ResourceController
         return $item;
     }
 
+    protected function getListOptions($model,$nameField){
+        $items = new $model();
+        $result = [];
+        foreach($items->findAll() as $row){
+            $result[$row["id"]]=$row[$nameField];
+        }
+        return $result;
+    }
+
     protected function layout($view, $data=[], $layout='default'){ 
         if (!@$data["details"]){
             $data["details"] = $this->getDetails($data);
