@@ -677,6 +677,9 @@
         * Use `auth` function to check login by token
     * Setup a common reject method to return when access is forbidden or invalid.
     * Modify views to use new `auth` helper methods to check login info
+* Setup common routes for Controllers
+    * Create an array of route => Controller pairs
+    * Setup common routes for create, read, update and delete items
 
 ## What is CodeIgniter?
 

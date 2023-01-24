@@ -53,6 +53,7 @@ $routes->set404Override(static function ($error) {
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+
 $routes->post('/auth/login', 'Auth::login');
 $routes->post('/api/auth/login', 'Auth::login');
 $routes->get('/auth/login', 'Auth::form');
@@ -71,57 +72,35 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->put('/api/profile', 'Auth::updateProfile');
 });
 
-$routes->group('', ['filter' => 'auth:access,users,1'], static function ($routes) {
-    $routes->get('/users', 'Users::index');
-    $routes->get('/users/view/(:num)', 'Users::view/$1');
-    $routes->get('/api/users', 'Users::index');
-    $routes->get('/api/users/(:num)', 'Users::view/$1');
-});
-$routes->group('', ['filter' => 'auth:access,users,2'], static function ($routes) {
-    $routes->get('/users/edit/(:num)', 'Users::edit/$1');
-    $routes->post('/users/edit/(:num)', 'Users::update/$1');
-    $routes->put('/api/users/(:num)', 'Users::update/$1');
-});
-$routes->group('', ['filter' => 'auth:access,users,3'], static function ($routes) {
-    $routes->get('/users/new', 'Users::new');
-    $routes->post('/users/new', 'Users::create');
-    $routes->post('/api/users/', 'Users::create');
-});
-$routes->group('', ['filter' => 'auth:access,users,4'], static function ($routes) {
-    $routes->get('/users/delete/(:num)', 'Users::delete/$1');
-    $routes->delete('/api/users/(:num)', 'Users::delete/$1');
-});
-$routes->group('', ['filter' => 'auth:access,usertypes,1'], static function ($routes) {
-    $routes->get('/usertypes', 'UserTypes::index');
-    $routes->get('/usertypes/view/(:num)', 'UserTypes::view/$1');
-});
-$routes->group('', ['filter' => 'auth:access,usertypes,2'], static function ($routes) {
-    $routes->get('/usertypes/edit/(:num)', 'UserTypes::edit/$1');
-    $routes->post('/usertypes/edit/(:num)', 'UserTypes::update/$1');
-});
-$routes->group('', ['filter' => 'auth:access,usertypes,3'], static function ($routes) {
-    $routes->get('/usertypes/new', 'UserTypes::new');
-    $routes->post('/usertypes/new', 'UserTypes::create/$1');
-});
-$routes->group('', ['filter' => 'auth:access,usertypes,4'], static function ($routes) {
-    $routes->get('/usertypes/delete/(:num)', 'UserTypes::delete/$1');
-});
-$routes->group('', ['filter' => 'auth:access,permissions,1'], static function ($routes) {
-    $routes->get('/permissions', 'Permissions::index');
-    $routes->get('/permissions/view/(:num)', 'Permissions::view/$1');
-});
-$routes->group('', ['filter' => 'auth:access,permissions,2'], static function ($routes) {
-    $routes->get('/permissions/edit/(:num)', 'Permissions::edit/$1');
-    $routes->post('/permissions/edit/(:num)', 'Permissions::update/$1');
-});
-$routes->group('', ['filter' => 'auth:access,permissions,3'], static function ($routes) {
-    $routes->get('/permissions/new', 'Permissions::new');
-    $routes->post('/permissions/new', 'Permissions::create/$1');
-});
-$routes->group('', ['filter' => 'auth:access,permissions,4'], static function ($routes) {
-    $routes->get('/permissions/delete/(:num)', 'Permissions::delete/$1');
-});
+$appRoutes = [
+    "users" => "Users",
+    "usertypes" => "UserTypes",
+    "permissions" => "Permissions"
+];
 
+foreach($appRoutes as $route => $controller){
+
+    $routes->group('', ['filter' => "auth:access,$route,1"], static function ($routes) use ($route, $controller){
+        $routes->get("/$route", "$controller::index");
+        $routes->get("$route/view/(:num)", "$controller::view/$1");
+        $routes->get("/api/$route", "$controller::index");
+        $routes->get("/api/$route/(:num)", "$controller::view/$1");
+    });
+    $routes->group('', ['filter' => "auth:access,$route,2"], static function ($routes) use ($route, $controller) {
+        $routes->get("/$route/edit/(:num)", "$controller::edit/$1");
+        $routes->post("/$route/edit/(:num)", "$controller::update/$1");
+        $routes->put("/$route/(:num)", "$controller::update/$1");
+    });
+    $routes->group('', ["filter" => "auth:access,$route,3"], static function ($routes) use ($route, $controller) {
+        $routes->get("/$route/new", "$controller::new");
+        $routes->post("/$route/new", "$controller::create");
+        $routes->post("/$route/", "$controller::create");
+    });
+    $routes->group('', ["filter" => "auth:access,$route,4"], static function ($routes) use ($route, $controller) {
+        $routes->get("/$route/delete/(:num)", "$controller::delete/$1");
+        $routes->delete("/$route/(:num)", "$controller::delete/$1");
+    });
+}
 
 /*
  * --------------------------------------------------------------------
