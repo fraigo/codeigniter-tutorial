@@ -66,6 +66,9 @@ a[disabled] {
 .form-item .input-group{
     flex: 1;
 }
+.form-item select[readonly]{
+    pointer-events: none;
+}
 .form-item .input-group input:first-child{
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;

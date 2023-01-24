@@ -37,12 +37,14 @@ class UserTypes extends BaseController
         if (!@$data["item"]){
             return null;
         }
-        $perm = new \App\Controllers\Permissions();
-        $perm->initController($this->request, $this->response, $this->logger);
+        $controller = new \App\Controllers\Permissions();
+        $controller->initController($this->request, $this->response, $this->logger);
         $_REQUEST["permissions_user_type_id"] = $data["item"]['id'];
-        $perm->prepareFields();
-        $perm->fields['user_type_id']["hidden"] = true;
-        return view('table',$perm->getTable());
+        $controller->prepareFields();
+        $controller->fields['user_type_id']["hidden"] = true;
+        $controller->newLink = "/permissions/new?user_type_id={$data["item"]['id']}";
+        $controller->editLink = "/permissions/edit/{id}?user_type_id={$data["item"]['id']}";
+        return view('table',$controller->getTable(""));
     }
 
 }

@@ -52,6 +52,8 @@ abstract class BaseController extends ResourceController
     protected $pageSize = 10;
     protected $pageGroup = null;
     protected $editLink = null;
+    protected $newLink = null;
+    protected $viewLink = null;
 
     /**
      * Constructor.
@@ -212,9 +214,11 @@ abstract class BaseController extends ResourceController
 
     protected function actionColumns($route){
         $actions = [];
-        $actions[] =  ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => "/$route/view/{id}"], "content" => '👁'];
+        $editLink = $this->editLink ?: "/$route/edit/{id}";
+        $viewLink = $this->viewLink ?: "/$route/view/{id}";
+        $actions[] =  ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => $viewLink], "content" => '👁'];
         if (module_access($route,2)){
-            $actions[] = ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => "/$route/edit/{id}"], "content" => '✏️'];
+            $actions[] = ["tag" => "a", "attributes" => [ 'class' => 'px-sm-1', 'href' => $editLink], "content" => '✏️'];
         }
         if (module_access($route,4)){
             $actions[] = ["tag" => "a", "attributes" => [ 
@@ -285,11 +289,13 @@ abstract class BaseController extends ResourceController
         $items = $this->getItems();
         $filters = $this->formFilters;
         $columns = $this->indexColumns($this->route,$pagerGroup);
+        $this->newLink = $this->newLink ?: "/$this->route/new";
 
         $data = [
             "title" => $this->entityGroup, // page $title
             "items" => $items,
             "route" => $this->route,
+            "newUrl" => $this->newLink,
             "columns" => $columns,
             "filters" => $filters,
             "pager" => $this->model->pager,
@@ -388,11 +394,21 @@ abstract class BaseController extends ResourceController
         if ($this->isJson()){
             return $this->JSONResponse($item);
         }
-        if (!$this->editLink && module_access($this->route,2)){
-            $this->editLink = "/$this->route/edit/{$item['id']}";
+        $editLink = $this->editLink ?: "/$this->route/edit/{$item['id']}";
+        $extra = [];
+        foreach($this->editFields as $fld){
+            if (@$_GET[$fld]){
+                $extra[] = "$fld={$_GET[$fld]}";
+            }
+        }
+        if (count($extra) > 0){
+            $editLink .= "?".implode('&',$extra);
+        }
+        if (!module_access($this->route,2)){
+            $editLink = null;
         }
         return $this->layout("view",[
-            'editLink'=>$this->editLink,
+            'editLink'=>$editLink,
             'item'=>$item,
             'fields'=>$fields,
             'title'=>"View $this->entityName",
@@ -404,6 +420,11 @@ abstract class BaseController extends ResourceController
     public function edit($id=null){
         $item = $this->getModelById($id);
         $fields = $this->prepareFields($this->editFields);
+        foreach($this->editFields as $fld){
+            if (@$_GET[$fld]){
+                $fields[$fld]["readonly"] = true;
+            }
+        }
         return $this->layout('form',[
             'item'=>$item, 
             'action'=> current_url(),
@@ -443,6 +464,12 @@ abstract class BaseController extends ResourceController
     function new(){
         $item = [];
         $fields = $this->prepareFields($this->editFields);
+        foreach($this->editFields as $fld){
+            if (@$_GET[$fld]){
+                $item[$fld]=$_GET[$fld];
+                $fields[$fld]["readonly"] = true;
+            }
+        }
         return $this->layout('form',[
             'action' => "/$this->route/new",
             'fields' => $fields,

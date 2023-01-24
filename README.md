@@ -716,6 +716,10 @@
     * Load module helper in `BaseController` `$helpers` attribute
     * Load module helper in default view to create access menus from `module_list()`
     * Call `module_list()` in Controllers or Views listing module names
+* Improve details section to edit related items
+    * Setup BaseController `editLink` and `newLink` attributes to allow overwrite default links in table view
+    * Modify `new` and `edit` methods to allow set and fix related fields
+    * Setup Controller `getDetails()` to overwrite view/new/edit links
 
 
 ## What is CodeIgniter?

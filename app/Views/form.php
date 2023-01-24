@@ -48,5 +48,7 @@
 ?> 
         </div>
     </div>
-    <?php echo @$details ?>
+    <div class="mt-4">
+        <?php echo @$details ?>
+    </div>
 </header>
