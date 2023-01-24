@@ -710,7 +710,12 @@
     * Setup visibility with `x-show` and `x-transition`
     * Build loops with `x-for` and conditionals with `x-if`
     * Assign element references with `x-ref` and use them with `$refs.refname`
-
+* Setup a module helper to get available modules and routes
+    * Create new module helper `app\Helpers\module_helper()`
+        * Create `module_list()` function with routes and module names
+    * Load module helper in `BaseController` `$helpers` attribute
+    * Load module helper in default view to create access menus from `module_list()`
+    * Call `module_list()` in Controllers or Views listing module names
 
 
 ## What is CodeIgniter?

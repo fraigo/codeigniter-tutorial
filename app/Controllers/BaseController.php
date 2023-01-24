@@ -37,7 +37,7 @@ abstract class BaseController extends ResourceController
      *
      * @var array
      */
-    protected $helpers = ['html','array','auth'];
+    protected $helpers = ['html','array','auth','module'];
 
     protected $modelName = '';
     protected $entityName = 'User';

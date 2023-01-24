@@ -40,11 +40,7 @@ class Permissions extends BaseController
 
     protected function prepareFields($keys=null){
         $this->fields["user_type_id"]["options"] = $this->getUserTypes();
-        $this->fields["module"]["options"] = [
-            "users" => "Users",
-            "usertypes" => "Profiles",
-            "permissions" => "Permissions"
-        ];
+        $this->fields["module"]["options"] = module_list();
         return parent::prepareFields($keys);
     }
     

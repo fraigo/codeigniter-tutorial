@@ -1,4 +1,4 @@
-<?php helper('auth'); ?>
+<?php helper(['auth','module']); ?>
 <?= $this->extend('layouts/default') ?>
 <?= $this->section('head') ?>
 <link rel="stylesheet" href="/css/style.css" >
@@ -23,14 +23,10 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
         <div class="dropdown-menu" aria-labelledby="dropdown03">
-        <?php if(module_access("users",1)) { ?>
-          <a class="dropdown-item" href="/users">Users</a>
-        <?php } ?>
-        <?php if(module_access("profiles",1)) { ?>
-          <a class="dropdown-item" href="/usertypes">Profiles</a>
-        <?php } ?>
-        <?php if(module_access("permissions",1)) { ?>
-          <a class="dropdown-item" href="/permissions">Permissions</a>
+        <?php foreach (module_list() as $route => $label) { ?>
+          <?php if(module_access($route,1)) { ?>
+            <a class="dropdown-item" href="/<?=$route?>"><?=$label?></a>
+          <?php } ?>
         <?php } ?>
         </div>
       </li>
