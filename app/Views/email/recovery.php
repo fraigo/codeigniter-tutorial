@@ -11,7 +11,7 @@
 <div>&nbsp;</div>
 Hello <?=$name?>,<br>
 <div>&nbsp;</div>
-We received a request to reset for your account.<br>
+We received a password reset request for your account.<br>
 <div>&nbsp;</div>
 You can reset your password by clicking the link below:<br>
 <div>&nbsp;</div>

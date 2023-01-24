@@ -29,4 +29,11 @@ class Services extends BaseService
      *     return new \CodeIgniter\Example();
      * }
      */
+
+     public static function email($config = null, $getShared = true){
+        if ($getShared) {
+            return self::getSharedInstance('email', $config);
+        }
+        return new \App\Libraries\EmailLogger($config);
+     }
 }

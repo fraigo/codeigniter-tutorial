@@ -680,6 +680,25 @@
 * Setup common routes for Controllers
     * Create an array of route => Controller pairs
     * Setup common routes for create, read, update and delete items
+* Setup and override a custom service
+    * Create a custom library in `app/Libraries` (eg: `app/Libraries/EmailLogger.php`)
+    * Create a new entry in `app/Config/Services.php` to override the `email` method:
+        * `public static function email($config = null, $getShared = true){ ... }`
+        * When `$getShared` is `true`, return `self::getSharedInstance('email', $config);`
+        * Else, return a new instance of the Library class (eg: `return new \App\Libraries\EmailLogger($config)`)
+* Implement a Custom logger:
+    * Call to the PHP function `error_log($message, $message_type, $destination)`
+    * For `$message_type` use `3` to append to a file (or create the file if it doesn't exist)
+    * Use `$destination` to define the filename to use to append the log:
+        * Path is WRITABLE + '/logs'
+        * File name is `email-{DATE}.log`
+    * Add a new line character `"\n"` to `$message` to geerate new lines in each log entry.
+* Implement development-only routes
+    * Create a route configuration file only for development:
+        * Filename is `app/Config/development/Routes.php`
+        * Add routes only for development. 
+        * Example: Logger viewer `$router->get('logs/default',function(){ ...read logs... })`
+
 
 ## What is CodeIgniter?
 
