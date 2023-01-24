@@ -10,7 +10,7 @@ class Users extends BaseController
     protected $route = "users";
     protected $entityName = 'User';
     protected $entityGroup = 'Users';
-    protected $viewFields = ['id','name','email','user_type','updated_at','login_at'];
+    protected $viewFields = ['name','email','user_type','updated_at','login_at'];
     protected $editFields = ['name','email','user_type','password','repeat_password'];
     public $fields = [
         "id" => [
@@ -72,11 +72,30 @@ class Users extends BaseController
     public function profile($id){
         $this->entityName = "My Profile";
         $this->editLink = "/profile/edit";
+        helper('form');
+        $this->fields["auth_token"] = [
+            "header" => "API Access",
+            "label" => "API Token",
+            "type" => "password",
+           "readonly" => true
+        ];
+        $data = $this->getModelById($id);
+        $this->fields["auth_token"]['value'] = password_view(["value"=>$data['auth_token'],"control"=>"password_view"]);
+        $this->viewFields[] = "auth_token";
+
         return $this->view($id);
     }
 
     public function editProfile($id){
         $this->entityName = "My Profile";
+        $this->fields["auth_token"] = [
+            "header" => "API Access",
+            "label" => "API Token",
+            "type" => "password",
+            "readonly" => true,
+            "control" => "password_view"
+        ];
+        $this->editFields[] = "auth_token";
         return $this->edit($id);
     }
 

@@ -1,5 +1,11 @@
 <?php
 
+function password_view($config){
+    $config['type'] = 'password';
+    $config['style'] = 'width: 100%';
+    return view('components/password-view',['config'=>$config]);
+}
+
 function form_item($config,$control="form_input",$class="form-item"){
     $id = @$config["id"];
     if (@$config["disabled"]===null){
@@ -13,7 +19,8 @@ function form_item($config,$control="form_input",$class="form-item"){
     $errors = "<div class=\"form-error\">$error</div>";
     $functions = [
         "form_input",
-        "form_dropdown"
+        "form_dropdown",
+        "password_view"
     ];
     if (!in_array($control,$functions)){
         $control = $functions[0];

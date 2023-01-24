@@ -698,7 +698,10 @@
         * Filename is `app/Config/development/Routes.php`
         * Add routes only for development. 
         * Example: Logger viewer `$router->get('logs/default',function(){ ...read logs... })`
-
+* Setup a custom component - Show/coyp token
+    * Create a view (eg: `app/Views/components/password-view.php`) to setup the component contents using $config parameters
+    * Call the view with `view('components/password-view.php'` and passing configuration values
+    * Setup control name in form_helper, create function name `function password_view($config){ }` calling the component view
 
 ## What is CodeIgniter?
 

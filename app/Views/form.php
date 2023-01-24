@@ -14,6 +14,7 @@
     <?php if (@$success){ ?>
     <div class="alert alert-success p-1 mt-1"><?=$success?></div>
     <?php  } ?>
+    <div class="block-sm">
     <?php
     foreach($fields as $fld=>$cfg){
         if (@$cfg["header"]){
@@ -40,11 +41,12 @@
                 'id'        => $fld,
                 'value'     => set_value($fld,@$item[$fld]),
                 'errors'    => @$errors[$fld]
-            ]);
+            ], @$cfg["control"]);
         }
     }
     echo form_close();
-?>
+?> 
+        </div>
     </div>
     <?php echo @$details ?>
 </header>

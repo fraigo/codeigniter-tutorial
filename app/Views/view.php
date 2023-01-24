@@ -9,19 +9,29 @@
                 <?php } ?>
             </div>
         </div>
-        <?php foreach($fields as $fld=> $config){ ?>
+        <div class="block-sm mr-auto">
+        <?php foreach($fields as $fld=> $config){ 
+            if (@$config["header"]){
+                echo "<div class=form-header >{$config["header"]}</div>";
+            }
+        ?>
         <div class="form-item">
             <label><?=$config["label"]?></label>
             <div><?php
             $value = @$item[$fld];
             if (@$config["options"]){
                 echo $config["options"][$value];
+            } else if (@$config["value"]){
+                echo $config["value"];
+            } else if (@$config["type"]=="password"){
+                echo "********************";
             } else {
                 echo $value;
             }
             ?></div>
         </div>
         <?php } ?>
+        </div>
     </div>
     <?php echo @$details ?>
 </header>
