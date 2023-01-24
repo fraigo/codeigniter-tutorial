@@ -2,6 +2,7 @@
 <?= $this->extend('layouts/default') ?>
 <?= $this->section('head') ?>
 <link rel="stylesheet" href="/css/style.css" >
+<script src="/js/alpine.js" defer></script>
 <?= $this->endSection() ?>
 <?= $this->section('header') ?>
 <nav class="navbar container navbar-expand d-flex flex-column flex-sm-row align-items-sm-center border-bottom box-shadow mb-3">

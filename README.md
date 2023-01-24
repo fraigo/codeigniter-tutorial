@@ -702,6 +702,16 @@
     * Create a view (eg: `app/Views/components/password-view.php`) to setup the component contents using $config parameters
     * Call the view with `view('components/password-view.php'` and passing configuration values
     * Setup control name in form_helper, create function name `function password_view($config){ }` calling the component view
+* Upgrade component to use alpine.js data bindings
+    * Import alpine.js file in default layout: `<script src="//unpkg.com/alpinejs" defer></script>`
+    * Setup component to use attributes like `x-init`, `x-data`, `x-on`, `x-bind` 
+    * Set content with `x-text`, `x-html`
+    * Assign input values with `x-model`
+    * Setup visibility with `x-show` and `x-transition`
+    * Build loops with `x-for` and conditionals with `x-if`
+    * Assign element references with `x-ref` and use them with `$refs.refname`
+
+
 
 ## What is CodeIgniter?
 
