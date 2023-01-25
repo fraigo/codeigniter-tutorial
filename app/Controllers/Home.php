@@ -6,6 +6,8 @@ class Home extends BaseController
 {
     public function index()
     {
-        return $this->layout('home');
+        $pages = new \App\Models\Pages();
+        $page = $pages->find(1);
+        return $this->layout('page',$page);
     }
 }

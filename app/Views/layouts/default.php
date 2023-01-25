@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title><?php echo @$title?:'My App' ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php if (@$description && !@$meta['description']) { ?>
+      <meta name="description" content="<?=$description?>" >
+    <?php } ?>
+    <?php if (@$meta) foreach($meta as $name=>$content) { ?>
+      <meta name="<?=$name?>" content="<?=$content?>" >
+    <?php } ?>
     <link rel="shortcut icon" type="image/png" href="/favicon.ico"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css" >
     <?= $this->renderSection('head') ?>

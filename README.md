@@ -735,6 +735,18 @@
 * Centralize module config for routes
     * Add `module_routes()` to module helper
     * Use `module_routes()` to generate routes for common modules
+* Implement a Page Creator/Editor
+    * Create migration for table `pages`:
+        * Set a `title`, `description`, `slug` and `contents` (HTML).
+        * Setup initial data for the first page (Home Page)
+    * Create model and controller for Pages
+    * Setup a page view to display items from `pages` table. 
+    * Setup the page Controller (`app\Controllers\Pages`)
+        * Setup `contents` fields to be textarea (form_textarea function)
+        * Setup a custom `view($id)` method to display the page view instead of the generic view.
+    * Change `Home` controller to display page `1` on `index()` method
+    * Add Pages to the module helper functions
+    * Modify the default layout to support reading the page description (meta tag)
 
 
 ## What is CodeIgniter?

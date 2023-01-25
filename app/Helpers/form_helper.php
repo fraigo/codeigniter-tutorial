@@ -20,7 +20,8 @@ function form_item($config,$control="form_input",$class="form-item"){
     $functions = [
         "form_input",
         "form_dropdown",
-        "password_view"
+        "password_view",
+        "form_textarea"
     ];
     if (!in_array($control,$functions)){
         $control = $functions[0];

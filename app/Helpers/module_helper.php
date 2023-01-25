@@ -35,5 +35,10 @@ function module_config(){
             "label" => "List Options",
             "controller" => "ListOptions"
         ],
+        [
+            "route" => "pages",
+            "label" => "Pages",
+            "controller" => "Pages"
+        ],
     ];
 }
