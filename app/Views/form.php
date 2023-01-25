@@ -2,7 +2,7 @@
     <div class="container">
     <?php
     helper(['html','form']);
-    echo form_open($action, []);
+    echo form_open($action, @$formAttributes?:[]);
     ?>
     <div class="d-flex justify-content-between mb-4">
         <h2><?=$title?></h2>
@@ -14,7 +14,7 @@
     <?php if (@$success){ ?>
     <div class="alert alert-success p-1 mt-1"><?=$success?></div>
     <?php  } ?>
-    <div class="block-sm">
+    <div class="form-content">
     <?php
     foreach($fields as $fld=>$cfg){
         if (@$cfg["header"]){
@@ -28,7 +28,7 @@
                 'name'      => $fld,
                 'id'        => $fld,
                 'options'   => ([""=>''])+$fields[$fld]["options"],
-                'selected' => [set_value($fld,@$item[$fld])],
+                'selected' => [set_value($fld,@$item[$fld],false)],
                 'errors'    => @$errors[$fld]
             ],"form_dropdown");
         } else {
@@ -39,7 +39,7 @@
                 'type'      => @$cfg["type"],
                 'name'      => $fld,
                 'id'        => $fld,
-                'value'     => set_value($fld,@$item[$fld]),
+                'value'     => set_value($fld,@$item[$fld],false),
                 'errors'    => @$errors[$fld]
             ], @$cfg["control"]);
         }

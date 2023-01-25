@@ -9,7 +9,12 @@ function htmlAttributes($attrs=[]){
     }
     $content = [];
     foreach($attrs as $attr=>$value){
-        $content[] = "$attr=\"$value\"";
+        if ($value===true){
+            $content[] = "$attr";
+        } else {
+            $content[] = "$attr=\"$value\"";
+        }
+        
     }
     return implode(' ',$content);
 }

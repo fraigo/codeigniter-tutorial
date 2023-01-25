@@ -16,7 +16,9 @@
             }
         ?>
         <div class="form-item">
+            <?php if (@$config["label"]!==null) { ?>
             <label><?=$config["label"]?></label>
+            <?php } ?>
             <div><?php
             $value = @$item[$fld];
             if (@$config["options"]){
@@ -26,7 +28,7 @@
             } else if (@$config["type"]=="password"){
                 echo "********************";
             } else {
-                echo $value;
+                echo htmlentities($value);
             }
             ?></div>
         </div>

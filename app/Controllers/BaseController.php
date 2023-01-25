@@ -54,6 +54,7 @@ abstract class BaseController extends ResourceController
     protected $editLink = null;
     protected $newLink = null;
     protected $viewLink = null;
+    protected $formAttributes = null;
 
     /**
      * Constructor.
@@ -426,7 +427,8 @@ abstract class BaseController extends ResourceController
             }
         }
         return $this->layout('form',[
-            'item'=>$item, 
+            'item'=>$item,
+            'formAttributes'=>$this->formAttributes,
             'action'=> current_url(),
             'fields'=> $fields,
             'errors'=>$this->errors,
@@ -473,6 +475,7 @@ abstract class BaseController extends ResourceController
         return $this->layout('form',[
             'action' => "/$this->route/new",
             'fields' => $fields,
+            'formAttributes'=>$this->formAttributes,
             'title' => "Create $this->entityName",
             'success' => session()->getFlashdata('success'),
             'errors' => $this->errors,
