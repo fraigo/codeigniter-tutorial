@@ -731,7 +731,11 @@
     * Setup `getDetails()` in Lists controller using `ListOptions` controller
     * Add new modules to module helper `module_list()` function
     * Add CRUD routes for `lists` and `listoptions`
-    * Creaet Unit tests for both models
+    * Create Unit tests for both models
+* Centralize module config for routes
+    * Add `module_routes()` to module helper
+    * Use `module_routes()` to generate routes for common modules
+
 
 ## What is CodeIgniter?
 

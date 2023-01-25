@@ -72,13 +72,8 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->put('/api/profile', 'Auth::updateProfile');
 });
 
-$appRoutes = [
-    "users" => "Users",
-    "usertypes" => "UserTypes",
-    "permissions" => "Permissions",
-    "lists" => "Lists",
-    "listoptions" => "ListOptions",
-];
+helper('module');
+$appRoutes = module_routes();
 
 foreach($appRoutes as $route => $controller){
 

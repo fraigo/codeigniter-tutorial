@@ -1,11 +1,39 @@
 <?php
 
 function module_list(){
+    return array_column(module_config(),"label","route");
+}
+
+function module_routes(){
+    return array_column(module_config(),"controller","route");
+}
+
+function module_config(){
     return [
-        "users" => "Users",
-        "usertypes" => "User Types",
-        "permissions" => "Permissions",
-        "lists" => "Lists",
-        "listoptions" => "ListOptions",
+        [
+            "route" => "users",
+            "label" => "Users",
+            "controller" => "Users"
+        ],
+        [
+            "route" => "usertypes",
+            "label" => "User Types",
+            "controller" => "UserTypes"
+        ],
+        [
+            "route" => "permissions",
+            "label" => "Permissions",
+            "controller" => "Permissions"
+        ],
+        [
+            "route" => "lists",
+            "label" => "Lists",
+            "controller" => "Lists"
+        ],
+        [
+            "route" => "listoptions",
+            "label" => "List Options",
+            "controller" => "ListOptions"
+        ],
     ];
 }
