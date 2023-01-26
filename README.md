@@ -747,6 +747,11 @@
     * Change `Home` controller to display page `1` on `index()` method
     * Add Pages to the module helper functions
     * Modify the default layout to support reading the page description (meta tag)
+* Setup a route to see pages by slug
+    * Add method to Pages controller (`viewBySlug($slug)`)
+        * Retrieve the page matching slug or 404 if not found
+    * Add a general route for page view by slug: `page/(:any)` to `Pages::viewBySlug/$1`
+
 
 
 ## What is CodeIgniter?

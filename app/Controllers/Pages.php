@@ -49,4 +49,19 @@ class Pages extends BaseController
         }
         return $this->layout('page',$page);
     }
+
+    public function viewBySlug($slug=null){
+        $item = $this->model->where("slug",$slug)->first();
+        if (!$item){
+            if ($this->isJson()){
+                $this->JSONResponse(null,404,["message"=>"Not found"])->send();
+                die();
+            }
+            throw new \CodeIgniter\Exceptions\PageNotFoundException();
+        }
+        if (module_access('pages',2)){
+            $item["editLink"] = $this->editLink ?: "/$this->route/edit/{$item['id']}";
+        }
+        return $this->layout('page',$item);
+    }
 }

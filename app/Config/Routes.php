@@ -64,6 +64,8 @@ $routes->post('/auth/reset/(:any)', 'Auth::doReset/$1');
 $routes->get('/auth/logout', 'Auth::logout');
 $routes->get('/api/auth/logout', 'Auth::logout');
 
+$routes->get('/page/(:any)', 'Pages::viewBySlug/$1');
+
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/profile', 'Auth::profile');
     $routes->get('/profile/edit', 'Auth::editProfile');
