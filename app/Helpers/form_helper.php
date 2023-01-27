@@ -1,13 +1,15 @@
 <?php
 
-function password_view($config){
-    $config['type'] = 'password';
-    $config['style'] = 'width: 100%';
-    return view('components/password-view',['config'=>$config]);
+function form_component($name, $config){
+    return view("components/$name", $config);
 }
 
 function form_item($config,$control="form_input",$class="form-item"){
     $id = @$config["id"];
+    unset($config["hidden"]);
+    if ($control==null && @$config["options"]){
+        $control = "form_dropdown";
+    }
     if (@$config["disabled"]===null){
         unset($config["disabled"]);
     }
@@ -15,12 +17,12 @@ function form_item($config,$control="form_input",$class="form-item"){
         unset($config["readonly"]);
     }
     $label = @$config["label"];
+    //unset($config["label"]);
     $error = @$config['errors'] ? "<div class='alert alert-danger p-1 mt-1'>".htmlentities(@$config['errors'])."</div>" : '';
     $errors = "<div class=\"form-error\">$error</div>";
     $functions = [
         "form_input",
         "form_dropdown",
-        "password_view",
         "form_textarea"
     ];
     if (!in_array($control,$functions)){
@@ -31,12 +33,23 @@ function form_item($config,$control="form_input",$class="form-item"){
     } else {
         @$config["class"] .= " form-control";
     }
-    $control = $control($config);
-    $label = @$config["label"]!==null ? "<label for=\"{$id}\" >{$label}</label>" : '';
+    if ($control=="form_input"){
+        foreach($config as $key=>$cfg){
+            if (is_array($cfg)){
+                unset($config[$key]);
+            }
+        }
+    }
+    if (@$config["component"]){
+        $controlContent = form_component($config["component"], $config);
+    } else {
+        $controlContent = $control($config);
+    }
+    $labelContent = @$config["label"]!==null ? "<label for=\"{$id}\" >{$label}</label>" : '';
     $template = "<div class=\"$class\">
-    $label
+    $labelContent
     <div>
-        $control
+        $controlContent
         $errors
     </div>
 </div>";

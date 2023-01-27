@@ -20,29 +20,22 @@
         if (@$cfg["header"]){
             echo "<div class=form-header >{$cfg["header"]}</div>";
         }
-        if (@$cfg["options"]){
-            echo form_item([
-                'label'     => $cfg["label"],
-                'disabled'   => @$cfg["disabled"],
-                'readonly'   => @$cfg["readonly"],
-                'name'      => $fld,
-                'id'        => $fld,
-                'options'   => ([""=>''])+$fields[$fld]["options"],
-                'selected' => [set_value($fld,@$item[$fld],false)],
-                'errors'    => @$errors[$fld]
-            ],"form_dropdown");
-        } else {
-            echo form_item([
-                'label'     => $cfg["label"],
-                'disabled'   => @$cfg["disabled"],
-                'readonly'   => @$cfg["readonly"],
-                'type'      => @$cfg["type"],
-                'name'      => $fld,
-                'id'        => $fld,
-                'value'     => set_value($fld,@$item[$fld],false),
-                'errors'    => @$errors[$fld]
-            ], @$cfg["control"]);
+        $config = [
+            'name'      => $fld,
+            'id'        => $fld,
+            'errors'    => @$errors[$fld],
+            'value'     => set_value($fld,@$item[$fld],false),
+        ];
+        $control = @$cfg["control"];
+        foreach($cfg as $key=>$val){
+            $config[$key] = $val;
         }
+        if (is_array(@$cfg["options"])){
+            $config['options']   = ([""=>''])+$cfg["options"];
+            $config['selected'] = [set_value($fld,@$item[$fld],false)];
+        }
+        echo form_item($config, $control);
+        
     }
     echo form_close();
 ?> 

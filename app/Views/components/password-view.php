@@ -1,6 +1,8 @@
 <?php
+$config = [];
 $config['x-ref'] = "content";
 $config['x-bind:type'] = "visible ? 'text' : 'password'";
+$config["value"] = $value;
 ?>
 <div class="input-group password-view" x-data="{label: 'Show', visible:false}">
 <?=form_input($config)?>

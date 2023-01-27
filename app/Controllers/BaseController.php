@@ -43,6 +43,7 @@ abstract class BaseController extends ResourceController
     protected $entityName = 'User';
     protected $entityGroup = 'Users';
     protected $model = null;
+    protected $tableFields = null;
     protected $viewFields = [];
     protected $editFields = [];
     public $fields = [];
@@ -243,10 +244,16 @@ abstract class BaseController extends ResourceController
             ]];
         }
         $indexCols = [];
-        foreach($this->fields as $fld=>$cfg){
-            if (@$cfg["hidden"]){
-                continue;
+        if (!$this->tableFields){
+            $this->tableFields=[];
+            foreach($this->fields as $fld=>$cfg){
+                if (!@$cfg["hidden"]){
+                    $this->tableFields[]=$fld;
+                }
             }
+        }
+        foreach($this->tableFields as $fld){
+            $cfg = $this->fields[$fld];
             $indexCols[$fld] = $cfg;
             if (@$cfg["sort"]){
                 $indexCols[$fld]["label"] = $this->sortColumn($fld,$indexCols[$fld]["label"],$group);

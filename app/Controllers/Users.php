@@ -77,10 +77,10 @@ class Users extends BaseController
             "header" => "API Access",
             "label" => "API Token",
             "type" => "password",
-           "readonly" => true
+            "readonly" => true
         ];
         $data = $this->getModelById($id);
-        $this->fields["auth_token"]['value'] = password_view(["value"=>$data['auth_token'],"control"=>"password_view"]);
+        $this->fields["auth_token"]['value'] = form_component('password-view',["value"=>$data['auth_token']]);
         $this->viewFields[] = "auth_token";
 
         return $this->view($id);
@@ -93,7 +93,7 @@ class Users extends BaseController
             "label" => "API Token",
             "type" => "password",
             "readonly" => true,
-            "control" => "password_view"
+            "component" => "password-view"
         ];
         $this->editFields[] = "auth_token";
         return $this->edit($id);

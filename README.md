@@ -751,6 +751,11 @@
     * Add method to Pages controller (`viewBySlug($slug)`)
         * Retrieve the page matching slug or 404 if not found
     * Add a general route for page view by slug: `page/(:any)` to `Pages::viewBySlug/$1`
+* Create a component view
+    * Create `form_component($view,$config)` to render components from a view
+    * Create `app/Views/components/` to store component templates
+    * Create component views using `$config` parameters 
+    * Replace password_view() with a call to `form_component('password-view', $config)`
 
 
 
