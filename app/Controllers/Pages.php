@@ -30,7 +30,7 @@ class Pages extends BaseController
             "header" => "Contents",
             "label" => null,
             "hidden" => true,
-            "control" => "form_textarea",
+            "component" => "html-editor",
         ],
         "created_at" => [
             "label" => "Created",

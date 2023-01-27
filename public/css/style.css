@@ -1,6 +1,9 @@
-html, body {
+html, body{
     font-family: Helvetica, Arial, sans-serif;
     font-size: 16px;
+}
+
+html, body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -63,7 +66,8 @@ a[disabled] {
     box-sizing: border-box;
     flex: 1;
 }
-.form-item .input-group{
+.form-item .input-group,
+.form-item .tox.tox-tinymce{
     flex: 1;
 }
 .form-item select[readonly]{
@@ -89,6 +93,14 @@ a[disabled] {
 .form-filters{
     background-color: rgba(128,128,128,0.2);
     border-radius: 5px;
+}
+
+#tinymce{
+    padding: 8px;
+}
+
+#tinymce div{
+    border: 1px dashed #e0e0e0;
 }
 
 ul.pagination, ul.pager{

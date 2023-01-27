@@ -756,7 +756,10 @@
     * Create `app/Views/components/` to store component templates
     * Create component views using `$config` parameters 
     * Replace password_view() with a call to `form_component('password-view', $config)`
-
+* Create an HTML-editor component for pages
+    * Create `app/Views/components/html-editor.php`
+    * Setup the HTML editor control (textarea) with $value and $name
+    * Configure a custom HTML editor component like tinymce.
 
 
 ## What is CodeIgniter?
