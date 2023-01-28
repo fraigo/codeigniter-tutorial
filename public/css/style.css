@@ -102,6 +102,16 @@ a[disabled] {
 #tinymce div{
     border: 1px dashed #e0e0e0;
 }
+#tinymce div[class='row']{
+    padding: 3px;
+}
+#tinymce div[class='row']::before{
+    content: " Row";
+    display: block;
+    padding: 0 16px;
+    opacity: 0.5;
+    flex: 1 0 100%;
+}
 
 ul.pagination, ul.pager{
     list-style-type: none;

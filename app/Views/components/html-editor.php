@@ -1,5 +1,5 @@
-<script src="https://unpkg.com/tinymce@6.3.1/tinymce.min.js" ></script>
-<textarea name="<?= $name ?>" id="<?= $id ?>" style="opacity:0;width:100%" contenteditable><?= $value ?></textarea>
+<script src="/components/tinymce/tinymce.min.js" ></script>
+<textarea name="<?= $name ?>" id="<?= $id ?>" style="opacity:0;width:100%;height:600px" contenteditable><?= $value ?></textarea>
 <script>
     var editor = tinymce.init({
         selector: "textarea#contents",
