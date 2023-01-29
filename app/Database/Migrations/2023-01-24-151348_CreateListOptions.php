@@ -35,7 +35,7 @@ class CreateListOptions extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addKey(['list_id','name']);
-        
+        $this->forge->addForeignKey('list_id', 'lists', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('list_options');
     }
 

@@ -17,12 +17,15 @@ class Lists extends BaseController
         ],
         "name" => [
             "label" => "Name",
+            "filter" => true,
         ],
         "description" => [
             "label" => "Description",
+            "filter" => true,
         ],
         "active" => [
             "label" => "Active",
+            "filter" => true,
             "options" => [
                 "1" => "Yes",
                 "0" => "No"
@@ -38,6 +41,7 @@ class Lists extends BaseController
         ],
     ];
 
+    
     function getDetails($data){
         if (!@$data["item"]){
             return null;
@@ -47,6 +51,7 @@ class Lists extends BaseController
         $_REQUEST["list_options_list_id"] = $data["item"]['id'];
         $controller->prepareFields();
         $controller->fields['list_id']["hidden"] = true;
+        $controller->viewLink = "/listoptions/view/{id}?list_id={$data["item"]['id']}";
         $controller->newLink = "/listoptions/new?list_id={$data["item"]['id']}";
         $controller->editLink = "/listoptions/edit/{id}?list_id={$data["item"]['id']}";
         return view('table',$controller->getTable(""));
