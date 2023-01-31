@@ -42,6 +42,8 @@ class TestModel extends CIUnitTestCase
     {
         $insertId = $this->model->insert($this->insertOk);
         static::$insertId = $insertId;
+        $errors = $this->model->errors();
+        $this->assertEquals([],$errors);
         $this->assertGreaterThan(0,$insertId,'Insert Error');
     }
 
@@ -61,6 +63,8 @@ class TestModel extends CIUnitTestCase
     {
         $item = $this->model->where("id",static::$insertId)->first();
         $result = $this->model->update(static::$insertId,$this->updateOk);
+        $errors = $this->model->errors();
+        $this->assertEquals([],$errors);
         $this->assertEquals(1,$result,'Update Error');
     }
 
