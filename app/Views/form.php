@@ -20,11 +20,20 @@
         if (@$cfg["header"]){
             echo "<div class=form-header >{$cfg["header"]}</div>";
         }
+        $matches = [];
+        $match = preg_match("/([a-z0-9_]+)\[([a-z0-9_]+)\]/",$fld, $matches);
+        if ($matches){
+            $value = @$item[$matches[1]][$matches[2]];
+            $error = @$errors[$matches[1]][$matches[2]];
+        } else {
+            $value = @$item[$fld];
+            $error = @$errors[$fld];
+        }
         $config = [
             'name'      => $fld,
             'id'        => $fld,
-            'errors'    => @$errors[$fld],
-            'value'     => set_value($fld,@$item[$fld],false),
+            'errors'    => $error,
+            'value'     => set_value($fld,$value,false),
         ];
         $control = @$cfg["control"];
         foreach($cfg as $key=>$val){
@@ -32,7 +41,7 @@
         }
         if (is_array(@$cfg["options"])){
             $config['options']   = ([""=>''])+$cfg["options"];
-            $config['selected'] = [set_value($fld,@$item[$fld],false)];
+            $config['selected'] = [set_value($fld,$value,false)];
         }
         echo form_item($config, $control);
         

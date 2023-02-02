@@ -22,7 +22,13 @@
             <label><?=$config["label"]?></label>
             <?php } ?>
             <div><?php
-            $value = @$item[$fld];
+            $matches = [];
+            $match = preg_match("/([a-z0-9_]+)\[([a-z0-9_]+)\]/",$fld, $matches);
+            if ($matches){
+                $value = @$item[$matches[1]][$matches[2]];
+            } else {
+                $value = @$item[$fld];
+            }
             helper('form');
             if (@$config["options"]){
                 echo @$config["options"][$value];
