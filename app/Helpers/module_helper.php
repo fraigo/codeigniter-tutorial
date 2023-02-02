@@ -40,5 +40,10 @@ function module_config(){
             "label" => "Pages",
             "controller" => "Pages"
         ],
+        [
+            "route" => "useroptions",
+            "label" => "User Options",
+            "controller" => "UserOptions"
+        ],
     ];
 }

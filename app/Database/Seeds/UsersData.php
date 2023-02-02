@@ -12,6 +12,7 @@ class UsersData extends Seeder
         $this->db->table('users')->truncate(); 
         $this->db->table('permissions')->truncate();
         $this->db->table('user_types')->truncate();
+        $this->db->table('user_options')->truncate();
         
         // User types
         $this->db->table('user_types')->insert([
@@ -104,6 +105,11 @@ class UsersData extends Seeder
             "updated_at" => date("Y-m-d H:i:s"),
             "user_type" => 3, // regular user
         ]);
-
+        
+        $userOptions = new \App\Models\UserOptions();
+        $userOptions->createUserOptions(1001);
+        $userOptions->createUserOptions(1002);
+        $userOptions->createUserOptions(1003);
+        $userOptions->createUserOptions(1004);
     }
 }
