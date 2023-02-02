@@ -3,7 +3,9 @@
         <div class="d-flex justify-content-between mb-4">
             <h2><?=$title?></h2>
             <div>
-                <button type="button" class="btn btn-secondary" onclick="window.history.back(-1)" >Back</button>
+                <?php if (@$backLink) { ?>
+                <button type="button" class="btn btn-secondary" onclick="document.location=this.getAttribute('data-href')" data-href="<?=$backLink?>">Back</button>
+                <?php } ?>
                 <?php if (@$editLink) { ?>
                 <button class="btn btn-primary" onclick="document.location=this.getAttribute('data-href')" data-href="<?=$editLink?>">Edit</button>
                 <?php } ?>
@@ -21,14 +23,18 @@
             <?php } ?>
             <div><?php
             $value = @$item[$fld];
+            helper('form');
             if (@$config["options"]){
-                echo $config["options"][$value];
+                echo @$config["options"][$value];
+            } else if (@$config["view_component"]){
+                $config["value"] = $value;
+                echo form_component($config["view_component"],$config);
             } else if (@$config["value"]){
                 echo $config["value"];
             } else if (@$config["type"]=="password"){
                 echo "********************";
             } else {
-                echo htmlentities($value);
+                echo htmlentities("$value");
             }
             ?></div>
         </div>

@@ -99,13 +99,9 @@ abstract class BaseController extends ResourceController
         return $item;
     }
 
-    protected function getListOptions($model,$nameField){
+    protected function getListOptions($model,$nameField,$idField="id",$condition=null){
         $items = new $model();
-        $result = [];
-        foreach($items->findAll() as $row){
-            $result[$row["id"]]=$row[$nameField];
-        }
-        return $result;
+        return $items->getListOptions($nameField,$idField,$condition);
     }
 
     protected function layout($view, $data=[], $layout='default'){ 
@@ -128,7 +124,7 @@ abstract class BaseController extends ResourceController
         ]);
     }
 
-    protected function prepareFields($keys=null){
+    protected function prepareFields($keys=null, $data=null){
         $result = [];
         foreach($this->fields as $fld=>$cfg){
             if (!$keys || in_array($fld,$keys)){
@@ -398,7 +394,7 @@ abstract class BaseController extends ResourceController
 
     public function view($id){
         $item = $this->getModelById($id);
-        $fields = $this->prepareFields($this->viewFields);
+        $fields = $this->prepareFields($this->viewFields,$item);
         if ($this->isJson()){
             return $this->JSONResponse($item);
         }
@@ -417,6 +413,7 @@ abstract class BaseController extends ResourceController
         }
         return $this->layout("view",[
             'editLink'=>$editLink,
+            'backLink'=>"/$this->route",
             'item'=>$item,
             'fields'=>$fields,
             'title'=>"View $this->entityName",
@@ -427,7 +424,7 @@ abstract class BaseController extends ResourceController
     
     public function edit($id=null){
         $item = $this->getModelById($id);
-        $fields = $this->prepareFields($this->editFields);
+        $fields = $this->prepareFields($this->editFields,$item);
         foreach($this->editFields as $fld){
             if (@$_GET[$fld]){
                 $fields[$fld]["readonly"] = true;
@@ -472,7 +469,7 @@ abstract class BaseController extends ResourceController
 
     function new(){
         $item = [];
-        $fields = $this->prepareFields($this->editFields);
+        $fields = $this->prepareFields($this->editFields,$item);
         foreach($this->editFields as $fld){
             if (@$_GET[$fld]){
                 $item[$fld]=$_GET[$fld];

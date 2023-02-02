@@ -63,39 +63,33 @@ class Users extends BaseController
         return $query;
     }
 
-    protected function prepareFields($keys=null){
+    protected function prepareFields($keys=null, $data=null){
         $this->fields["user_type"]["options"] = $this->getUserTypes();
-        $action = current_url(true)->getSegment(2);
+        if ($data){
+            $this->fields["auth_token"] = [
+                "header" => "API Access",
+                "label" => "API Token",
+                "component" => "password-view",
+                "view_component" => "password-view",
+            ];
+        }
         return parent::prepareFields($keys);
     }
 
     public function profile($id){
         $this->entityName = "My Profile";
         $this->editLink = "/profile/edit";
-        helper('form');
-        $this->fields["auth_token"] = [
-            "header" => "API Access",
-            "label" => "API Token",
-            "type" => "password",
-            "readonly" => true
-        ];
-        $data = $this->getModelById($id);
-        $this->fields["auth_token"]['value'] = form_component('password-view',["value"=>$data['auth_token']]);
         $this->viewFields[] = "auth_token";
-
+        $data = $this->getModelById($id);
+        $this->prepareFields($this->viewFields, $data);
         return $this->view($id);
     }
 
     public function editProfile($id){
         $this->entityName = "My Profile";
-        $this->fields["auth_token"] = [
-            "header" => "API Access",
-            "label" => "API Token",
-            "type" => "password",
-            "readonly" => true,
-            "component" => "password-view"
-        ];
         $this->editFields[] = "auth_token";
+        $data = $this->getModelById($id);
+        $this->prepareFields($this->editFields, $data);
         return $this->edit($id);
     }
 

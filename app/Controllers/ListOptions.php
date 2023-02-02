@@ -37,7 +37,7 @@ class ListOptions extends BaseController
         ],
     ];
 
-    protected function prepareFields($keys=null){
+    protected function prepareFields($keys=null, $data=null){
         $this->fields["list_id"]["options"] = $this->getListOptions('App\Models\Lists','description');
         return parent::prepareFields($keys);
     }

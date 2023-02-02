@@ -10,8 +10,8 @@ class UsersData extends Seeder
     {
         // clear data
         $this->db->table('users')->truncate(); 
-        $this->db->table('permissions')->truncate(); 
-        $this->db->table('user_types')->truncate(); 
+        $this->db->table('permissions')->truncate();
+        $this->db->table('user_types')->truncate();
         
         // User types
         $this->db->table('user_types')->insert([

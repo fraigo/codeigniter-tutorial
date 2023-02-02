@@ -66,7 +66,7 @@ function parseData($content,$data){
                 $content[$key] = parseData($col, $data);
             } else {
                 foreach($data as $fld=>$value){
-                    $content[$key] = str_replace("{$key}","$value", $col);
+                    $content[$key] = str_replace("{$key}","$value", "$col");
                 }
             }
         }
