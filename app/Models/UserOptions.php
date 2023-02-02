@@ -88,4 +88,34 @@ class UserOptions extends BaseModel
         }
     }
 
+    public function setUserOptions($user_id, $userOptions){
+        $options = $this->getListUserOptions();
+        $userModel = new \App\Models\Users();
+        $listOptions = new \App\Models\ListOptions();
+        $user = $userModel->find($user_id);
+        if (!$user) return [];
+        if (!$userOptions) return [];
+        $errors = [];
+        foreach($userOptions as $opt=>$value){
+            if (!@$options[$opt]){
+                $errors["$opt"] = "Option not found";
+            }
+            if ("$value"==""){
+                $errors["$opt"] = "Empty option value";
+            }
+            $availableOptions = $listOptions->getOptionsByName($opt);
+            if (!@$availableOptions[$value]){
+                $errors["$opt"] = "Invalid option value";
+            }
+        }
+        if (!$errors){
+            foreach($userOptions as $opt=>$value){
+                $query = $this->where(['user_id'=>$user_id,'option'=>$opt]);
+                $query->set('value',$value);
+                $query->update();
+            }
+        }
+        return $errors;
+    }
+
 }

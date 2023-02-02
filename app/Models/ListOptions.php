@@ -57,4 +57,12 @@ class ListOptions extends BaseModel
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
+    public function getOptionsByName($name){
+        $listOptions = new \App\Models\ListOptions();
+        $listOptions->select('list_options.value,list_options.name');
+        $listOptions->join('lists','lists.id=list_options.list_id');
+        $listOptions->where('lists.name',$name);
+        return $listOptions->getListOptions('value','name');
+    }
+
 }

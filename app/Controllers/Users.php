@@ -66,6 +66,24 @@ class Users extends BaseController
     protected function prepareFields($keys=null, $data=null){
         $this->fields["user_type"]["options"] = $this->getUserTypes();
         if ($data){
+            $userOptions = new \App\Models\UserOptions();
+            $optionFields = $userOptions->getListUserOptions();
+            $newFields = [];
+            foreach ($optionFields as $field=>$label){
+                $listOptions = new \App\Models\ListOptions();
+                $opts = $listOptions->getOptionsByName($field);
+                $fieldname = "user_options[$field]";
+                $keys[] = $fieldname;
+                $newFields[$fieldname] = [
+                    "header" => count($newFields) ? null : "User Options",
+                    "label" => $label,
+                    "field" => '',
+                    "options" => $opts
+                ];
+            }
+            $this->fields = array_merge($this->fields, $newFields);
+            $this->editFields = $keys;
+            $this->viewFields = $keys;
             $this->fields["auth_token"] = [
                 "header" => "API Access",
                 "label" => "API Token",
@@ -74,6 +92,18 @@ class Users extends BaseController
             ];
         }
         return parent::prepareFields($keys);
+    }
+
+    public function getModelById($id){
+        $result = parent::getModelById($id);
+        $userOptions = new \App\Models\UserOptions();
+        $userOptions->createUserOptions($id);
+        $options = $userOptions->getUserOptions($result['id']);
+        $result["user_options"] = [];
+        foreach($options as $field=>$value){
+            $result["user_options"][$field] = $value;
+        }
+        return $result;
     }
 
     public function profile($id){
@@ -133,6 +163,21 @@ class Users extends BaseController
             unset($data["password"]);
         }
         return $data;
+    }
+
+    function update($id=null){
+        $options = $this->request->getVar("user_options");
+        $userOptions = new \App\Models\UserOptions();
+        $res = $userOptions->setUserOptions($id, $options);
+        if ($res){
+            $this->errors = [ "user_options" => $res];
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
+            return $this->edit($id);
+        }
+        $result = parent::update($id);
+        return $result;
     }
 
 }
