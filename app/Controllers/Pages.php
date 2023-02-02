@@ -53,11 +53,7 @@ class Pages extends BaseController
     public function viewBySlug($slug=null){
         $item = $this->model->where("slug",$slug)->first();
         if (!$item){
-            if ($this->isJson()){
-                $this->JSONResponse(null,404,["message"=>"Not found"])->send();
-                die();
-            }
-            throw new \CodeIgniter\Exceptions\PageNotFoundException();
+            $this->notFound();
         }
         if (module_access('pages',2)){
             $item["editLink"] = $this->editLink ?: "/$this->route/edit/{$item['id']}";

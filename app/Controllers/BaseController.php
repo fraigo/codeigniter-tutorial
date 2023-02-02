@@ -84,17 +84,21 @@ abstract class BaseController extends ResourceController
         return null;
     }
 
+    protected function notFound(){
+        if ($this->isJson()){
+            $this->JSONResponse(null,404,["message"=>"Not found"])->send();
+            die();
+        }
+        throw new \CodeIgniter\Exceptions\PageNotFoundException();
+    }
+
     protected function getModelById($id){
         $table = $this->model->table;
         $item = $this->getQueryModel()
             ->where("$table.id", $id)
             ->first();
         if (!$item){
-            if ($this->isJson()){
-                $this->JSONResponse(null,404,["message"=>"Not found"])->send();
-                die();
-            }
-            throw new \CodeIgniter\Exceptions\PageNotFoundException();
+            $this->notFound();
         }
         return $item;
     }
