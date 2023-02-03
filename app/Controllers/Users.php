@@ -96,13 +96,7 @@ class Users extends BaseController
 
     public function getModelById($id){
         $result = parent::getModelById($id);
-        $userOptions = new \App\Models\UserOptions();
-        $userOptions->createUserOptions($id);
-        $options = $userOptions->getUserOptions($result['id']);
-        $result["user_options"] = [];
-        foreach($options as $field=>$value){
-            $result["user_options"][$field] = $value;
-        }
+        $result["user_options"] = $this->model->getUserOptions($id);
         return $result;
     }
 

@@ -18,6 +18,9 @@ function do_login($id){
     $users = new \App\Models\Users();
     $users->select(['id','name','email','user_type','auth_token','login_at']);
     $user = $users->find($id);
+    if ($user){
+        $user["user_options"] = $users->getUserOptions($id);
+    }
     
     $userTypes = new \App\Models\UserTypes();
     $userType = $userTypes

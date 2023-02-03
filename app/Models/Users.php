@@ -81,4 +81,10 @@ class Users extends BaseModel
         return $data;
     }
 
+    public function getUserOptions($id){
+        $userOptions = new \App\Models\UserOptions();
+        $userOptions->createUserOptions($id);
+        return $userOptions->getUserOptions($id);
+    }
+
 }
