@@ -8,7 +8,7 @@ use CodeIgniter\Email\Email;
 class EmailLogger extends Email{
 
     public function logPath(){
-        return WRITEPATH.'/logs';
+        return WRITEPATH.'logs';
     }
 
     protected function logEmail($type, $success, $debug = []){
@@ -21,6 +21,7 @@ class EmailLogger extends Email{
             "recipients" => $recipients, 
             "subject" => mb_convert_encoding(mb_decode_mimeheader($this->subject),'UTF-8'),
             "status" => $success ? "Success" : "Error",
+            "protocol" => $type,
             "body" => $this->finalBody,
             "headers" => $this->headers,
             "debug" => $debug
@@ -29,21 +30,11 @@ class EmailLogger extends Email{
         return true;
     }
 
-    protected function sendWithMail(){
-        $result = parent::sendWithMail();
-        $this->logEmail('mail', $result, $this->debugMessage);
+    protected function spoolEmail()
+    {
+        $result = parent::spoolEmail();
+        $this->logEmail($this->getProtocol(), $result, $this->debugMessage);
         return $result;
     }
 
-    protected function sendWithSmtp(){
-        $result = parent::sendWithSmtp();
-        $this->logEmail('smtp', $result, $this->debugMessage);
-        return $result;
-    }
-
-    protected function sendWithSendmail(){
-        $result = parent::sendWithSmtp();
-        $this->logEmail('sendmail', $result, $this->debugMessage);
-        return $result;
-    }
 }

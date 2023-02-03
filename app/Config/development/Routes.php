@@ -46,12 +46,12 @@ $routes->get('/logs/email', static function () {
             $body = $contents["body"];
             $headers = urldecode(http_build_query($contents["headers"], "", "\n"));
             $debug = @$contents["debug"];
-            unset($contents["headers"]);
             unset($contents["body"]);
-            unset($contents["debug"]);
             foreach($contents as $key=>$value){
-                echo "<b>$key</b><br>";
-                echo "$value<br>";
+                if (!is_array($value)){
+                    echo "<b>$key</b><br>";
+                    echo "$value<br>";
+                }
             }
             echo "</div>";
             echo '<div class="email-body">';
