@@ -53,7 +53,7 @@ class Auth extends BaseController
 
     public function login()
     {
-        $data = json_decode(json_encode($this->request->getVar()),true);
+        $data = $this->getVars();
         if (!is_array($data)){
             if ($this->isJson()){
                 return $this->JSONResponse(null,400,["message"=>"Invalid Request"]);
@@ -108,7 +108,7 @@ class Auth extends BaseController
     }
 
     function doRecover(){
-        $data = $this->request->getVar();
+        $data = $this->getVars();
         $rules = [
             "email" => "required|valid_email",
         ];
@@ -116,6 +116,9 @@ class Auth extends BaseController
         $validation->setRules($rules);
         if (!$validation->run($data)){
             $this->errors = $validation->getErrors();
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
             return $this->recover();
         }
         $user = $this->model
@@ -132,6 +135,9 @@ class Auth extends BaseController
                 $this->errors = [
                     "email" => "Cannot update user"
                 ];
+                if ($this->isJson()){
+                    return $this->JSONResponse(null,400,$this->errors);
+                }
                 return $this->recover();
             }
             helper('email');
@@ -144,16 +150,23 @@ class Auth extends BaseController
                 $this->errors = [
                     "message" => "Send Error: $error"
                 ];
+                if ($this->isJson()){
+                    return $this->JSONResponse(null,400,$this->errors);
+                }
                 return $this->recover();
             }
 
         }
-        session()->setFlashData("success","If your email is registered, you will receive an email with account recovery instructions.");
+        $message = "If your email is registered, you will receive an email with account recovery instructions.";
+        if ($this->isJson()){
+            return $this->JSONResponse(["message"=>$message]);
+        }
+        session()->setFlashData("success",$message);
         return redirect()->back();
     }
 
     function doReset($token){
-        $data = $this->request->getVar();
+        $data = $this->getVars();
         $user = $this->model
             ->where("password_token",$token)
             ->where("password_token_expires>",Time::now()->toDateTimeString())
