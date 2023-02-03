@@ -59,12 +59,14 @@ class UserOptions extends BaseModel
 
     public function getListUserOptions(){
         $listOptions = new \App\Models\ListOptions();
-        return $listOptions->getListOptions('value', 'name', 'list_id = 1');
+        $listOptions->where('list_id',1);
+        return $listOptions->getListOptions('value', 'name');
     }
 
     public function getDefaultUserOptions(){
         $listOptions = new \App\Models\ListOptions();
-        return $listOptions->getListOptions('value', 'name', 'list_id = 2');
+        $listOptions->where('list_id',2);
+        return $listOptions->getListOptions('value', 'name');
     }
 
     public function getUserOptions($user_id){

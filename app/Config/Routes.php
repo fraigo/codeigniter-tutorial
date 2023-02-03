@@ -72,6 +72,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->post('/profile/edit', 'Auth::updateProfile');
     $routes->get('/api/profile', 'Auth::profile');
     $routes->put('/api/profile', 'Auth::updateProfile');
+    $routes->get('/api/app/lists', 'ListOptions::all');
 });
 
 helper('module');

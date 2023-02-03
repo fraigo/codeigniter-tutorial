@@ -41,4 +41,20 @@ class ListOptions extends BaseController
         $this->fields["list_id"]["options"] = $this->getListOptions('App\Models\Lists','description');
         return parent::prepareFields($keys);
     }
+
+    public function all(){
+        $lists = new \App\Models\Lists();
+        $allLists = $lists->findAll();
+        $result = [];
+        foreach($allLists as $list){
+            $options = $this->model->where('list_id',$list['id'])->findAll();
+            $items = array_column($options,"value","name");
+            $result[$list['name']] = [
+                "description" => $list["description"],
+                "items" => $options,
+                "keys" => $items
+            ];
+        }
+        return $this->JSONResponse($result);
+    }
 }
