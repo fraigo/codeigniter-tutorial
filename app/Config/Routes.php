@@ -89,16 +89,16 @@ foreach($appRoutes as $route => $controller){
     $routes->group('', ['filter' => "auth:access,$route,2"], static function ($routes) use ($route, $controller) {
         $routes->get("/$route/edit/(:num)", "$controller::edit/$1");
         $routes->post("/$route/edit/(:num)", "$controller::update/$1");
-        $routes->put("/$route/(:num)", "$controller::update/$1");
+        $routes->put("/api/$route/(:num)", "$controller::update/$1");
     });
     $routes->group('', ["filter" => "auth:access,$route,3"], static function ($routes) use ($route, $controller) {
         $routes->get("/$route/new", "$controller::new");
         $routes->post("/$route/new", "$controller::create");
-        $routes->post("/$route/", "$controller::create");
+        $routes->post("/api/$route/", "$controller::create");
     });
     $routes->group('', ["filter" => "auth:access,$route,4"], static function ($routes) use ($route, $controller) {
         $routes->get("/$route/delete/(:num)", "$controller::delete/$1");
-        $routes->delete("/$route/(:num)", "$controller::delete/$1");
+        $routes->delete("/api/$route/(:num)", "$controller::delete/$1");
     });
 }
 
