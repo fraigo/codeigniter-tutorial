@@ -2,34 +2,38 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
-
 class Users extends BaseController
 {
     protected $modelName = 'App\Models\Users';
     protected $route = "users";
-    protected $entityName = 'User';
-    protected $entityGroup = 'Users';
-    protected $viewFields = ['name','email','user_type','updated_at','login_at'];
-    protected $editFields = ['name','email','user_type','password','repeat_password'];
+    protected $entityName = "User";
+    protected $entityGroup = "Users";
+    protected $viewFields = ['name','email','user_type','avatar_url','updated_at','login_at'];
+    protected $editFields = ['name','email','user_type','avatar_url','password','repeat_password'];
     public $fields = [
         "id" => [
-            "label" => "ID",
-            "hidden" => true
+            "label" => "Id",
+            "hidden" => true,
         ],
         "name" => [
             "label" => "Name",
             "sort" => true,
-            "filter" => true
+            "filter" => true,
         ],
         "email" => [
             "label" => "Email",
             "sort" => true,
-            "filter" => true
+            "filter" => true,
         ],
         "user_type" => [
             "label" => "Profile",
-            "filter" => true
+            "filter" => true,
+        ],
+        "avatar_url" => [
+            "label" => "Avatar",
+            "hidden" => true,
+            "view_component" => "avatar",
+            "component" => "image-upload",
         ],
         "password" => [
             "header" => "Set Password",
@@ -44,15 +48,16 @@ class Users extends BaseController
             "type" => "password",
             "hidden" => true,
         ],
-        "updated_at" => [
-            "label" => "Last Update",
+        "login_at" => [
+            "label" => "Last Login",
             "sort" => true,
         ],
-        "login_at" => [
-            "label" => "Last Login"
-        ]
+        "updated_at" => [
+            "label" => "Updated",
+            "sort" => true,
+        ],
     ];
-    
+
     protected function getQueryModel(){
         $query = parent::getQueryModel();
         $access = profile_access("users");

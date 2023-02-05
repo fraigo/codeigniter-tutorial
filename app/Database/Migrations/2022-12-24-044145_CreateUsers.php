@@ -30,6 +30,10 @@ class CreateUsers extends Migration
                 'type'           => 'INT',
                 'default'        => '0',
             ],
+            'avatar_url' => [
+                'type'           => 'TEXT',
+                'null'           => true,
+            ],
             'login_at' => [
                 'type'           => 'DATETIME',
                 'null'           => true,

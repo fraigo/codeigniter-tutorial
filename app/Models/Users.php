@@ -19,6 +19,7 @@ class Users extends BaseModel
         'name',
         'password',
         'user_type',
+        'avatar_url',
         'login_at',
         'password_token',
         'password_token_expires',
