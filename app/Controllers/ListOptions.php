@@ -50,6 +50,7 @@ class ListOptions extends BaseController
             $options = $this->model->where('list_id',$list['id'])->findAll();
             $items = array_column($options,"value","name");
             $result[$list['name']] = [
+                "id" => $list["id"],
                 "description" => $list["description"],
                 "items" => $options,
                 "keys" => $items
