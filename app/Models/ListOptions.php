@@ -31,11 +31,11 @@ class ListOptions extends BaseModel
     protected $validationRules      = [
         'list_id' => [
             'label' => 'List',
-            'rules' => 'required|greater_than_equal_to[0]'
+            'rules' => 'required|greater_than_equal_to[0]|unique_fields[list_options,list_id,name]'
         ],
         'name' => [
             'label' => 'Name',
-            'rules' => 'required|max_length[64]'
+            'rules' => 'required|max_length[64]|unique_fields[list_options,list_id,name]'
         ],
         'value' => [
             'label' => 'Value',
