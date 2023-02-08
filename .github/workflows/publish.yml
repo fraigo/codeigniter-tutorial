@@ -1,6 +1,5 @@
 name: Publish Website
 on: push
-  branches: [ "main" ]
 jobs:
   FTP-Deploy-Action:
     name: FTP-Deploy-Action
