@@ -1,5 +1,42 @@
 <?php
 
+function parseNode($node){
+    if ("$node->nodeName" == "#text"){
+        return $node->textContent;
+    }
+    $result = [
+        "tag" => $node->nodeName,
+        "contents" => [],
+    ];
+    if ($node->attributes){
+        $result["attributes"] = [];
+        for ($i = 0 ; $i<$node->attributes->length; $i++){
+            $attr = parseNode($node->attributes->item($i));
+            $result["attributes"][$attr["tag"]] = $attr["contents"][0];
+        } 
+    }
+      
+    foreach ($node->childNodes as $item){
+        if ($item->nodeName=="html" && !$item->hasChildNodes()) continue;
+        $item = parseNode($item);
+        $result["contents"][] = $item;
+    }
+    return $result;
+}
+
+function parseHtml($htmlString){
+    $doc = new \DOMDocument();
+    $doc->loadHTML('<?xml encoding="UTF-8"><html><body>' . $htmlString .'</body></html>');
+
+    foreach ($doc->childNodes as $item){
+        if ($item->nodeType == XML_PI_NODE){
+            $doc->removeChild($item); // remove hack
+        }
+    }
+    $doc->encoding = 'UTF-8'; // insert proper
+    return parseNode($doc->getElementsByTagName("body")[0]);
+}
+
 /**
  * Generate HTML attributes from array
  */

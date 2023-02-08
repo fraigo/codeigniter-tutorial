@@ -47,6 +47,11 @@ class Pages extends BaseController
         if (module_access('pages',2)){
             $page["editLink"] = $this->editLink ?: "/$this->route/edit/$id";
         }
+        if ($this->isJson()) {
+            $page["domcontent"] = parseHtml($page["contents"]);
+            return $this->JSONResponse($page);
+        }
+        die("Ok");
         return $this->layout('page',$page);
     }
 
