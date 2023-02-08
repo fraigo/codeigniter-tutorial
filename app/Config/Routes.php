@@ -49,6 +49,15 @@ $routes->set404Override(static function ($error) {
  * Route Definitions
  * --------------------------------------------------------------------
  */
+if (strpos($_SERVER["REQUEST_URI"],"/api")===0){
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding, Authorization");
+    if ($_SERVER["REQUEST_METHOD"]=="OPTIONS"){
+        http_response_code(200);
+        die();
+    }
+}
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
