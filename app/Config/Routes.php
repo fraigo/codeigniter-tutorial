@@ -84,6 +84,11 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/api/app/lists', 'ListOptions::all');
 });
 
+$routes->group('', ['filter' => 'auth'], static function ($routes) {
+    $routes->get('/import', 'Import::index');
+    $routes->get('/import/(:any)', 'Import::index/$1');
+});
+
 helper('module');
 $appRoutes = module_routes();
 

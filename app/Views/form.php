@@ -8,7 +8,7 @@
         <h2><?=$title?></h2>
         <div>
             <button type="button" class="btn btn-secondary" onclick="window.history.back(-1)" >Back</button>
-            <button type="submit" class="btn btn-primary"><?=@$item["id"]?"Update":"Create"?></button>
+            <button type="submit" class="btn btn-primary"><?=$actionName?></button>
         </div>
     </div>
     <?php if (@$success){ ?>
