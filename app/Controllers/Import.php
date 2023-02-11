@@ -21,26 +21,77 @@ class Import extends BaseController
             $height = (count($tableFields)+1) * 1.25;
             $fields["fields"] = [
                 "label" => "Fields",
-                "multiple" => true,
-                "style" => "height: {$height}em; font-size: 16px;",
-                "options" => $tableFields
+                "onchange" => "this.form.selected_fields.value+=this.value+'\\n'",
+                "options" => array_combine($tableFields,$tableFields)
+            ];
+            $fields["selected_fields"] = [
+                "label" => "Selected Fields",
+                "control" => "form_textarea",
+                "style" => "height: 240px; font-size: 16px;",
+            ];
+            $fields["default_values"] = [
+                "label" => "Default Values",
+                "control" => "form_textarea",
+                "style" => "height: 200px; font-size: 16px;",
             ];
             $fields["file"] = [
-                "label" => "Fields",
+                "label" => "CSV File",
                 "type" => "file",
                 "accept" => ".csv"
+            ];
+            $fields["content"] = [
+                "label" => "CSV Content",
+                "control" => "form_textarea",
             ];
         }
         return $this->layout('form',[
             'item'=>$item,
             'formAttributes'=>[
-                "onsubmit"=>"tableChange(this.table.value);return false",
+                "onsubmit"=>"tableChange(this.table.value);".($table?"":"return false"),
             ],
+            'actionLabel' => 'Import',
             'action'=> current_url(),
             'fields'=> $fields,
             'errors'=>$this->errors,
             'success' => session()->getFlashdata('success'),
             'title'=>"Import Data"
+        ]);
+    }
+
+    public function import($table="")
+    {
+        $list = explode("\n",$this->request->getVar("content"));
+        $fields = explode("\n",$this->request->getVar("selected_fields"));
+        $values = explode("\n",$this->request->getVar("default_values"));
+        $results = [];
+        $rows = [];
+        $db = db_connect();
+        foreach($list as $item){
+            $cols = explode("\t",trim($item));
+            $row = [];
+            foreach($fields as $idx=>$fld){
+                if ($fld==''){
+                    break;
+                }
+                $row[$fld] = @$cols[$idx];
+            }
+            foreach($values as $idx=>$val){
+                $parts = explode("=",trim($val));
+                $row[$parts[0]] = $parts[1];
+            }
+            $row["created_at"] = date("Y-m-d H:i:s");
+            $row["updated_at"] = date("Y-m-d H:i:s");
+            try {
+                $res = $db->table($table)->insert($row);
+            } catch( \Exception $ex){
+                $res = $ex->getMessage();
+            }
+            $rows[] = $row;
+            $results[] = $res;
+        }
+        return $this->layout('import/results',[
+            "results" => $results,
+            "rows" => $rows
         ]);
     }
 

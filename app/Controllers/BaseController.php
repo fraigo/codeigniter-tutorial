@@ -439,6 +439,7 @@ abstract class BaseController extends ResourceController
         }
         return $this->layout('form',[
             'item'=>$item,
+            'actionLabel' => "Edit",
             'formAttributes'=>$this->formAttributes,
             'action'=> current_url(),
             'fields'=> $fields,
@@ -485,6 +486,7 @@ abstract class BaseController extends ResourceController
         }
         return $this->layout('form',[
             'action' => "/$this->route/new",
+            'actionLabel' => "Create",
             'fields' => $fields,
             'formAttributes'=>$this->formAttributes,
             'title' => "Create $this->entityName",

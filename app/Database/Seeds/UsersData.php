@@ -91,7 +91,7 @@ class UsersData extends Seeder
             "id" => 1003,
             "name" => "Editor",
             "email" => "editor@example.com",
-            "password" => md5("Creator.123"),
+            "password" => md5("Editor.123"),
             "created_at" => date("Y-m-d H:i:s"),
             "updated_at" => date("Y-m-d H:i:s"),
             "user_type" => 2, // regular user

@@ -66,6 +66,9 @@ a[disabled] {
     box-sizing: border-box;
     flex: 1;
 }
+.form-item textarea{
+    line-height: 1.5em;
+}
 .form-item .input-group,
 .form-item .tox.tox-tinymce{
     flex: 1;

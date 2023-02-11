@@ -87,6 +87,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/import', 'Import::index');
     $routes->get('/import/(:any)', 'Import::index/$1');
+    $routes->post('/import/(:any)', 'Import::import/$1');
 });
 
 helper('module');
