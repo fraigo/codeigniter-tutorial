@@ -1,5 +1,13 @@
 <?php
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Password Recovery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
 <table bgcolor="#eeeeee" width="100%" style="width: 100%">
     <tr>
         <td></td>
@@ -28,5 +36,5 @@ You can reset your password by clicking the link below:<br>
         <td></td>
     </tr>
 </table>
-
-
+</body>
+</html>
