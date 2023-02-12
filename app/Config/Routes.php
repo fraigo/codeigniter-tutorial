@@ -71,6 +71,7 @@ $routes->post('/auth/recover', 'Auth::doRecover');
 $routes->post('/api/auth/recover', 'Auth::doRecover');
 $routes->get('/auth/reset/(:any)', 'Auth::reset/$1');
 $routes->post('/auth/reset/(:any)', 'Auth::doReset/$1');
+$routes->post('/api/auth/reset/(:any)', 'Auth::doReset/$1');
 $routes->get('/auth/logout', 'Auth::logout');
 $routes->get('/api/auth/logout', 'Auth::logout');
 

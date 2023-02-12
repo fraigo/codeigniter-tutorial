@@ -6,6 +6,7 @@ function send_email($to, $subject, $view, $data=[]){
     $config['protocol'] = 'mail';
     $config['mailPath'] = '/usr/sbin/sendmail';
     $config['mailType']  = 'html';
+    $config['charset']  = 'UTF-8';
     $config['wordWrap'] = true;
     $email->initialize($config);
     $email->setFrom('admin@'.$_SERVER['SERVER_NAME'], 'Admin');

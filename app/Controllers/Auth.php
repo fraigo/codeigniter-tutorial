@@ -173,6 +173,11 @@ class Auth extends BaseController
             ->where("password_token_expires>",Time::now()->toDateTimeString())
             ->first();
         if (!$user){
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,[
+                    "token" => "Token is invalid or has expired" 
+                ]);
+            }
             return $this->reset($token);
         }
         $rules = [
@@ -186,6 +191,9 @@ class Auth extends BaseController
         $validation->setRules($rules);
         if (!$validation->run($data)){
             $this->errors = $validation->getErrors();
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
             return $this->reset($token);
         }
         $data = [
@@ -196,7 +204,13 @@ class Auth extends BaseController
         $result = $this->model->update($user['id'],$data);
         if (!$result){
             $this->errors = ["user"=>"Cannot update user with password"];
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
             return $this->reset($token);
+        }
+        if ($this->isJson()){
+            return $this->JSONResponse(["message"=>"Your account password was reset."]);
         }
         session()->setFlashData("success","Your account password was reset.");
         return redirect()->back();

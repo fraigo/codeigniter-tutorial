@@ -22,7 +22,7 @@ class EmailLogger extends Email{
             "subject" => mb_convert_encoding(mb_decode_mimeheader($this->subject),'UTF-8'),
             "status" => $success ? "Success" : "Error",
             "protocol" => $type,
-            "body" => $this->finalBody,
+            "body" => $this->body,
             "headers" => $this->headers,
             "debug" => $debug
         ];
