@@ -8,7 +8,7 @@ function send_email($to, $subject, $view, $data=[]){
     $config['mailType']  = 'html';
     $config['wordWrap'] = true;
     $email->initialize($config);
-    $email->setFrom('admin@examle.com', 'Admin');
+    $email->setFrom('admin@'.$_SERVER['SERVER_NAME'], 'Admin');
     $email->setTo($to);
     $email->setSubject($subject);
     $email->setMessage(view($view,$data));
