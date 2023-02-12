@@ -9,7 +9,7 @@ class Users extends BaseController
     protected $entityName = "User";
     protected $entityGroup = "Users";
     protected $viewFields = ['name','email','user_type','avatar_url','updated_at','login_at'];
-    protected $editFields = ['name','email','user_type','avatar_url','password','repeat_password'];
+    protected $editFields = ['name','email','user_type','avatar_url','password','repeat_password','phone','address','city','postal_code'];
     public $fields = [
         "id" => [
             "label" => "Id",
@@ -35,19 +35,6 @@ class Users extends BaseController
             "view_component" => "avatar",
             "component" => "image-upload",
         ],
-        "password" => [
-            "header" => "Set Password",
-            "label" => "Password",
-            "hidden" => true,
-            "type" => "password",
-            "field" => "",
-        ],
-        "repeat_password" => [
-            "field" => "",
-            "label" => "Repeat Password",
-            "type" => "password",
-            "hidden" => true,
-        ],
         "login_at" => [
             "label" => "Last Login",
             "sort" => true,
@@ -55,6 +42,23 @@ class Users extends BaseController
         "updated_at" => [
             "label" => "Updated",
             "sort" => true,
+        ],
+        "phone" => [
+            "header" => "Contact Information",
+            "label" => "Phone",
+            "hidden" => true,
+        ],
+        "address" => [
+            "label" => "Address",
+            "hidden" => true,
+        ],
+        "city" => [
+            "label" => "City",
+            "hidden" => true,
+        ],
+        "postal_code" => [
+            "label" => "Postal Code",
+            "hidden" => true,
         ],
     ];
 

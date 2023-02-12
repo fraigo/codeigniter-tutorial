@@ -58,6 +58,26 @@ class CreateUsers extends Migration
                 'type'           => 'VARCHAR',
                 'constraint'     => 128,
                 'null'           => true,
+            ],
+            'phone' => [
+                'type'           => 'VARCHAR',
+                'constraint'     => 64,
+                'null'           => true,
+            ],
+            'address' => [
+                'type'           => 'VARCHAR',
+                'constraint'     => 255,
+                'null'           => true,
+            ],
+            'city' => [
+                'type'           => 'VARCHAR',
+                'constraint'     => 128,
+                'null'           => true,
+            ],
+            'postal_code' => [
+                'type'           => 'VARCHAR',
+                'constraint'     => 10,
+                'null'           => true,
             ]
         ]);
         $this->forge->addKey('id', true);

@@ -23,7 +23,11 @@ class Users extends BaseModel
         'login_at',
         'password_token',
         'password_token_expires',
-        'auth_token'
+        'auth_token',
+        'phone',
+        'address',
+        'city',
+        'postal_code'
     ];
 
     // Dates
@@ -58,6 +62,22 @@ class Users extends BaseModel
         'auth_token' => [
             'label' => 'Auth Token',
             'rules' => 'max_length[128]'
+        ],
+        'phone' => [
+            'label' => 'Phone',
+            'rules' => 'max_length[64]'
+        ],
+        'address' => [
+            'label' => 'Address',
+            'rules' => 'max_length[255]'
+        ],
+        'city' => [
+            'label' => 'City',
+            'rules' => 'max_length[128]'
+        ],
+        'postal_code' => [
+            'label' => 'Postal Code',
+            'rules' => 'max_length[10]'
         ]
     ];
     protected $validationMessages   = [];
