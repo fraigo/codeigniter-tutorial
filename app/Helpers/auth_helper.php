@@ -16,7 +16,7 @@ function create_token(){
 
 function do_login($id){
     $users = new \App\Models\Users();
-    $users->select(['id','name','email','user_type','auth_token','login_at']);
+    $users->select(['id','name','email','user_type','auth_token','login_at','phone','address','city','postal_code']);
     $user = $users->find($id);
     if ($user){
         $user["user_options"] = $users->getUserOptions($id);
