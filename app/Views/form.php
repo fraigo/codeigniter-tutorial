@@ -42,7 +42,7 @@
             $config[$key] = $val;
         }
         if (is_array(@$cfg["options"])){
-            $config['options']   = ([""=>''])+$cfg["options"];
+            $config['options']   = ([""=>@$cfg["default_option"]?:''])+$cfg["options"];
             $config['selected'] = [set_value($fld,$value,false)];
         }
         echo form_item($config, $control);

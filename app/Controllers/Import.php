@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use \CodeIgniter\Database\Exceptions\DatabaseException;
+
 class Import extends BaseController
 {
     public function index($table="")
@@ -22,25 +24,30 @@ class Import extends BaseController
             $fields["fields"] = [
                 "label" => "Fields",
                 "onchange" => "this.form.selected_fields.value+=this.value+'\\n'",
-                "options" => array_combine($tableFields,$tableFields)
+                "options" => array_combine($tableFields,$tableFields),
+                "default_option" => "Select Field",
             ];
             $fields["selected_fields"] = [
                 "label" => "Selected Fields",
+                "placeholder" => "Pick fields from selector",
                 "control" => "form_textarea",
-                "style" => "height: 240px; font-size: 16px;",
+                "style" => "height: 180px; font-size: 16px;",
             ];
             $fields["default_values"] = [
                 "label" => "Default Values",
+                "placeholder" => "field=value",
                 "control" => "form_textarea",
-                "style" => "height: 200px; font-size: 16px;",
+                "style" => "height: 120px; font-size: 16px;",
             ];
             $fields["file"] = [
                 "label" => "CSV File",
                 "type" => "file",
+                "onchange" => "parseFile(this)",
                 "accept" => ".csv"
             ];
             $fields["content"] = [
                 "label" => "CSV Content",
+                "placeholder" => "Data separated by comma or tab space",
                 "control" => "form_textarea",
             ];
         }
@@ -63,19 +70,21 @@ class Import extends BaseController
         $list = explode("\n",$this->request->getVar("content"));
         $fields = explode("\n",$this->request->getVar("selected_fields"));
         $values = explode("\n",$this->request->getVar("default_values"));
-        $results = [];
         $rows = [];
         $db = db_connect();
+        
         foreach($list as $item){
             $cols = explode("\t",trim($item));
-            $row = [];
             foreach($fields as $idx=>$fld){
-                if ($fld==''){
+                if (trim($fld)==''){
                     break;
                 }
                 $row[$fld] = @$cols[$idx];
             }
             foreach($values as $idx=>$val){
+                if (strpos($val,'=')===false){
+                    break;
+                }
                 $parts = explode("=",trim($val));
                 $row[$parts[0]] = $parts[1];
             }
@@ -83,15 +92,19 @@ class Import extends BaseController
             $row["updated_at"] = date("Y-m-d H:i:s");
             try {
                 $res = $db->table($table)->insert($row);
-            } catch( \Exception $ex){
+            } catch( DatabaseException $ex){
                 $res = $ex->getMessage();
             }
-            $rows[] = $row;
-            $results[] = $res;
+            $rows[] = array_merge(["RESULT" => $res],$row);
         }
-        return $this->layout('import/results',[
-            "results" => $results,
-            "rows" => $rows
+        return $this->layout('table',[
+            "title" => "Results",
+            "items" => $rows,
+            "route" => '',
+            "newUrl" => '/import',
+            "columns" => null,
+            "filters" => [],
+            "container" => '',
         ]);
     }
 
