@@ -43,6 +43,19 @@ class Users extends BaseController
             "label" => "Updated",
             "sort" => true,
         ],
+        "password" => [
+            "header" => "Set Password",
+            "label" => "Password",
+            "hidden" => true,
+            "type" => "password",
+            "field" => "",
+        ],
+        "repeat_password" => [
+            "field" => "",
+            "label" => "Repeat Password",
+            "type" => "password",
+            "hidden" => true,
+        ],
         "phone" => [
             "header" => "Contact Information",
             "label" => "Phone",
