@@ -25,6 +25,7 @@ class UserTypes extends BaseController
             "sort" => true,
             "filter" => true,
             "options" => [
+                0 => "None",
                 1 => "View",
                 2 => "Edit",
                 3 => "Create",
