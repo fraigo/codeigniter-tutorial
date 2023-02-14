@@ -39,7 +39,7 @@ class Lists extends BaseModel
         ],
         'active' => [
             'label' => 'Active',
-            'rules' => 'required|max_length[255]|greater_than_equal_to[0]'
+            'rules' => 'required|greater_than_equal_to[0]'
         ]
     ];
     protected $validationMessages   = [];

@@ -23,8 +23,7 @@ class CreateLists extends Migration
                 'constraint'     => 255,
             ],
             'active' => [
-                'type'           => 'INT',
-                'constraint'     => 255,
+                'type'           => 'TINYINT',
                 'default'        => '1',
             ],
             'created_at' => [

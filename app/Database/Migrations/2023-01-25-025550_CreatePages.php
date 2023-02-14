@@ -29,7 +29,7 @@ class CreatePages extends Migration
                 'null'           => true,
             ],
             'contents' => [
-                'type'           => 'BLOB',
+                'type'           => 'TEXT',
             ],
             'created_at' => [
                 'type'           => 'DATETIME',
@@ -40,7 +40,7 @@ class CreatePages extends Migration
             ]
         ]);
         $this->forge->addKey('id', true);
-        
+        $this->forge->addUniqueKey(['slug']);
         
         $this->forge->createTable('pages');
 

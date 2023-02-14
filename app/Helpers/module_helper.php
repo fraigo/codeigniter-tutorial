@@ -17,7 +17,7 @@ function module_config(){
         ],
         [
             "route" => "usertypes",
-            "label" => "User Types",
+            "label" => "Profile Types",
             "controller" => "UserTypes"
         ],
         [

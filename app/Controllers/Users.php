@@ -8,7 +8,7 @@ class Users extends BaseController
     protected $route = "users";
     protected $entityName = "User";
     protected $entityGroup = "Users";
-    protected $viewFields = ['name','email','user_type','avatar_url','updated_at','login_at'];
+    protected $viewFields = ['name','email','user_type','avatar_url','updated_at','login_at','phone','address','city','postal_code'];
     protected $editFields = ['name','email','user_type','avatar_url','password','repeat_password','phone','address','city','postal_code'];
     public $fields = [
         "id" => [
@@ -38,6 +38,10 @@ class Users extends BaseController
         "login_at" => [
             "label" => "Last Login",
             "sort" => true,
+        ],
+        "created_at" => [
+            "label" => "Created",
+            "hidden" => true,
         ],
         "updated_at" => [
             "label" => "Updated",
@@ -81,7 +85,7 @@ class Users extends BaseController
         if (!is_admin()){
             $query->where("user_types.access<=$access");
         }
-        $query->join('user_types','user_types.id=users.user_type');
+        $query->join('user_types','user_types.id=users.user_type',is_admin()?'left':null);
         return $query;
     }
 

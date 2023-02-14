@@ -9,7 +9,7 @@ class Pages extends BaseController
     protected $entityName = "Page";
     protected $entityGroup = "Pages";
     protected $viewFields = [];
-    protected $editFields = ['title','description','contents','slug'];
+    protected $editFields = ['title','description','slug','contents'];
     public $fields = [
         "id" => [
             "label" => "Id",
@@ -25,6 +25,7 @@ class Pages extends BaseController
         ],
         "slug" => [
             "label" => "Slug",
+            "filter" => true,
         ],
         "contents" => [
             "header" => "Contents",
@@ -37,7 +38,7 @@ class Pages extends BaseController
             "hidden" => true,
         ],
         "updated_at" => [
-            "label" => "Updated_at",
+            "label" => "Updated",
             "hidden" => true,
         ],
     ];

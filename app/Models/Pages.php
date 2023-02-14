@@ -40,7 +40,7 @@ class Pages extends BaseModel
         ],
         'slug' => [
             'label' => 'Slug',
-            'rules' => 'max_length[255]'
+            'rules' => 'max_length[255]|is_unique[pages.slug,id,{id}]'
         ],
         'contents' => [
             'label' => 'Contents',

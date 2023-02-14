@@ -11,16 +11,16 @@ class Permissions extends BaseController
     protected $viewFields = [];
     protected $editFields = ['user_type_id','module','access'];
     public $fields = [
-        'id' => [
-            "label" => "ID",
+        "id" => [
+            "label" => "Id",
             "hidden" => true
         ],
-        'user_type_id' => [
+        "user_type_id" => [
             "label" => "Profile",
             "sort" => true,
             "filter" => true
         ],
-        'module' => [
+        "module" => [
             "label" => "Module",
             "sort" => true,
             "filter" => true
@@ -36,7 +36,15 @@ class Permissions extends BaseController
                 3 => "Create",
                 4 => "Full"
             ]
-        ]
+        ],
+        "created_at" => [
+            "label" => "Created",
+            "hidden" => true,
+        ],
+        "updated_at" => [
+            "label" => "Updated",
+            "hidden" => true,
+        ],
     ];
 
     protected function prepareFields($keys=null, $data=null){
