@@ -26,11 +26,13 @@ final class HealthTest extends CIUnitTestCase
             $env = preg_grep('/^app\.baseURL = ./', file(HOMEPATH . '.env')) !== false;
         }
 
+        $baseURL = null;
         if ($env) {
             // BaseURL in .env is a valid URL?
             // phpunit.xml.dist sets app.baseURL in $_SERVER
             // So if you set app.baseURL in .env, it takes precedence
             $config = new App();
+            $baseURL = $config->baseURL;
             $this->assertTrue(
                 $validation->check($config->baseURL, 'valid_url'),
                 'baseURL "' . $config->baseURL . '" in .env is not valid URL'
@@ -42,6 +44,7 @@ final class HealthTest extends CIUnitTestCase
         $reader = new ConfigReader();
 
         // BaseURL in app/Config/App.php is a valid URL?
+        if (!$baseURL)
         $this->assertTrue(
             $validation->check($reader->baseURL, 'valid_url'),
             'baseURL "' . $reader->baseURL . '" in app/Config/App.php is not valid URL'

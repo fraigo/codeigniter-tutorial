@@ -49,7 +49,7 @@ $routes->set404Override(static function ($error) {
  * Route Definitions
  * --------------------------------------------------------------------
  */
-if (strpos($_SERVER["REQUEST_URI"],"/api")===0){
+if (strpos(@$_SERVER["REQUEST_URI"]?:'',"/api")===0){
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding, Authorization");
