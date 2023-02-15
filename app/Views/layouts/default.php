@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo @$title?:'My App' ?></title>
+    <title><?php echo @$title?:(getenv('app.name')?:'My App') ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php if (@$description && !@$meta['description']) { ?>
       <meta name="description" content="<?=$description?>" >
