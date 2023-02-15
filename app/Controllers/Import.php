@@ -49,6 +49,7 @@ class Import extends BaseController
                 "label" => "CSV Content",
                 "placeholder" => "Data separated by comma or tab space",
                 "control" => "form_textarea",
+                "onchange" => "parseHeaders(this)"
             ];
         }
         return $this->layout('form',[

@@ -85,7 +85,7 @@ class Users extends BaseController
         if (!is_admin()){
             $query->where("user_types.access<=$access");
         }
-        $query->join('user_types','user_types.id=users.user_type',is_admin()?'left':null);
+        $query->join('user_types','user_types.id=users.user_type',is_admin()?'left':'');
         return $query;
     }
 
