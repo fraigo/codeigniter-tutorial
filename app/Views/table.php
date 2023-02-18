@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between mb-4">
         <h2><?=$title?></h2>
         <div>
-            <?php if (module_access($route,3)) { ?>
+            <?php if (module_access($route,3) && $newUrl) { ?>
             <button type="button" class="btn btn-secondary" onclick="document.location=this.getAttribute('data-href')" data-href="<?=$newUrl?>">New</button>
             <?php } ?>
         </div>

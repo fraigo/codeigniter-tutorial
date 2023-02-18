@@ -1,8 +1,10 @@
 ENV=$1
 echo "Installing composer packages..."
 composer update
-echo "Copying env file ($ENV.env)..."
-cp $ENV.env .env
+if [ ! -e ".dev" ]; then
+    echo "creating env file from $ENV.env ..."
+    cp $ENV.env .env
+fi
 echo "Running migrations..."
 php spark migrate
 echo "Importing app data"
