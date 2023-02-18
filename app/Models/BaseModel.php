@@ -7,13 +7,37 @@ use CodeIgniter\Model;
 class BaseModel extends Model
 {
     // put here any common model method or attribute
+    protected $relationships =[];
 
-    public function getListOptions($nameField, $id_field = "id", $condition=null){
+    public function getListOptions($nameFields, $id_field = "id", $condition=null){
         $result = [];
+        if (!is_array($nameFields)) $nameFields = [$nameFields];
         if ($condition) $this->where($condition);
         foreach($this->findAll() as $row){
-            $result[$row[$id_field]]=$row[$nameField];
+            $values = [];
+            foreach($nameFields as $fld){
+                if (array_key_exists($fld,$row)){
+                    $values[] = $row[$fld];
+                } else {
+                    $values[] = $fld;
+                }
+            }
+            $result[$row[$id_field]]=implode("",$values);
         }
         return $result;
+    }
+
+    public function getRelationshipModel($extTable){
+        $rel = @$this->relationships[$extTable];
+        if ($rel){
+            $field = $rel["field"];
+            $idField = @$rel["ext_id"]?:'id';
+            $desc = $rel["ext_description"];
+            $extFields = ["$desc as {$extTable}__$desc"];
+            $modelTable = $this->table;
+            $fields = array_merge(["$modelTable.*"],$extFields);
+            $this->select($fields);
+            $this->join($extTable, "$extTable.$idField=$modelTable.$field");
+        }
     }
 }

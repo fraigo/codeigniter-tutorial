@@ -56,6 +56,7 @@ abstract class BaseController extends ResourceController
     protected $newLink = null;
     protected $viewLink = null;
     protected $formAttributes = null;
+    protected $actionColumn = null;
 
     /**
      * Constructor.
@@ -103,9 +104,9 @@ abstract class BaseController extends ResourceController
         return $item;
     }
 
-    protected function getListOptions($model,$nameField,$idField="id",$condition=null){
+    protected function getListOptions($model,$nameFields,$idField="id",$condition=null){
         $items = new $model();
-        return $items->getListOptions($nameField,$idField,$condition);
+        return $items->getListOptions($nameFields,$idField,$condition);
     }
 
     protected function layout($view, $data=[], $layout='default'){ 
@@ -238,7 +239,7 @@ abstract class BaseController extends ResourceController
     protected function indexColumns($route, $group){
         $actionCol = [];
         if ($route){
-            $actionCol = [[
+            $actionCol = $this->actionColumn ?: [[
                 "content" => $this->actionColumns($route),
                 "cellAttributes" => [
                     "class" => "actions text-center text-nowrap",
@@ -300,7 +301,7 @@ abstract class BaseController extends ResourceController
         $items = $this->getItems();
         $filters = $this->formFilters;
         $columns = $this->indexColumns($this->route,$pagerGroup);
-        $this->newLink = $this->newLink ?: "/$this->route/new";
+        $this->newLink = ($this->newLink||$this->newLink===false) ? $this->newLink : "/$this->route/new";
 
         $data = [
             "title" => $this->entityGroup, // page $title
@@ -439,7 +440,7 @@ abstract class BaseController extends ResourceController
         }
         return $this->layout('form',[
             'item'=>$item,
-            'actionLabel' => "Edit",
+            'actionLabel' => "Update",
             'formAttributes'=>$this->formAttributes,
             'action'=> current_url(),
             'fields'=> $fields,

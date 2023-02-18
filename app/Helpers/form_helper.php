@@ -1,7 +1,7 @@
 <?php
 
 function form_component($name, $config){
-    return view("components/$name", $config);
+    return view("components/$name", $config, ['saveData'=>false]);
 }
 
 function form_item($config,$control="form_input",$class="form-item"){
@@ -68,9 +68,10 @@ function form_filters($filters=[],$title="Filters"){
         $clearUrl->stripQuery($cfg['name']);
     }
     $content = [];
+    $id = rand(10000,99999);
     $content[] = form_open(current_url(),["method"=>"GET","class"=>"form-filters d-flex flex-column flex-wrap mb-2"]);
     $clear = '<input type="button" class="btn btn-secondary btn-sm" type="button" data-href="'.$clearUrl.'" onclick="document.location=this.getAttribute(\'data-href\')" value="Clear">';
-    $toggle = '<button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target=".filterCollapse" aria-expanded="false" aria-controls="filterCollapse">Show/Hide</span></button>';
+    $toggle = '<button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapse_'.$id.'" aria-expanded="false" aria-controls="filterCollapse">Show/Hide</span></button>';
     $desc = '';
     foreach($filters as $field=>$cfg){
         if (@$cfg["hidden"]) continue;
@@ -86,7 +87,7 @@ function form_filters($filters=[],$title="Filters"){
         }
     }
     $content[] = '<div class="d-flex align-items-center p-2 justify-content-between"><div><b class=\"mt-2\">'.$title.'</b>'.$desc.'</div><div>'.$clear." ".$toggle.'</div></div>';
-    $content[] = '<div class="collapse filterCollapse" ><div class="d-flex flex-wrap">';
+    $content[] = '<div class="collapse filterCollapse" id="collapse_'.$id.'"><div class="d-flex flex-wrap">';
     $inputs = [];
     foreach($filters as $field=>$cfg){
         if (@$cfg["hidden"]) continue;
