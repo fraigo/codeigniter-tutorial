@@ -5,12 +5,13 @@
 ?>
 <script src="/components/tinymce/tinymce.min.js" ></script>
 <input type="file" id="htmleditorfile" accept="image/*" style="display: none">
-<textarea name="<?= $name ?>" id="<?= $id ?>" style="opacity:0;width:100%;height:600px" contenteditable><?= $value ?></textarea>
+<textarea name="<?= $name ?>" id="<?= $id ?>" style="opacity:0;width:100%;height:<?= @$height ? "{$height}px" : '300px' ?>" contenteditable><?= $value ?></textarea>
 <script>
     var editor = tinymce.init({
-        selector: "textarea#contents",
+        selector: "textarea#<?= $id ?>",
         body_class: "some_class_name",
         menubar: false,
+        height: <?= @$height ?: 300 ?>,
         // https://www.tiny.cloud/docs/tinymce/6/available-toolbar-buttons/
         toolbar: "undo redo | bold italic | h1 h2 h3 h4 | fontfamily | alignleft aligncenter alignright | forecolor backcolor | bullist numlist | link image table | fontsize template codesample ",
         toolbar_groups: {
