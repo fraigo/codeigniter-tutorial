@@ -19,6 +19,13 @@ class ListOptions extends BaseModel
         'name',
         'value'
     ];
+    protected $relationships = [
+        "lists" => [
+            "field"  => "list_id",
+            "ext_id" => "id",
+            "ext_description" => "description",
+        ]
+    ];
 
     // Dates
     protected $useTimestamps = true;

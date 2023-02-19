@@ -187,8 +187,8 @@ abstract class BaseController extends ResourceController
         return $filters;
     }
 
-    protected function getVars(){
-        return json_decode(json_encode($this->request->getVar()),true);
+    protected function getVars($var=null){
+        return json_decode(json_encode($this->request->getVar($var)),true);
     }
 
     protected function processSort($query,$group){

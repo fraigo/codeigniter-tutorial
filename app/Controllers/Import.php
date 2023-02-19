@@ -9,7 +9,8 @@ class Import extends BaseController
     public function index($table="")
     {
         $item=[
-            "table" => $table
+            "table" => $table,
+            "operation" => "insert",
         ];
         $fields = [
             "table" => [
@@ -21,6 +22,32 @@ class Import extends BaseController
         if ($table){
             $tableFields = $this->getFields($table);
             $height = (count($tableFields)+1) * 1.25;
+            $fields["operation"] = [
+                "label" => "Operation",
+                "options" => [
+                    "insert" => "Insert",
+                    "replace" => "Replace",
+                ],
+            ];
+            $fields["truncate"] = [
+                "label" => "Truncate",
+                "options" => [
+                    "yes" => "Clear Data",
+                    "no" => "Leave Existing Data",
+                ],
+            ];
+            $fields["file"] = [
+                "label" => "CSV File",
+                "type" => "file",
+                "onchange" => "parseFile(this)",
+                "accept" => ".csv"
+            ];
+            $fields["content"] = [
+                "label" => "CSV Content",
+                "placeholder" => "Data separated by comma or tab space",
+                "control" => "form_textarea",
+                "onchange" => "parseHeaders(this)"
+            ];
             $fields["fields"] = [
                 "label" => "Fields",
                 "onchange" => "this.form.selected_fields.value+=this.value+'\\n'",
@@ -38,18 +65,6 @@ class Import extends BaseController
                 "placeholder" => "field=value",
                 "control" => "form_textarea",
                 "style" => "height: 120px; font-size: 16px;",
-            ];
-            $fields["file"] = [
-                "label" => "CSV File",
-                "type" => "file",
-                "onchange" => "parseFile(this)",
-                "accept" => ".csv"
-            ];
-            $fields["content"] = [
-                "label" => "CSV Content",
-                "placeholder" => "Data separated by comma or tab space",
-                "control" => "form_textarea",
-                "onchange" => "parseHeaders(this)"
             ];
         }
         return $this->layout('form',[
@@ -69,10 +84,15 @@ class Import extends BaseController
     public function import($table="")
     {
         $list = explode("\n",$this->request->getVar("content"));
+        $replace = "replace" == $this->request->getVar("operation");
+        $truncate = "yes" == $this->request->getVar("truncate");
         $fields = explode("\n",$this->request->getVar("selected_fields"));
         $values = explode("\n",$this->request->getVar("default_values"));
         $rows = [];
         $db = db_connect();
+        if ($truncate){
+            $db->table($table)->truncate(); 
+        }
         
         foreach($list as $item){
             $cols = explode("\t",trim($item));
@@ -92,7 +112,11 @@ class Import extends BaseController
             $row["created_at"] = date("Y-m-d H:i:s");
             $row["updated_at"] = date("Y-m-d H:i:s");
             try {
-                $res = $db->table($table)->insert($row);
+                if ($replace){
+                    $res = $db->table($table)->replace($row);
+                } else {
+                    $res = $db->table($table)->insert($row);
+                }
             } catch( DatabaseException $ex){
                 $res = $ex->getMessage();
             }
