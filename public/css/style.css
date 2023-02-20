@@ -89,6 +89,9 @@ a[disabled] {
     margin: 0;
     padding-left: 6px;
 }
+.form-item input[type='color'][readonly]{
+    pointer-events: none;
+}
 .form-errors{
     margin: 8px 0;
     line-height: 1.4em;

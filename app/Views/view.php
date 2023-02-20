@@ -32,8 +32,13 @@
             helper('form');
             if (@$config["options"]){
                 echo @$config["options"][$value];
+            } else if (@$config["view_control"]){
+                $config["value"] = $value;
+                $config["readonly"] = true;
+                echo form_control($config["view_control"],$config);
             } else if (@$config["view_component"]){
                 $config["value"] = $value;
+                $config["readonly"] = true;
                 echo form_component($config["view_component"],$config);
             } else if (@$config["value"]){
                 echo $config["value"];

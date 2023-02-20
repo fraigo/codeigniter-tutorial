@@ -4,7 +4,7 @@ function form_component($name, $config){
     return view("components/$name", $config, ['saveData'=>false]);
 }
 
-function form_item($config,$control="form_input",$class="form-item"){
+function form_control($control,$config){
     $id = @$config["id"];
     unset($config["hidden"]);
     if ($control==null && @$config["options"]){
@@ -16,10 +16,10 @@ function form_item($config,$control="form_input",$class="form-item"){
     if (@$config["readonly"]===null){
         unset($config["readonly"]);
     }
-    $label = @$config["label"];
-    //unset($config["label"]);
-    $error = @$config['errors'] ? "<div class='alert alert-danger p-1 mt-1'>".htmlentities(@$config['errors'])."</div>" : '';
-    $errors = "<div class=\"form-error\">$error</div>";
+    
+    if ($control==null && @$config["options"]){
+        $control = "form_dropdown";
+    }
     $functions = [
         "form_input",
         "form_dropdown",
@@ -28,11 +28,6 @@ function form_item($config,$control="form_input",$class="form-item"){
     if (!in_array($control,$functions)){
         $control = $functions[0];
     }
-    if (@$config["type"]=="submit"){
-        @$config["class"] .= " btn";
-    } else {
-        @$config["class"] .= " form-control";
-    }
     if ($control=="form_input"){
         foreach($config as $key=>$cfg){
             if (is_array($cfg)){
@@ -40,10 +35,25 @@ function form_item($config,$control="form_input",$class="form-item"){
             }
         }
     }
+    if (@$config["type"]=="submit"){
+        @$config["class"] .= " btn";
+    } else {
+        @$config["class"] .= " form-control";
+    }
+    return $control($config);
+}
+
+function form_item($config,$control="form_input",$class="form-item"){
+    $id = @$config["id"];
+    $label = @$config["label"];
+    //unset($config["label"]);
+    $error = @$config['errors'] ? "<div class='alert alert-danger p-1 mt-1'>".htmlentities(@$config['errors'])."</div>" : '';
+    $errors = "<div class=\"form-error\">$error</div>";
     if (@$config["component"]){
         $controlContent = form_component($config["component"], $config);
     } else {
-        $controlContent = $control($config);
+        $controlContent = form_control($control,$config);
+    
     }
     $labelContent = @$config["label"]!==null ? "<label for=\"{$id}\" >{$label}</label>" : '';
     $template = "<div class=\"$class\">
