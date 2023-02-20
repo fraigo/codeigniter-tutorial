@@ -11,6 +11,7 @@ class Import extends BaseController
         $item=[
             "table" => $table,
             "operation" => "insert",
+            "truncate" => "no",
         ];
         $fields = [
             "table" => [
@@ -32,8 +33,9 @@ class Import extends BaseController
             $fields["truncate"] = [
                 "label" => "Truncate",
                 "options" => [
-                    "yes" => "Clear Data",
                     "no" => "Leave Existing Data",
+                    "yes" => "Clear Data",
+                    
                 ],
             ];
             $fields["file"] = [
