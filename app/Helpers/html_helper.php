@@ -103,13 +103,14 @@ function parseData($content,$data){
                 $content[$key] = parseData($col, $data);
             } else {
                 foreach($data as $fld=>$value){
-                    $content[$key] = str_replace("{$key}","$value", "$col");
+                    $col = str_replace('{$key}',"$value", "$col");
                 }
+                $content[$key] = $col;
             }
         }
     } else {
         foreach($data as $fld=>$value){
-            $content = str_replace("{$fld}","$value", $content);
+            $content = str_replace('{$fld}',"$value", $content);
         }
     }
     return $content;
@@ -134,7 +135,7 @@ function htmlRow($row,$columns,$header=false){
                 $content = $cfg["content"];
             }
             if (@$cfg["options"]){
-                $content = @$cfg["options"][@$row[$fld]];
+                $content = $cfg["options"][@$row[$fld]];
             }
         }
         $cols[] = htmlCell($content,$header,@$cfg["cellAttributes"]);
