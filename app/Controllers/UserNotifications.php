@@ -58,11 +58,12 @@ class UserNotifications extends BaseController
     function userNotifications(){
         $userID = user_id();
         $notifications = $this->model;
-        $notifications->getRelationshipModel("notifications",['title','content']);
+        $notifications->getRelationshipModel("notifications",['title','content','link']);
         $notifications->where([
             'user_id' => $userID,
             'notifications.active' => 1
         ]);
+        $notifications->orderBy('user_notifications.created_at DESC');
         $items = $notifications->findAll();
         return $this->JSONResponse([
             "notifications" => $items,
