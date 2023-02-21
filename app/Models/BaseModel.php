@@ -27,13 +27,13 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function getRelationshipModel($extTable){
+    public function getRelationshipModel($extTable, $extFields=null){
         $rel = @$this->relationships[$extTable];
         if ($rel){
             $field = $rel["field"];
             $idField = @$rel["ext_id"]?:'id';
             $desc = $rel["ext_description"];
-            $extFields = ["$desc as {$extTable}__$desc"];
+            $extFields = $extFields?:["$desc as {$extTable}__$desc"];
             $modelTable = $this->table;
             $fields = array_merge(["$modelTable.*"],$extFields);
             $this->select($fields);

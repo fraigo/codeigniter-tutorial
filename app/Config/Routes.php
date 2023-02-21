@@ -85,6 +85,8 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->put('/api/profile', 'Auth::updateProfile');
 
     $routes->get('/search/select/(:any)', 'Search::select/$1');
+    $routes->get('/api/app/notifications', 'UserNotifications::userNotifications');
+    $routes->put('/api/app/usernotifications/(:any)', 'UserNotifications::updateUserNotification/$1');
     $routes->get('/api/app/lists', 'ListOptions::all');
 });
 

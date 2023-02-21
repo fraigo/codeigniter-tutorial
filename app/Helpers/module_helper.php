@@ -36,6 +36,16 @@ function module_config(){
             "controller" => "ListOptions"
         ],
         [
+            "route" => "notifications",
+            "label" => "Notifications",
+            "controller" => "Notifications"
+        ],
+        [
+            "route" => "usernotifications",
+            "label" => "User Notifications",
+            "controller" => "UserNotifications"
+        ],
+        [
             "route" => "pages",
             "label" => "Pages",
             "controller" => "Pages"
