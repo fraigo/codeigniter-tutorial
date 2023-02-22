@@ -74,4 +74,15 @@ class UserNotifications extends BaseModel
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
+    public function createUserNotification($notificationId,$userId){
+        $notification = new \App\Models\UserNotifications();
+        $id = $notification->insert([
+            "notification_id" => $notificationId,
+            "user_id" => $userId,
+            "read" => 0,
+            "sent" => 0,
+        ]);
+        return $id;
+    }
+
 }

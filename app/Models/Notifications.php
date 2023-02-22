@@ -66,4 +66,16 @@ class Notifications extends BaseModel
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
+    public function createNotification($title,$content=null,$link=null){
+        $notification = new \App\Models\Notifications();
+        $id = $notification->insert([
+            "title" => $title,
+            "icon" => "",
+            "content" => $content,
+            "active" => 1,
+            "link" => $link
+        ]);
+        return $id;
+    }
+
 }
