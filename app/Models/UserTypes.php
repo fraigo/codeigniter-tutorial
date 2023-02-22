@@ -18,6 +18,10 @@ class UserTypes extends BaseModel
         'name',
         'access'
     ];
+    protected $childModels = [
+        '\App\Models\Permissions'=>'user_type_id',
+        '\App\Models\Users'=>'user_type',
+    ];
 
     // Dates
     protected $useTimestamps = true;
@@ -50,6 +54,6 @@ class UserTypes extends BaseModel
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    protected $afterDelete    = ['deleteChilds'];
 
 }

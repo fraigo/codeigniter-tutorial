@@ -31,6 +31,9 @@ class Notifications extends BaseModel
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
+    protected $childModels = [
+        '\App\Models\UserNotifications'=>'notification_id',
+    ];
 
     // Validation
     protected $validationRules      = [
@@ -64,7 +67,7 @@ class Notifications extends BaseModel
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    protected $afterDelete    = ['deleteChilds'];
 
     public function createNotification($title,$content=null,$link=null){
         $notification = new \App\Models\Notifications();

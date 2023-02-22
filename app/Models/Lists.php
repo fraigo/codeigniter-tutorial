@@ -19,6 +19,9 @@ class Lists extends BaseModel
         'description',
         'active'
     ];
+    protected $childModels = [
+        '\App\Models\ListOptions'=>'list_id',
+    ];
 
     // Dates
     protected $useTimestamps = true;
@@ -55,6 +58,6 @@ class Lists extends BaseModel
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    protected $afterDelete    = ['deleteChilds'];
 
 }

@@ -36,6 +36,9 @@ class Users extends BaseModel
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
+    protected $childModels = [
+        '\App\Models\UserOptions' => 'user_id',
+    ];
 
     // Validation
     protected $validationRules      = [
@@ -93,7 +96,7 @@ class Users extends BaseModel
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    protected $afterDelete    = ['deleteChilds'];
 
     protected function hashPassword($data){
         if (@$data["data"]["password"]){

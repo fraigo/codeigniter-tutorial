@@ -7,7 +7,8 @@ use CodeIgniter\Model;
 class BaseModel extends Model
 {
     // put here any common model method or attribute
-    protected $relationships =[];
+    protected $relationships = [];
+    protected $childModels = [];
 
     public function getListOptions($nameFields, $id_field = "id", $condition=null){
         $result = [];
@@ -38,6 +39,16 @@ class BaseModel extends Model
             $fields = array_merge(["$modelTable.*"],$extFields);
             $this->select($fields);
             $this->join($extTable, "$extTable.$idField=$modelTable.$field");
+        }
+    }
+
+    protected function deleteChilds($data){
+        foreach($this->childModels as $model=>$field){
+            $model = new $model();
+            $items = $model->select('id')->where($field,$data['id'])->findAll();
+            foreach($items as $item){
+                $model->delete($item['id']);
+            }
         }
     }
 }
