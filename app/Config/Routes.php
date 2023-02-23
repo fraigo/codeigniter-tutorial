@@ -123,6 +123,10 @@ foreach($appRoutes as $route => $controller){
     });
 }
 
+$routes->get('/_admin/auth', 'AdminConsole::auth');
+$routes->get('/_admin/console', 'AdminConsole::index');
+$routes->get('/_admin/(:any)', 'AdminConsole::command/$1');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
