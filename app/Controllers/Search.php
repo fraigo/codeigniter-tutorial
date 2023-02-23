@@ -21,6 +21,15 @@ class Search extends BaseController
         $controller = new $controllerName();
         $controller->initController($this->request,$this->response,$this->logger);
         $controller->prepareFields();
+        if (@$config["extra_fields"]){
+            foreach($config["extra_fields"] as $fld=>$value){
+                $controller->fields[$fld] = [
+                    "field" => $value,
+                    "hidden" => true,
+                ];
+            }
+        }
+        
         if (@$config["filters"])
         foreach($config["filters"] as $fld=>$val){
            //$controller->fields["$fld"]["hidden"]=true;
@@ -31,7 +40,7 @@ class Search extends BaseController
                     "type"=>"button",
                     "value"=>"Select",
                     "data-description" => $config["description"],
-                    "data-id" => "{id}",
+                    "data-id" => @$config["search_id"]?:"{id}",
                     "onclick"=>"selectItemFromSearch(this,'$target')"
                 ])
             ]

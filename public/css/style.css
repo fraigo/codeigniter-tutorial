@@ -73,6 +73,10 @@ a[disabled] {
 .form-item .tox.tox-tinymce{
     flex: 1;
 }
+.form-item .input-group > input{
+    border-radius: 5px 0 0 5px;
+}
+
 .form-item select[readonly]{
     pointer-events: none;
 }
