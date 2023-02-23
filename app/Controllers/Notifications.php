@@ -46,6 +46,7 @@ class Notifications extends BaseController
         "content" => [
             "header" => "Content",
             "component" => "html-editor",
+            "view_component" => "html-editor",
             "label" => null,
             "hidden" => true,
         ],

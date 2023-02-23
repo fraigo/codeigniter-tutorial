@@ -2,13 +2,14 @@
     $images = [
         // [ "title" => "Frank" , "value" => "/images/frank.jpg"]
     ];
+    $componentId = @$id ?: 'editor'.rand(10000,99999);
 ?>
 <script src="/components/tinymce/tinymce.min.js" ></script>
 <input type="file" id="htmleditorfile" accept="image/*" style="display: none">
-<textarea name="<?= $name ?>" id="<?= $id ?>" style="opacity:0;width:100%;height:<?= @$height ? "{$height}px" : '300px' ?>" contenteditable><?= $value ?></textarea>
+<textarea name="<?= @$name ?>" id="<?= $componentId ?>" style="opacity:0;width:100%;height:<?= @$height ? "{$height}px" : '300px' ?>" contenteditable><?= $value ?></textarea>
 <script>
     var editor = tinymce.init({
-        selector: "textarea#<?= $id ?>",
+        selector: "textarea#<?= $componentId ?>",
         body_class: "some_class_name",
         menubar: false,
         height: <?= @$height ?: 300 ?>,
@@ -21,6 +22,7 @@
                 items: 'h1 h2 h3 h4'
             }
         },
+        readonly: <?=@$readonly ? 'true' : 'false'?>,
         relative_urls : false,
         remove_script_host : true,
         image_list: <?php echo json_encode($images) ?>,
@@ -96,3 +98,8 @@
         content_css: ['/css/bootstrap.min.css','/css/style.css']
     });
 </script>
+<style>
+    .tox[aria-disabled='true'] .tox-editor-header{
+        display: none;
+    }
+</style>
