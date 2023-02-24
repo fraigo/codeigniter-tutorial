@@ -27,8 +27,17 @@ class AdminConsole extends BaseController
             return $this->doAuth();
         }
         helper('html');
+        echo "<style>
+        a{
+            display: block;
+            padding: 4px;
+            text-decoration: none;
+        }
+        </style>";
         echo "<h2>Admin Console</h2>";
-        echo anchor("/_admin/migrate","Run Migration")."<br>";
+        echo anchor("/_admin/migrate","Run Migration",["target"=>"output"])."<br>";
+        echo anchor("/_admin/appdata?name=AppData","Reset App Data",["target"=>"output"])."<br>";
+        echo '<iframe style="width:100%; height:400px" name="output" ></iframe>';
     }
 
     public function auth(){
@@ -38,8 +47,13 @@ class AdminConsole extends BaseController
 
     public function command($cmd=null){
         $commands = [
-            "migrate" => "php spark migrate"
+            "rollback" => "php spark migrate",
+            "migrate" => "php spark migrate",
         ];
+        $name = @$_GET["name"];
+        if ($name){
+            $commands["appdata"] = "php spark db:seed {$name}";
+        }
         $command = @$commands[$cmd];
         if (!$command){
             return $this->notFound();
