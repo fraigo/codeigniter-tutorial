@@ -36,7 +36,11 @@ class AdminConsole extends BaseController
         </style>";
         echo "<h2>Admin Console</h2>";
         echo anchor("/_admin/migrate","Run Migration",["target"=>"output"])."<br>";
-        echo anchor("/_admin/appdata?name=AppData","Reset App Data",["target"=>"output"])."<br>";
+        $seeds = glob(APPPATH.'/Database/Seeds/*.php');
+        foreach ($seeds as $seed){
+            $seedName = str_replace(".php","",basename($seed));
+            echo anchor("/_admin/appdata?name=$seedName","Seed $seedName",["target"=>"output"])."<br>";
+        }
         echo '<iframe style="width:100%; height:400px" name="output" ></iframe>';
     }
 
