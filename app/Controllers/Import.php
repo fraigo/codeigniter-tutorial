@@ -142,6 +142,7 @@ class Import extends BaseController
     private function getTables(){
         $db = db_connect();
         $tables = $db->listTables();
+        sort($tables);
         $result = [];
         foreach ($tables as $table) {
             $result[$table] = ($table);
