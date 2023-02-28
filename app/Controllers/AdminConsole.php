@@ -15,11 +15,11 @@ class AdminConsole extends BaseController
     }
 
     private function doAuth($force=false){
-        if (!@$_SERVER['PHP_AUTH_USER']){
+        if (!@$_SERVER['PHP_AUTH_USER'] || !$this->isAuthenticated()){
             header('WWW-Authenticate: Basic realm="App"');
             header('HTTP/1.0 401 Unauthorized');
             return $this->JSONResponse(null,401,["success"=>false,"message"=>"Unauthorized"]);
-        }    
+        }
     }
 
     public function index(){
@@ -36,6 +36,7 @@ class AdminConsole extends BaseController
         </style>";
         echo "<h2>Admin Console</h2>";
         echo anchor("/_admin/migrate","Run Migration",["target"=>"output"])."<br>";
+        echo anchor("/import    ","Import",["target"=>"_blank"])."<br>";
         $seeds = glob(APPPATH.'/Database/Seeds/*.php');
         foreach ($seeds as $seed){
             $seedName = str_replace(".php","",basename($seed));
