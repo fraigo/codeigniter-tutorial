@@ -25,10 +25,11 @@ class BaseModel extends Model
             }
             $result[$row[$id_field]]=implode("",$values);
         }
+        asort($result);
         return $result;
     }
 
-    public function getRelationshipModel($extTable, $extFields=null){
+    public function getRelationshipModel($extTable, $extFields=null, $leftJoin=false){
         $rel = @$this->relationships[$extTable];
         if ($rel){
             $field = $rel["field"];
@@ -38,7 +39,7 @@ class BaseModel extends Model
             $modelTable = $this->table;
             $fields = array_merge(["$modelTable.*"],$extFields);
             $this->select($fields);
-            $this->join($extTable, "$extTable.$idField=$modelTable.$field");
+            $this->join($extTable, "$extTable.$idField=$modelTable.$field",$leftJoin?'left':'');
         }
     }
 

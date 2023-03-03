@@ -380,7 +380,7 @@ abstract class BaseController extends ResourceController
     {
         $this->prepareFields();
         if ($this->isJson()){
-            $this->pageSize = 100;
+            $this->pageSize = @$_GET["pagesize"]?:100;
             $this->pageGroup = 'default';
             $items = $this->getItems();
             $page = $this->model->pager->getCurrentPage();

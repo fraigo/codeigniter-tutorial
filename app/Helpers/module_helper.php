@@ -1,7 +1,10 @@
 <?php
 
 function module_list(){
-    return array_column(module_config(),"label","route");
+    $result = array_column(module_config(),"label","route");
+    $result = array_merge($result,custom_modules());
+    asort($result);
+    return $result;
 }
 
 function module_routes(){
@@ -55,5 +58,13 @@ function module_config(){
             "label" => "User Options",
             "controller" => "UserOptions"
         ],
+    ];
+}
+
+function custom_modules(){
+    return [
+        "staff_profile" => "Staff Profile",
+        "client_profile" => "Client Profile",
+        "agency_profile" => "Agency Profile",
     ];
 }
