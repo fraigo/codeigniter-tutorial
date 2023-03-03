@@ -149,7 +149,7 @@ class Auth extends BaseController
             if ($errors){
                 $error = explode("<br>",$errors)[0];
                 $this->errors = [
-                    "message" => "Send Error: $error"
+                    "message" => getenv('email.debug') ? $errors : "Send Error: $error"
                 ];
                 if ($this->isJson()){
                     return $this->JSONResponse(null,400,$this->errors);
