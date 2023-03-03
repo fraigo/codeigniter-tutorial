@@ -36,7 +36,8 @@ class AdminConsole extends BaseController
         </style>";
         echo "<h2>Admin Console</h2>";
         echo anchor("/_admin/migrate","Run Migration",["target"=>"output"])."<br>";
-        echo anchor("/import    ","Import",["target"=>"_blank"])."<br>";
+        echo anchor("/_admin/rollback","Rollback Migration",["target"=>"output"])."<br>";
+        echo anchor("/import","Import",["target"=>"_blank"])."<br>";
         $seeds = glob(APPPATH.'/Database/Seeds/*.php');
         foreach ($seeds as $seed){
             $seedName = str_replace(".php","",basename($seed));
@@ -52,7 +53,7 @@ class AdminConsole extends BaseController
 
     public function command($cmd=null){
         $commands = [
-            "rollback" => "php spark migrate",
+            "rollback" => "php spark migrate:rollback",
             "migrate" => "php spark migrate",
         ];
         $name = @$_GET["name"];
