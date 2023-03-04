@@ -12,7 +12,7 @@
         'value'=>"$value",
         'width'=>$width,
         'height'=>$height,
-        'default_image'=>$default_image,
+        'default_image'=>@$default_image,
         'onclick'=>"document.getElementById('upload_$tmp_id').click()"
     ])?>
     <input id="upload_<?=$tmp_id?>" type="file" accept="image/png,image/jpeg" style="display:none"
