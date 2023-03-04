@@ -34,6 +34,7 @@ class Users extends BaseController
             "hidden" => true,
             "view_component" => "avatar",
             "component" => "image-upload",
+            "default_image" => "/img/avatar.svg",
         ],
         "login_at" => [
             "label" => "Last Login",

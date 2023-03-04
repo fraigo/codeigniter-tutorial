@@ -10,7 +10,7 @@
     <?php if (@$meta) foreach($meta as $name=>$content) { ?>
       <meta name="<?=$name?>" content="<?=$content?>" >
     <?php } ?>
-    <link rel="shortcut icon" type="image/png" href="<?=getenv('app.icon')?:'/images/icon.png'?>"/>
+    <link rel="shortcut icon" type="image/png" href="<?=getenv('app.icon')?:'/img/icon.png'?>"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css" >
     <?= $this->renderSection('head') ?>
 </head>

@@ -1,6 +1,6 @@
 <?php
     $images = [
-        // [ "title" => "Frank" , "value" => "/images/frank.jpg"]
+        // [ "title" => "Frank" , "value" => "/img/frank.jpg"]
     ];
     $componentId = @$id ?: 'editor'.rand(10000,99999);
 ?>

@@ -764,7 +764,7 @@
     * Use `env` file to setup variables and `getenv('varname')` to retrieve values
     * Crete new variables on `env` file (and default ones in `.env`)
         * `app.name = 'My App Name'` for the app name
-        * `app.icon = '/images/icon.png'` for the app icon (relative to the `/public` web path)
+        * `app.icon = '/img/icon.png'` for the app icon (relative to the `/public` web path)
     * Setup website header to display the `app.name` value
         * Use `getenv('app.name')?:'Default app name'` to setup the app header title, with a fallback to a deault app name if `app.name` is not set
         * If `getenv('app.name')` is set, include the app image icon in the content: Eg: `<img src="<?=getenv('app.icon')?>" style="height:40px">`
