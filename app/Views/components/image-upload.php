@@ -12,6 +12,7 @@
         'value'=>"$value",
         'width'=>$width,
         'height'=>$height,
+        'contain'=>$contain,
         'default_image'=>@$default_image,
         'onclick'=>"document.getElementById('upload_$tmp_id').click()"
     ])?>
@@ -28,7 +29,6 @@
                 var reader = new FileReader();
                 reader.onload = (e) => {
                     var canvas = document.getElementById(canvasId)
-                    var ctx = canvas.getContext('2d')
                     var img = new Image()
                     img.onload = () => {
                         var side = Math.min(img.naturalWidth, img.naturalHeight)
@@ -36,7 +36,9 @@
                         var sy = side
                         var dx = (img.naturalWidth - side) / 2
                         var dy = (img.naturalHeight - side) / 2
-                        if (width!=height) {
+                        var finalWidth = width
+                        var finalHeight = height
+                        if (contain) {
                             console.log('rate',width/height,img.naturalWidth/img.naturalHeight)
                             if (width/height>img.naturalWidth/img.naturalHeight){
                                 sx = img.naturalHeight * width / height
@@ -49,10 +51,20 @@
                                 dx = (img.naturalWidth - sx) / 2
                                 dy = (img.naturalHeight - sy) / 2
                             }
-                            
                         }
+                        if (contain){
+                            sx = img.naturalWidth
+                            sy = img.naturalHeight
+                            dx = 0
+                            dy = 0
+                            finalWidth = width
+                            finalHeight = width * img.naturalHeight / img.naturalWidth
+                        }
+                        canvas.setAttribute('width',finalWidth)
+                        canvas.setAttribute('height',finalHeight)
+                        var ctx = canvas.getContext('2d')
                         ctx.clearRect(0, 0, width, height)
-                        ctx.drawImage(img, dx, dy, sx, sy, 0, 0, width, height)
+                        ctx.drawImage(img, dx, dy, sx, sy, 0, 0, finalWidth, finalHeight)
                         var input = document.getElementById(inputId)
                         input.value = canvas.toDataURL()
                         var avatar = document.getElementById(avatarId)
