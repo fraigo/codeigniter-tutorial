@@ -133,6 +133,7 @@ abstract class BaseController extends ResourceController
         $result = [];
         foreach($this->fields as $fld=>$cfg){
             if (!$keys || in_array($fld,$keys)){
+                if (!$keys && @$cfg['view']===false) continue;
                 $result[$fld] = $cfg;
             }
         }

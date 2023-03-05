@@ -29,6 +29,12 @@ class Users extends BaseController
             "label" => "Profile",
             "filter" => true,
         ],
+        "users__user_type_name" => [
+            "label" => "Profile",
+            "hidden" => true,
+            "view" => false,
+            "field" => "user_types.name",
+        ],
         "avatar_url" => [
             "label" => "Avatar",
             "hidden" => true,
