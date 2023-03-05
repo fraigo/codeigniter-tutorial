@@ -2,9 +2,9 @@
     helper(['form','cookie']);
     echo form_open('/auth/login', ["class" => "form-signin"]);
     ?>
-    <?php if (getenv('app.icon')) {?>
+    <?php if (getenv('app.logo')) {?>
     <div class="text-center my-4">
-        <img src="<?=getenv('app.icon')?>" style="width:50%">
+        <img src="<?=getenv('app.logo')?>" style="width:50%">
     </div>
     <?php } ?>
     <h2 class="text-center">Login</h2>

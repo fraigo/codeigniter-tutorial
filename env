@@ -25,7 +25,9 @@
 # app_baseURL = ''
 # app.forceGlobalSecureRequests = false
 # app.name = "My App"
-# app.icon = '/img/icon.png'
+# app.icon = '/favicon.png'
+# app.icontype = 'image/x-icon'
+# app.logo = '/img/icon.png'
 
 # app.sessionDriver = 'CodeIgniter\Session\Handlers\FileHandler'
 # app.sessionCookieName = 'ci_session'

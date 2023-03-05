@@ -7,7 +7,7 @@
 <?= $this->section('header') ?>
 <nav class="navbar container navbar-expand d-flex flex-column flex-sm-row align-items-sm-center border-bottom box-shadow mb-3">
   <a class="navbar-brand" >
-    <?php if (getenv('app.icon')) { ?><img class="navbar-icon" src="<?=getenv('app.icon')?>" height="32" align="middle" >&nbsp;<?php } ?>
+    <?php if (getenv('app.logo')) { ?><img class="navbar-icon" src="<?=getenv('app.logo')?>" height="32" align="middle" >&nbsp;<?php } ?>
     <?=getenv('app.name')?:'My App'?>
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
