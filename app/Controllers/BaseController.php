@@ -342,7 +342,7 @@ abstract class BaseController extends ResourceController
 
     function doCreate($fields, $rules=null){
         $data = $this->request->getVar($fields);
-        $rules = $this->model->getValidationRules(['only'=>$fields]);
+        $rules = $rules ?: $this->model->getValidationRules(['only'=>$fields]);
         $validation = \Config\Services::validation();
         $validation->setRules($rules);
         if (!$validation->run($data)){
@@ -359,7 +359,7 @@ abstract class BaseController extends ResourceController
         return "<script>document.location.replace($loc);</script>";
     }
 
-    function getRules($fields){
+    function getRules($fields,$id=null){
         $rules = $this->model->getValidationRules(['only'=>$fields]);
         return $rules;
     }
@@ -462,7 +462,7 @@ abstract class BaseController extends ResourceController
             }
             $fields = array_intersect($fields,array_keys($jsonData));
         }
-        $rules = $this->getRules($fields);
+        $rules = $this->getRules($fields,$id);
         $result = $this->doUpdate($id,$fields,$rules);
         if (!$result){
             if ($this->isJson()){
@@ -500,7 +500,7 @@ abstract class BaseController extends ResourceController
 
     function create(){
         $fields = $this->editFields;
-        $rules = $this->getRules($fields);
+        $rules = $this->getRules($fields,null);
         $id = $this->doCreate($fields,$rules);
         if (!$id){
             if ($this->isJson()){

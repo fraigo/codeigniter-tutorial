@@ -168,14 +168,14 @@ class Users extends BaseController
         return $result;
     }
 
-    function getRules($fields){
+    function getRules($fields,$id=null){
         $rules = $this->model->getValidationRules(['only'=>$fields]);
         $action = $this->getAction();
         $rules['repeat_password'] = [
-            "rules" => 'matches[password]',
+            "rules" => $id ? 'matches[password]' : 'required|matches[password]',
             "label" => "Repeat password"
         ];
-        if ($action=="edit" || $action=="profile"){
+        if (($action=="edit" && $id!=null) || $action=="profile"){
             $password = $this->request->getVar('password');
             if (!$password){
                 unset($rules["password"]);
