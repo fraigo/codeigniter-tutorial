@@ -36,7 +36,7 @@ class CreateUserOptions extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey(['user_id','option']);
-        $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
+        //$this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('user_options');
     }
 

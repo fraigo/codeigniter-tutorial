@@ -83,7 +83,7 @@ class CreateUsers extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey(['email']);
         $this->forge->addKey(['name']);
-        $this->forge->addForeignKey('user_type', 'user_types', 'id', 'CASCADE', 'CASCADE');
+        //$this->forge->addForeignKey('user_type', 'user_types', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('users');
     }
 

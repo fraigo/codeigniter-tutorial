@@ -35,7 +35,7 @@ class CreatePermissions extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey(['user_type_id','module']);
-        $this->forge->addForeignKey('user_type_id', 'user_types', 'id', 'CASCADE', 'CASCADE');
+        //$this->forge->addForeignKey('user_type_id', 'user_types', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('permissions');
     }
 
