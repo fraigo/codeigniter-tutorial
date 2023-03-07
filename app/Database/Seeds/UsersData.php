@@ -9,12 +9,17 @@ class UsersData extends Seeder
     public function run()
     {
         // clear data
+        echo "Cleanup Users\n";
         $this->db->table('users')->truncate(); 
+        echo "Cleanup User Permissions\n";
         $this->db->table('permissions')->truncate();
+        echo "Cleanup User Profile types\n";
         $this->db->table('user_types')->truncate();
+        echo "Cleanup User Options\n";
         $this->db->table('user_options')->truncate();
         
         // User types
+        echo "Add Profile Types\n";
         $this->db->table('user_types')->insert([
             "id" => 1,
             "name" => "Viewer",
@@ -44,6 +49,7 @@ class UsersData extends Seeder
             "updated_at" => date("Y-m-d H:i:s")
         ]);
 
+        echo "Add Permissions\n";
         $this->db->table('permissions')->insert([
             "id" => 1,
             "user_type_id" => 1,
@@ -69,6 +75,7 @@ class UsersData extends Seeder
             "updated_at" => date("Y-m-d H:i:s")
         ]);
         
+        echo "Add Users\n";
         $this->db->table('users')->insert([
             "id" => 1001,
             "name" => "Admin",
@@ -106,6 +113,7 @@ class UsersData extends Seeder
             "user_type" => 3, // regular user
         ]);
         
+        echo "Add User Options\n";
         $userOptions = new \App\Models\UserOptions();
         $userOptions->createUserOptions(1001);
         $userOptions->createUserOptions(1002);

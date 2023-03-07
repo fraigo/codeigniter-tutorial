@@ -9,9 +9,11 @@ class ListsData extends Seeder
     public function run()
     {
         // clear data
+        echo "Cleanup Lists\n";
         $this->db->table('lists')->truncate(); 
         $this->db->table('list_options')->truncate(); 
         
+        echo "Populate Lists\n";
         $this->db->table('lists')->insert([
             "id" => 1,
             "name" => "user_options",
