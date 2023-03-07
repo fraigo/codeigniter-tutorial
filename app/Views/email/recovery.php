@@ -1,4 +1,5 @@
 <?php
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -9,10 +10,18 @@
 </head>
 <body>
 <table bgcolor="#eeeeee" width="100%" style="width: 100%">
+<tbody>
     <tr>
-        <td></td>
+        <td>&nbsp;</td>
         <td width="600">
         <table bgcolor="#f8f8f8" width="600">
+            <tr height="100">
+                <td width="20"></td>
+                <td align="center">
+                    <img src="<?=imageAttachment(getenv('app.logo'))['url']?>" alt="Logo" height="92">
+                </td>
+                <td width="20"></td>
+            </tr>
             <tr>
                 <td width="20"></td>
                 <td>
@@ -25,16 +34,17 @@ You can reset your password by clicking the link below:<br>
 <div>&nbsp;</div>
 <a href="<?=$url?>"><?=$url?></a>
 <div>&nbsp;</div>
-<b>Admin Team</b><br>
-<?=base_url()?>
+<?=@$sender?:'<b>'.getenv('app.name').'</b>'?></b><br>
 <div>&nbsp;</div>
+<?=@$footer?>
                 </td>
                 <td width="20"></td>
             </tr>
         </table>
         </td>
-        <td></td>
+        <td>&nbsp;</td>
     </tr>
+<tbody>
 </table>
 </body>
 </html>

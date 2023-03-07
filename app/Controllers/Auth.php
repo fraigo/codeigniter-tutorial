@@ -142,7 +142,7 @@ class Auth extends BaseController
             }
             helper('email');
             $baseUrl = (@$data["baseurl"]?:base_url()."/auth/reset");
-            $errors = send_email($data["email"], "Password Recovery request", "email/recovery",[
+            $errors = send_email($user['email'], "Password Recovery request", "email/recovery",[
                 "name" => $user["name"],
                 "url" => "$baseUrl/$token"
             ]);
