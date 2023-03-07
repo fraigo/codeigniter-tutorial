@@ -52,7 +52,6 @@ class Pages extends BaseController
             $page["domcontent"] = parseHtml($page["contents"]);
             return $this->JSONResponse($page);
         }
-        die("Ok");
         return $this->layout('page',$page);
     }
 

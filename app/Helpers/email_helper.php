@@ -57,6 +57,6 @@ function imageAttachment($publicPath,$mime=null){
         $result["file"] = $fullPath;
         $result["name"] = $name;  
     }
-    $EMAIL_ATTACHMENTS[] = $result;
+    $EMAIL_ATTACHMENTS[$fullPath] = $result;
     return $result;
 }

@@ -13,6 +13,17 @@ class AppData extends Seeder
         $seed->run();
         $seed = new UsersData($this->config);
         $seed->run();
+        echo "Add Pages\n";
+        $this->db->table('pages')->truncate();
+        $this->db->table('pages')->insert([
+            "id" => 1,
+            "title" => "Home",
+            "description" => "Home Page",
+            "contents" => "<h1>Home Page</h1>\n",
+            "slug" => "home",
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s")
+        ]);
 
     }
 }
