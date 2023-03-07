@@ -64,16 +64,16 @@ class AdminConsole extends BaseController
 
     public function command($cmd=null){
         $commands = [
-            "rollback" => "php spark migrate:rollback",
-            "refresh" => "php spark migrate:refresh",
-            "migrate" => "php spark migrate",
+            "rollback" => ["php spark migrate:rollback"],
+            "refresh" => ["php spark migrate:refresh", "php spark db:seed AppData"],
+            "migrate" => ["php spark migrate"],
         ];
         $name = @$_GET["name"];
         if ($name){
-            $commands["appdata"] = "php spark db:seed {$name}";
+            $commands["appdata"] = ["php spark db:seed {$name}"];
         }
-        $command = @$commands[$cmd];
-        if (!$command){
+        $commandItems = @$commands[$cmd];
+        if (!$commandItems){
             return $this->notFound();
         }
         if (!$this->isAuthenticated()){
@@ -81,9 +81,13 @@ class AdminConsole extends BaseController
         }
         header("Content-Type: text/plain");
         chdir(ROOTPATH);
-        echo "$command\n";
-        $result = `$command`;
-        echo $result;
+        foreach($commandItems as $command){
+            echo "==============================\n";
+            echo "$command\n";
+            echo "==============================\n";
+            $result = `$command`;
+            echo $result;        
+        }
         die();
     }
 }
