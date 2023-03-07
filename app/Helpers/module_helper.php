@@ -69,6 +69,7 @@ function module_config(){
 
 function custom_modules(){
     return [
-        
+        "auth_token" => "API Token",
+        "profile" => "Profile",
     ];
 }

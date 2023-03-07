@@ -117,6 +117,7 @@ class Users extends BaseController
             $this->fields = array_merge($this->fields, $newFields);
             $this->editFields = $keys;
             $this->viewFields = $keys;
+            if (module_access('auth_token',1))
             $this->fields["auth_token"] = [
                 "header" => "API Access",
                 "label" => "API Token",
@@ -137,6 +138,7 @@ class Users extends BaseController
         $this->entityName = "My Profile";
         $this->editLink = "/profile/edit";
         $this->viewFields[] = "auth_token";
+        $this->route = "profile";
         $data = $this->getModelById($id);
         $this->prepareFields($this->viewFields, $data);
         return $this->view($id);
