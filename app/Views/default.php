@@ -26,7 +26,7 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
         <div class="dropdown-menu" aria-labelledby="dropdown03">
-        <?php foreach (module_routes() as $route => $label) { ?>
+        <?php foreach (module_menu() as $route => $label) { ?>
           <?php if(module_access($route,1)) { ?>
             <a class="dropdown-item" href="/<?=$route?>"><?=$label?></a>
           <?php } ?>

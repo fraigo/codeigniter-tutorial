@@ -7,6 +7,12 @@ function module_list(){
     return $result;
 }
 
+function module_menu(){
+    $result = array_column(module_config(),"label","route");
+    asort($result);
+    return $result;
+}
+
 function module_routes(){
     return array_column(module_config(),"controller","route");
 }
@@ -63,8 +69,6 @@ function module_config(){
 
 function custom_modules(){
     return [
-        "staff_profile" => "Staff Profile",
-        "client_profile" => "Client Profile",
-        "agency_profile" => "Agency Profile",
+        
     ];
 }
