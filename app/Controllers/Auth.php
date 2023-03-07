@@ -210,9 +210,9 @@ class Auth extends BaseController
             return $this->reset($token);
         }
         if ($this->isJson()){
-            return $this->JSONResponse(["message"=>"Your account password was reset."]);
+            return $this->JSONResponse(["message"=>"Your account password has been reset."]);
         }
-        session()->setFlashData("success","Your account password was reset.");
+        session()->setFlashData("success","Your account password has been reset.");
         return redirect()->back();
     }
 }
