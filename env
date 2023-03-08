@@ -59,6 +59,8 @@
 # database.tests.DBPrefix =
 # database.tests.port = 3306
 
+# database.foreignkeys = 1
+
 #--------------------------------------------------------------------
 # CONTENT SECURITY POLICY
 #--------------------------------------------------------------------

@@ -38,8 +38,8 @@ class CreateUserNotifications extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey(['notification_id','user_id']);
-        //$this->forge->addForeignKey('notification_id', 'notifications', 'id', 'CASCADE', 'CASCADE');
-        //$this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
+        if (getenv("database.foreighkeys")) $this->forge->addForeignKey('notification_id', 'notifications', 'id', 'CASCADE', 'CASCADE');
+        if (getenv("database.foreighkeys")) $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('user_notifications');
     }
 
