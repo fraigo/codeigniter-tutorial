@@ -44,11 +44,14 @@ class BaseModel extends Model
     }
 
     protected function deleteChilds($data){
-        foreach($this->childModels as $model=>$field){
+        foreach($this->childModels as $model=>$fields){
             $model = new $model();
-            $items = $model->select('id')->where($field,$data['id'])->findAll();
-            foreach($items as $item){
-                $model->delete($item['id']);
+            $flds = explode(",",$fields);
+            foreach($flds as $field){
+                $items = $model->select('id')->where($field,$data['id'])->findAll();
+                foreach($items as $item){
+                    $model->delete($item['id']);
+                }
             }
         }
     }
