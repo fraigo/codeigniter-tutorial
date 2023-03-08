@@ -89,9 +89,9 @@ class Users extends BaseModel
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = ['hashPassword'];
+    protected $beforeInsert   = ['hashPassword','imageConversion'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = ['hashPassword'];
+    protected $beforeUpdate   = ['hashPassword','imageConversion'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
@@ -101,6 +101,13 @@ class Users extends BaseModel
     protected function hashPassword($data){
         if (@$data["data"]["password"]){
             @$data["data"]["password"] = md5($data["data"]["password"]);
+        }
+        return $data;
+    }
+
+    protected function imageConversion($data){
+        if (@$data["data"]["avatar_url"]){
+            $data["data"]["avatar_url"] = $this->imageToURL($data["data"]["avatar_url"]);
         }
         return $data;
     }

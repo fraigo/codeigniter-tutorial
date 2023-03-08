@@ -52,4 +52,28 @@ class BaseModel extends Model
             }
         }
     }
+
+    public function imageToURL($imageURL){
+        if (strpos($imageURL,"data:")===0){
+            list($type, $content) = explode(';', $imageURL);
+            list($proto,$mime) = explode(':', $type);
+            list($format, $rawdata)      = explode(',', $content,2);
+            $contents = base64_decode($rawdata);
+            $fileid = md5($contents);
+            $extensions = [
+                "image/png" => "png",
+                "image/jpeg" => "jpg",
+                "image/jpg" => "jpg",
+            ];
+            $ext = $extensions[$mime];
+            $url = "/uploads/images/$fileid.$ext";
+            $imagePath = ROOTPATH."writable/uploads/images";
+            if (!file_exists($imagePath)){
+                @mkdir($imagePath);
+            }
+            file_put_contents(ROOTPATH."writable$url",$contents);
+            return $url;
+        }
+        return $imageURL;
+    }
 }

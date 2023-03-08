@@ -76,6 +76,7 @@ $routes->get('/auth/logout', 'Auth::logout');
 $routes->get('/api/auth/logout', 'Auth::logout');
 
 $routes->get('/page/(:any)', 'Pages::viewBySlug/$1');
+$routes->get('/uploads/images/(:any)', 'ImageController::imageUploads/$1');
 
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/profile', 'Auth::profile');
