@@ -44,22 +44,110 @@ class AdminConsole extends BaseController
         }
         </style>";
         $extra = @$_GET["failsafe"] ? "&failsafe=1" : "";
+        $date = date("Y-m-d");
         echo "<h2>Admin Console</h2>";
-        echo anchor("/_admin/migrate?$extra","Run Migration",["target"=>"output"])."<br>";
-        echo anchor("/_admin/rollback?$extra","Rollback Migration",["target"=>"output"])."<br>";
-        echo anchor("/_admin/refresh?$extra","REfresh Database",["target"=>"output"])."<br>";
-        echo anchor("/import","Import",["target"=>"_blank"])."<br>";
+        echo anchor("/_admin/migrate?$extra","Run Migration",["target"=>"output"]);
+        echo anchor("/_admin/rollback?$extra","Rollback Migration",["target"=>"output"]);
+        echo anchor("/_admin/refresh?$extra","Refresh Database",["target"=>"output"]);
+        echo anchor("/_admin/logs/$date","Current Logs",["target"=>"output"]);
+        echo anchor("/_admin/emaillogs/$date","Email Logs",["target"=>"output"]);
+        echo anchor("/import","Import",["target"=>"_blank"]);
         $seeds = glob(APPPATH.'/Database/Seeds/*.php');
+        echo "<div style='height:100px;overflow-y:auto; border:1px solid #eee;margin-bottom:16px'>";
         foreach ($seeds as $seed){
             $seedName = str_replace(".php","",basename($seed));
-            echo anchor("/_admin/appdata?name=$seedName$extra","Seed $seedName",["target"=>"output"])."<br>";
+            echo anchor("/_admin/appdata?name=$seedName$extra","Seed $seedName",["target"=>"output"]);
         }
+        echo "</div>";
         echo '<iframe style="width:100%; height:400px" name="output" ></iframe>';
     }
 
     public function auth(){
         $this->doAuth();
         $this->response->redirect("./console");
+    }
+
+    public function logs($date){
+        $logfile = realpath(ROOTPATH."writable/logs/log-$date.log");
+        if (file_exists($logfile)){
+            $content = file_get_contents($logfile);
+            $matches = [];
+            preg_match_all('/[A-Z]+ - [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9] --> /',$content,$matches);
+            $headers = array_unique($matches[0]);
+            foreach($headers as $match){
+                $sep = str_repeat("=",32);
+                $match2 = str_replace(" --> ","\n",$match);
+                $content = str_replace($match,"\n$sep\n$match2",$content);
+            }
+            header("Content-Type: text/plain");
+            echo $content;
+            die();
+        } else {
+            http_response_code(404);
+        }
+    }
+
+    public function emailLogs($date="*"){
+        $emailLogger = new \App\Libraries\EmailLogger();
+        $path = $emailLogger->logPath();
+        $files = glob("$path/email-$date.log");
+        arsort($files);
+        echo '<head><base target="_blank"></head>';
+        echo "<style>
+            body{
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            .email-container{
+                border: 1px solid #e0e0e0;
+                padding:12px;
+                display: flex;
+                flex-wrap: wrap;
+                margin-bottom: 8px;
+            }
+            .email-info{
+                margin-right: 16px;
+            }
+            .email-body{
+                flex: 1;
+                min-width: 600px;
+            }
+        </style>";
+        foreach ($files as $file){
+            $lines = explode("\n",file_get_contents($file));
+            arsort($lines);
+            foreach($lines as $line){
+                @list($date,$time,$content) = explode(" ",$line,3);
+                if ($content=="") continue;
+                echo '<div class="email-container">';
+                $contents = json_decode($content,true);
+                echo '<div class="email-info">';
+                echo "<b>Date</b><br>";
+                echo "$date $time<br>";
+                $body = $contents["body"];
+                $headers = urldecode(http_build_query($contents["headers"], "", "\n"));
+                $debug = @$contents["debug"];
+                unset($contents["body"]);
+                foreach($contents as $key=>$value){
+                    if (!is_array($value)){
+                        echo "<b>$key</b><br>";
+                        echo "$value<br>";
+                    }
+                }
+                echo "</div>";
+                echo '<div class="email-body">';
+                    echo $body;
+                    echo '<!-- DEBUG ';
+                    echo is_array($debug) ? implode('<br>',$debug) : $debug;
+                    echo '-->';
+                    echo '<!-- HEADERS '."\n";
+                    echo $headers."\n";
+                    echo '-->'."\n";
+                echo '</div></table>';
+                echo '</div></table>';
+                echo '</div>';
+                echo "</div>";
+            }
+        }
     }
 
     public function command($cmd=null){

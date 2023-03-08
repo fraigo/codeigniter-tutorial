@@ -126,6 +126,8 @@ foreach($appRoutes as $route => $controller){
 
 $routes->get('/_admin/auth', 'AdminConsole::auth');
 $routes->get('/_admin/console', 'AdminConsole::index');
+$routes->get('/_admin/emaillogs/(:any)', 'AdminConsole::emailLogs/$1');
+$routes->get('/_admin/logs/(:any)', 'AdminConsole::logs/$1');
 $routes->get('/_admin/(:any)', 'AdminConsole::command/$1');
 
 /*
