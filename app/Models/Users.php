@@ -38,6 +38,7 @@ class Users extends BaseModel
     protected $deletedField  = 'deleted_at';
     protected $childModels = [
         '\App\Models\UserOptions' => 'user_id',
+        '\App\Models\UserNotifications'=>'user_id',
     ];
 
     // Validation
