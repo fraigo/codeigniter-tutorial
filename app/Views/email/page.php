@@ -2,6 +2,9 @@
 
 $content = @$page["contents"]?:"";
 
+$content = str_replace('[url]','<a href="{url}" style="text-decoration:none !important;"><span style="padding:8px 20px;background-color:#d28e19;color:#f0f0f0;text-decoration:none;">',$content);
+$content = str_replace('[/url]','</span></a>',$content);
+
 $content = str_replace("{name}",@$name,$content);
 $content = str_replace("{url}",@$url,$content);
 $matches = [];
