@@ -87,6 +87,41 @@ class AdminConsole extends BaseController
         }
     }
 
+    function table($table=null,$fields=""){
+        if (!$table) return ;
+        $db = db_connect();
+        $query = $db->query("SELECT * from $table",[]);
+        $rows = $query->getResultArray();
+        if (!@$rows[0]) return;
+        $header = $rows[0];
+        if (@$_GET["noid"]){
+            unset($header["id"]);    
+        }
+        unset($header["updated_at"]);
+        unset($header["created_at"]);
+        $headers = array_keys($header);
+        if ($fields) {
+            $headers = explode(" ",$fields);
+        }
+        $sep = "\t";
+        header("Content-Type: text/plain");
+        echo implode($sep,$headers)."\n";
+        foreach($rows as $row){
+            $values = [];
+            foreach($headers as $fld){
+                $value = @$row[$fld];
+                $value = str_replace("\r","","$value");
+                $value = str_replace("\n","",$value);
+                if (strpos($value,"\"")!==false){
+                    //$value = '"' . str_replace('"','""',$value) . '"';
+                }
+                $values[] = $value;
+            }
+            echo implode($sep,$values)."\n";
+        }
+        die();
+    }
+
     public function emailLogs($date="*"){
         $emailLogger = new \App\Libraries\EmailLogger();
         $path = $emailLogger->logPath();
