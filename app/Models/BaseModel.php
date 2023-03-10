@@ -43,6 +43,19 @@ class BaseModel extends Model
         }
     }
 
+    public function modelDetails($data){
+        $details = [];
+        foreach($this->childModels as $model=>$fields){
+            $model = new $model();
+            $flds = explode(",",$fields);
+            $details[$model->table] = [];
+            foreach($flds as $field){
+                $details[$model->table][$field] = $model->where($field,$data['id'])->findAll();
+            }
+        }
+        return $details;
+    }
+
     protected function deleteChilds($data){
         foreach($this->childModels as $model=>$fields){
             $model = new $model();

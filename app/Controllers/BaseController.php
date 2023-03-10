@@ -57,6 +57,7 @@ abstract class BaseController extends ResourceController
     protected $viewLink = null;
     protected $formAttributes = null;
     protected $actionColumn = null;
+    protected $returnJSONDetails = false;
 
     /**
      * Constructor.
@@ -364,11 +365,15 @@ abstract class BaseController extends ResourceController
         return $rules;
     }
 
-    protected function JSONResponse($data, $status=200, $errors=null){
+    protected function JSONResponse($data, $status=200, $errors=null, $extra=null){
         $response = [
             "success" => ($errors === null),
             "date" => date("Y-m-d H:i:s"),
         ];
+        if (is_array($extra))
+        foreach($extra as $key => $values){
+            $response[$key] = $values;
+        }
         if ($errors){
             $response["errors"] = $errors;
         } else {
@@ -405,7 +410,9 @@ abstract class BaseController extends ResourceController
         $item = $this->getModelById($id);
         $fields = $this->prepareFields($this->viewFields,$item);
         if ($this->isJson()){
-            return $this->JSONResponse($item);
+            $extra = null;
+            if ($this->returnJSONDetails) $extra = ["details"=>$this->model->modelDetails($item)];
+            return $this->JSONResponse($item, 200, null, $extra);
         }
         $editLink = $this->editLink ?: "/$this->route/edit/{$item['id']}";
         $extra = [];
@@ -430,7 +437,6 @@ abstract class BaseController extends ResourceController
         ]);
     }
 
-    
     public function edit($id=null){
         $item = $this->getModelById($id);
         $fields = $this->prepareFields($this->editFields,$item);
