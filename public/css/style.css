@@ -112,6 +112,9 @@ a[disabled] {
 #tinymce div{
     border: 1px dashed #e0e0e0;
 }
+#tinymce[contenteditable='false'] div{
+    border: inherit;
+}
 #tinymce div[class='row']{
     padding: 3px;
 }
