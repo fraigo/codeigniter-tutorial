@@ -491,6 +491,9 @@ abstract class BaseController extends ResourceController
                 $item[$fld]=$_GET[$fld];
                 $fields[$fld]["readonly"] = true;
             }
+            if (@$fields[$fld]["default"]!==null && @$item[$fld]===null){
+                $item[$fld]=$fields[$fld]["default"];
+            }
         }
         return $this->layout('form',[
             'action' => "/$this->route/new",
