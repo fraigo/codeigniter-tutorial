@@ -85,6 +85,13 @@ class Auth extends BaseController
             return $this->form();
         }
         $result = do_login($user['id']);
+        if (!$result){
+            $this->errors = ["email"=>"The account is not available"];
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
+            return $this->form();
+        }
         if (@$data["remember"]){
             $this->response->setCookie('remember_email',$data["email"],60*60*24*7);
         } else {
@@ -124,6 +131,9 @@ class Auth extends BaseController
         $user = $this->model
             ->where("email",$data["email"])
             ->first();
+        if (!check_user($user)){
+            $user = null;
+        }
         $token = null;
         if ($user){
             $token = create_token();

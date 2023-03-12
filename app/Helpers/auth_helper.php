@@ -31,6 +31,10 @@ function do_login($id){
     $permissions = $perm->select(['module','access'])
         ->where("user_type_id",$user["user_type"])
         ->findAll();
+
+    if (!check_user($user)){
+        return null;
+    }
     
     $updatedData = [
         "login_at" => gmdate("Y-m-d H:i:s"),
@@ -85,6 +89,11 @@ function check_login($request){
             clear_login();
         }
     }
+}
+
+function check_user($user){
+
+    return true;
 }
 
 function logged_in(){
