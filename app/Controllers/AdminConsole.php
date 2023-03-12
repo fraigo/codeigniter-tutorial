@@ -5,6 +5,8 @@ namespace App\Controllers;
 class AdminConsole extends BaseController
 {
     private function isAuthenticated(){
+        helper('auth');
+        if (is_admin()) return true;
         if (!isset($_SERVER['PHP_AUTH_USER'])) return false;
         $user = $_SERVER['PHP_AUTH_USER'];
         $password = $_SERVER['PHP_AUTH_PW'];
@@ -112,6 +114,7 @@ class AdminConsole extends BaseController
                 $value = @$row[$fld];
                 $value = str_replace("\r","","$value");
                 $value = str_replace("\n","",$value);
+                $value = str_replace("0000-00-00 00:00:00","",$value);
                 if (strpos($value,"\"")!==false){
                     //$value = '"' . str_replace('"','""',$value) . '"';
                 }
@@ -211,6 +214,59 @@ class AdminConsole extends BaseController
             $result = `$command`;
             echo $result;        
         }
+        die();
+    }
+
+    public function schema(){
+        header("Content-Type: text/plain");
+        $data = [];
+        $data["name"] = "Staffgrabs";
+        $metadata = [
+            "name" => "staffgrabs",
+            "tables" => [],
+        ];
+        $db = db_connect();
+        $tables = $db->listTables();
+        //asort($tables);
+        $types = [
+            "integer" => "int"
+        ];
+        foreach($tables as $table){
+            if ($table=="migrations") continue;
+            $tableMetadata = [
+                "name" => $table,
+                "fields" => [],
+                "relationships" => [],
+                "indexes" => [],
+            ];
+            $fields = $db->getFieldData($table);
+            $pks = [];
+            foreach ($fields as $field) {
+                $fieldData = [
+                    "name" => $field->name,
+                    "type" => strtolower(@$types[strtolower($field->type)]?:$field->type),
+                    "size" => $field->max_length,
+                ];
+                if ($field->max_length){
+                    $fieldData["size"] = $field->max_length;
+                }
+                if ($field->nullable){
+                    $fieldData["null"] = true;
+                }
+                if ($field->primary_key){
+                    $fieldData["primary_key"] = true;
+                    $fieldData["auto_increment"] = true;
+                }
+                $tableMetadata["fields"][$field->name] = $fieldData;
+                if ($field->primary_key) $pks[] = $field->name;
+            }
+            //ksort($tableMetadata["fields"]);
+            $tableMetadata["fields"] = array_values($tableMetadata["fields"]);
+            $metadata["tables"][] = $tableMetadata;
+        }
+        $data["databases"] = [$metadata];
+        
+        echo json_encode($data,JSON_PRETTY_PRINT);
         die();
     }
 }

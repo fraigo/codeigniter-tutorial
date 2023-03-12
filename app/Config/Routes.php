@@ -126,6 +126,7 @@ foreach($appRoutes as $route => $controller){
 
 $routes->get('/_admin/auth', 'AdminConsole::auth');
 $routes->get('/_admin/console', 'AdminConsole::index');
+$routes->get('/_admin/schema', 'AdminConsole::schema');
 $routes->get('/_admin/table/(:any)', 'AdminConsole::table/$1');
 $routes->get('/_admin/emaillogs/(:any)', 'AdminConsole::emailLogs/$1');
 $routes->get('/_admin/logs/(:any)', 'AdminConsole::logs/$1');
@@ -147,3 +148,8 @@ $routes->get('/_admin/(:any)', 'AdminConsole::command/$1');
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
+
+if (is_file(APPPATH . 'Config/CustomRoutes.php')) {
+    require APPPATH . 'Config/CustomRoutes.php';
+}
+
