@@ -130,7 +130,14 @@ class Users extends BaseController
 
     public function getModelById($id){
         $result = parent::getModelById($id);
-        $result["user_options"] = $this->model->getUserOptions($id);
+        if ($result){
+            $perm = new \App\Models\Permissions();
+            $permissions = $perm->select(['module','access'])
+                ->where("user_type_id",$result["user_type"])
+                ->findAll();
+            $result["permissions"] = array_column($permissions,"access","module");
+            $result["user_options"] = $this->model->getUserOptions($id);
+        }
         return $result;
     }
 

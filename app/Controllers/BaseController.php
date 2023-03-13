@@ -102,10 +102,6 @@ abstract class BaseController extends ResourceController
         if (!$item){
             $this->notFound();
         }
-        $perm = new \App\Models\Permissions();
-        $item['permissions'] = $perm->select(['module','access'])
-            ->where("user_type_id",$item["user_type"])
-            ->findAll();
         return $item;
     }
 
