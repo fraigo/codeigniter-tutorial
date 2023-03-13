@@ -86,9 +86,9 @@ abstract class BaseController extends ResourceController
         return null;
     }
 
-    protected function notFound(){
+    protected function notFound($message=null){
         if ($this->isJson()){
-            $this->JSONResponse(null,404,["message"=>"Not found"])->send();
+            $this->JSONResponse(null,404,["message"=>$message?:"Not found"])->send();
             die();
         }
         throw new \CodeIgniter\Exceptions\PageNotFoundException();
