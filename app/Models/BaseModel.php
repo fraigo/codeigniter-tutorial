@@ -47,6 +47,7 @@ class BaseModel extends Model
         $details = [];
         foreach($this->childModels as $model=>$fields){
             $model = new $model();
+            $model->getModel();
             $flds = explode(",",$fields);
             $details[$model->table] = [];
             foreach($flds as $field){
@@ -91,5 +92,9 @@ class BaseModel extends Model
             return $url;
         }
         return $imageURL;
+    }
+
+    public function getModel(){
+        return $this;
     }
 }

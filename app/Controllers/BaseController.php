@@ -78,6 +78,7 @@ abstract class BaseController extends ResourceController
 
     protected function getQueryModel(){
         $item = $this->model
+            ->getModel()
             ->select($this->selectFields());
         return $item;
     }
