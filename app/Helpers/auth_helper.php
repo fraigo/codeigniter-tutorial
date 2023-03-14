@@ -37,7 +37,7 @@ function do_login($id){
     }
     
     $updatedData = [
-        "login_at" => gmdate("Y-m-d H:i:s"),
+        "login_at" => date("Y-m-d H:i:s"),
     ];
     if (!$user["auth_token"]){
         $updatedData["auth_token"] = create_token();
