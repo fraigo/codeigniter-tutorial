@@ -1,0 +1,62 @@
+Agency Login
+    "success": true,
+Agency Profile
+    "success": true,
+Agency Shifts
+    "success": true,
+Shifts List
+    "success": true,
+Staff Members
+    "success": true,
+Create Shift
+    "success": true,
+        "id": 41,
+View Shift
+    "success": true,
+        "id": 41,
+Publish Shift
+    "success": true,
+Staff Login
+    "success": true,
+Staff Profile
+    "success": true,
+Update Staff Profile
+    "success": true,
+Agency Notifications
+    "success": true,
+Read Notification
+    "success": true,
+View Staff profile
+    "success": true,
+Review Staff profile
+    "success": true,
+Mark Notification Read
+    "success": false,
+Staff Correct Staff Profile
+    "success": true,
+Agency Review correction Staff Profile
+    "success": true,
+Staff Calendar View
+    "success": true,
+Staff Request Shift
+    "success": true,
+Agency Confirm Shift request
+    "success": true,
+Agency Confirm Shift
+    "success": true,
+Staff Clock In Shift
+    "success": true,
+Staff Clock Out Shift
+    "success": true,
+Agency Timesheets
+    "success": true,
+Agency Timesheet
+    "success": true,
+Agency Timesheet detail
+    "success": true,
+Agency update Timesheet Completed
+    "success": true,
+Client Timesheet reviews
+    "success": true,
+Client Timesheet review
+    "success": true,
