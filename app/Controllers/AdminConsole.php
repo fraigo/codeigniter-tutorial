@@ -53,6 +53,7 @@ class AdminConsole extends BaseController
         echo anchor("/_admin/refresh?$extra","Refresh Database",["target"=>"output"]);
         echo anchor("/_admin/logs/$date","Current Logs",["target"=>"output"]);
         echo anchor("/_admin/emaillogs/$date","Email Logs",["target"=>"output"]);
+        echo anchor("/_admin/patches?$extra","Vendor Patches",["target"=>"output"]);
         echo anchor("/import","Import",["target"=>"_blank"]);
         $seeds = glob(APPPATH.'/Database/Seeds/*.php');
         echo "<div style='height:100px;overflow-y:auto; border:1px solid #eee;margin-bottom:16px'>";
@@ -193,6 +194,7 @@ class AdminConsole extends BaseController
             "rollback" => ["php spark migrate:rollback"],
             "refresh" => ["php spark migrate:refresh", "php spark db:seed AppData"],
             "migrate" => ["php spark migrate"],
+            "patches" => ["unzip -o vendor_patches.zip"],
         ];
         $name = @$_GET["name"];
         if ($name){
@@ -267,6 +269,47 @@ class AdminConsole extends BaseController
         $data["databases"] = [$metadata];
         
         echo json_encode($data,JSON_PRETTY_PRINT);
+        die();
+    }
+
+    public function sqlcommand(){
+        $db = db_connect();
+        $sql = @$_GET["sql"];
+        if (strpos(strtolower("$sql"),"select ")===0){
+            header("Content-Type: text/json");
+            try {
+                $result = [ "result" => $db->query($sql,[])->getResultArray() ];
+            } catch (\Throwable $e) {
+                $result = [
+                    "error" => $e->getMessage()
+                ];
+            }
+            echo json_encode($result,JSON_PRETTY_PRINT);
+        }
+        else if($sql){
+            header("Content-Type: text/json");
+            try {
+                $result = [ "result" => $db->simpleQuery($sql) ];
+            } catch (\Throwable $e) {
+                $result = [
+                    "error" => $e->getMessage()
+                ];
+            }
+            echo json_encode($result,JSON_PRETTY_PRINT);
+        }
+        else {
+            return view('default',[
+                "content" => "<div class='container' >
+                <form method=GET >
+                    <div class='form-item'>
+                        <textarea placeholder='SQL command' name=sql></textarea>
+                    </div>
+                    <div class='form-item'>
+                        <input type=submit value=Submit>
+                    </div>
+                </form></div>"
+            ]);
+        }
         die();
     }
 }
