@@ -14,6 +14,17 @@ foreach($images as $image){
     $url = imageAttachment($image)['url'];
     $content = str_replace("$image",$url,$content);
 }
+if (@$replacements){
+    foreach($replacements as $rep=>$value){
+        if (is_array($value)){
+            continue;
+        }
+        if (!$value){
+            continue;
+        }
+        $content = str_replace("{".$rep."}",$value,$content);
+    }
+}
 
 ?>
 <!DOCTYPE html>
