@@ -48,9 +48,13 @@ class AdminConsole extends BaseController
         $extra = @$_GET["failsafe"] ? "&failsafe=1" : "";
         $date = date("Y-m-d");
         echo "<h2>Admin Console</h2>";
+        echo anchor("/_admin/composer?$extra","Composer Install",["target"=>"output"]);
         echo anchor("/_admin/migrate?$extra","Run Migration",["target"=>"output"]);
         echo anchor("/_admin/rollback?$extra","Rollback Migration",["target"=>"output"]);
         echo anchor("/_admin/refresh?$extra","Refresh Database",["target"=>"output"]);
+        echo anchor("/_admin/zipuploads?$extra","Backup Images",["target"=>"output"]);
+        echo anchor("/_admin/unzipuploads?$extra","Restore Images",["target"=>"output"]);
+        echo anchor("/_admin/download/images.zip?$extra","Download Images",["target"=>"output"]);
         echo anchor("/_admin/logs/$date","Current Logs",["target"=>"output"]);
         echo anchor("/_admin/emaillogs/$date","Email Logs",["target"=>"output"]);
         echo anchor("/_admin/patches?$extra","Vendor Patches",["target"=>"output"]);
@@ -189,12 +193,28 @@ class AdminConsole extends BaseController
         }
     }
 
+    public function download($id){
+        chdir(ROOTPATH);
+        $files = [
+            "images.zip" => "writable/images.zip"
+        ];
+        $file = @$files[$id];
+        if ($file && file_exists($file)){
+            header("Content-type: application/octet-stream");
+            readfile($file);
+        }
+        die();
+    }
+
     public function command($cmd=null){
         $commands = [
+            "composer" => ["composer install"],
             "rollback" => ["php spark migrate:rollback"],
             "refresh" => ["php spark migrate:refresh", "php spark db:seed AppData"],
             "migrate" => ["php spark migrate"],
             "patches" => ["unzip -o vendor_patches.zip"],
+            "zipuploads" => ["zip -o writable/images.zip writable/uploads/images/*.png"],
+            "unzipuploads" => ["unzip -o writable/images.zip"],
         ];
         $name = @$_GET["name"];
         if ($name){
@@ -302,7 +322,7 @@ class AdminConsole extends BaseController
                 "content" => "<div class='container' >
                 <form method=GET >
                     <div class='form-item'>
-                        <textarea placeholder='SQL command' name=sql></textarea>
+                        <textarea placeholder='SQL command' name=sql style='height:200px;font-family:Courier, monospace'></textarea>
                     </div>
                     <div class='form-item'>
                         <input type=submit value=Submit>
