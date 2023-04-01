@@ -48,7 +48,7 @@ class AdminConsole extends BaseController
         $extra = @$_GET["failsafe"] ? "&failsafe=1" : "";
         $date = date("Y-m-d");
         echo "<h2>Admin Console</h2>";
-        echo anchor("/_admin/composer?$extra","Composer Install",["target"=>"output"]);
+        echo anchor("/_admin/composer?$extra","Composer Update",["target"=>"output"]);
         echo anchor("/_admin/migrate?$extra","Run Migration",["target"=>"output"]);
         echo anchor("/_admin/rollback?$extra","Rollback Migration",["target"=>"output"]);
         echo anchor("/_admin/refresh?$extra","Refresh Database",["target"=>"output"]);
@@ -208,7 +208,7 @@ class AdminConsole extends BaseController
 
     public function command($cmd=null){
         $commands = [
-            "composer" => ["composer install"],
+            "composer" => ["composer update --no-progress 2>&1","unzip -o vendor_patches.zip"],
             "rollback" => ["php spark migrate:rollback"],
             "refresh" => ["php spark migrate:refresh", "php spark db:seed AppData"],
             "migrate" => ["php spark migrate"],
