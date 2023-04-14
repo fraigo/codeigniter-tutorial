@@ -75,6 +75,13 @@ $routes->post('/api/auth/reset/(:any)', 'Auth::doReset/$1');
 $routes->get('/auth/logout', 'Auth::logout');
 $routes->get('/api/auth/logout', 'Auth::logout');
 
+$routes->get('/api/google/login/auth', 'Gapi::auth/login');
+$routes->get('/api/google/login/token', 'Gapi::token');
+// $routes->get('/api/google/drive/auth', 'Gapi::auth/drive');
+// $routes->get('/api/google/drive/browse', 'Gapi::browse');
+// $routes->get('/api/google/drive/browse/(:any)', 'Gapi::browse/$1');
+// $routes->get('/api/google/drive/select/(:any)', 'Gapi::select/$1');
+
 $routes->get('/page/(:any)', 'Pages::viewBySlug/$1');
 $routes->get('/uploads/images/(:any)', 'ImageController::imageUploads/$1');
 
