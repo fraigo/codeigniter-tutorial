@@ -33,6 +33,12 @@ class AdminConsole extends BaseController
         }
     }
 
+    private function consoleLink($link,$label,$attrs=[]){
+        if (!$attrs) $attrs = [];
+        $attrs["onclick"] = "return confirm('Continue with '+this.innerText+' ?')";
+        return anchor($link,$label,$attrs);
+    }
+
     public function index(){
         if (!$this->isAuthenticated()){
             return $this->doAuth();
@@ -48,24 +54,25 @@ class AdminConsole extends BaseController
         $extra = @$_GET["failsafe"] ? "&failsafe=1" : "";
         $date = date("Y-m-d");
         echo "<h2>Admin Console</h2>";
-        echo anchor("/_admin/composer?$extra","Composer Update",["target"=>"output"]);
-        echo anchor("/_admin/migrate?$extra","Run Migration",["target"=>"output"]);
-        echo anchor("/_admin/rollback?$extra","Rollback Migration",["target"=>"output"]);
-        echo anchor("/_admin/refresh?$extra","Refresh Database",["target"=>"output"]);
-        echo anchor("/_admin/zipuploads?$extra","Backup Images",["target"=>"output"]);
-        echo anchor("/_admin/unzipuploads?$extra","Restore Images",["target"=>"output"]);
-        echo anchor("/_admin/download/images.zip?$extra","Download Images",["target"=>"output"]);
-        echo anchor("/_admin/logs/$date","Current Logs",["target"=>"output"]);
-        echo anchor("/_admin/emaillogs/$date","Email Logs",["target"=>"output"]);
-        echo anchor("/_admin/patches?$extra","Vendor Patches",["target"=>"output"]);
-        echo anchor("/import","Import",["target"=>"_blank"]);
+        echo $this->consoleLink("/_admin/composer?$extra","Composer Update",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/migrate?$extra","Run Migration",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/rollback?$extra","Rollback Migration",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/refresh?$extra","Refresh Database",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/zipuploads?$extra","Backup Images",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/unzipuploads?$extra","Restore Images",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/download/images.zip?$extra","Download Images",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/logs/$date","Current Logs",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/emaillogs/$date","Email Logs",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/patches?$extra","Vendor Patches",["target"=>"output"]);
+        echo $this->consoleLink("/import","Import",["target"=>"_blank"]);
         $seeds = glob(APPPATH.'/Database/Seeds/*.php');
         echo "<div style='height:100px;overflow-y:auto; border:1px solid #eee;margin-bottom:16px'>";
         foreach ($seeds as $seed){
             $seedName = str_replace(".php","",basename($seed));
-            echo anchor("/_admin/appdata?name=$seedName$extra","Seed $seedName",["target"=>"output"]);
+            echo $this->consoleLink("/_admin/appdata?name=$seedName$extra","Seed $seedName",["target"=>"output"]);
         }
         echo "</div>";
+        echo "<div><small>".date("Y-m-d H:i:s",filemtime(__FILE__))."<small></div>";
         echo '<iframe style="width:100%; height:400px" name="output" ></iframe>';
     }
 
@@ -97,7 +104,17 @@ class AdminConsole extends BaseController
     function table($table=null,$fields=""){
         if (!$table) return ;
         $db = db_connect();
-        $query = $db->query("SELECT * from $table",[]);
+        $cond = "";
+        $params = [];
+        $sort = "";
+        if (@$_GET["min_id"]>0){
+            $cond = "WHERE id>=?";
+            $params = [$_GET["min_id"]];
+        }
+        if (@$_GET["sort"]){
+            $sort = "ORDER BY {$_GET["sort"]}";
+        }
+        $query = $db->query("SELECT * from $table $cond $sort",$params);
         $rows = $query->getResultArray();
         if (!@$rows[0]) return;
         $header = $rows[0];
@@ -207,8 +224,9 @@ class AdminConsole extends BaseController
     }
 
     public function command($cmd=null){
+        $composer_cmd = trim(`which composer`);
         $commands = [
-            "composer" => ["composer update --no-progress 2>&1","unzip -o vendor_patches.zip"],
+            "composer" => ["$composer_cmd update --no-progress 2>&1","unzip -o vendor_patches.zip"],
             "rollback" => ["php spark migrate:rollback"],
             "refresh" => ["php spark migrate:refresh", "php spark db:seed AppData"],
             "migrate" => ["php spark migrate"],
@@ -298,7 +316,10 @@ class AdminConsole extends BaseController
         if (strpos(strtolower("$sql"),"select ")===0){
             header("Content-Type: text/json");
             try {
-                $result = [ "result" => $db->query($sql,[])->getResultArray() ];
+                $result = [ 
+                    "sql" => $sql,
+                    "result" => $db->query($sql,[])->getResultArray() 
+                ];
             } catch (\Throwable $e) {
                 $result = [
                     "error" => $e->getMessage()
@@ -320,14 +341,42 @@ class AdminConsole extends BaseController
         else {
             return view('default',[
                 "content" => "<div class='container' >
-                <form method=GET >
+                <form method=GET id=sqlform >
                     <div class='form-item'>
                         <textarea placeholder='SQL command' name=sql style='height:200px;font-family:Courier, monospace'></textarea>
                     </div>
                     <div class='form-item'>
-                        <input type=submit value=Submit>
+                        <input type='button' value='Last Query' onclick=\"this.form.sql.value = localStorage.getItem('last_query')\">
+                        <select style='max-width:200px' id=query_history onchange=\"this.form.sql.value = this.value\" >
+                            <option value=''>SQL History</option>
+                        </select>
+                        <div style=\"flex:1\"></div>
+                        <input type=submit style='font-weight:bold' value=Submit onclick=\"saveQuery(this.form)\" >
                     </div>
-                </form></div>"
+                </form></div>
+                <script>
+                    function saveQuery(frm){
+                        var queries = localStorage.getItem('query_log') ? JSON.parse(localStorage.getItem('query_log')) : []
+                        localStorage.setItem('last_query',frm.sql.value)
+                        var pos = queries.indexOf(frm.sql.value)
+                        if (pos>=0) {
+                            queries.splice(pos,1)
+                        }
+                        queries.push(frm.sql.value)
+                        localStorage.setItem('query_log', JSON.stringify(queries)) 
+                    }
+                    function loadHistory(){
+                        var queries = localStorage.getItem('query_log') ? JSON.parse(localStorage.getItem('query_log')) : []
+                        var sel = document.querySelector('#query_history');
+                        for(var idx in queries){
+                            var opt = document.createElement('option');
+                            opt.value = queries[idx];
+                            opt.text = queries[idx];
+                            sel.appendChild(opt);
+                        }
+                    }
+                    loadHistory();
+                </script>"
             ]);
         }
         die();
