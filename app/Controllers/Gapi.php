@@ -8,7 +8,7 @@ class Gapi extends BaseController
     protected $helpers = ['html','array','auth','module','gapi'];
     
 
-    public function auth($type="drive",$client=null,$redirect='gapi/drive/auth'){
+    public function auth($type="drive",$client=null,$redirect='api/google/drive/browse'){
         if (@$_GET['redirect']){
             $redirect = $_GET['redirect'];
         }
@@ -77,7 +77,7 @@ class Gapi extends BaseController
     }
 
     public function browse($id="root"){
-        $client = gdrive_client('gapi/drive/browse');
+        $client = gdrive_client('api/google/drive/browse');
         $result = gapi_auth($client);
         if (!$result) {
             $this->auth("drive",$client);
