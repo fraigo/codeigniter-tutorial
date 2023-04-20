@@ -34,6 +34,11 @@ if (@$replacements){
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
+<?php if (@$ldjson) { ?>
+<script type="application/ld+json">
+    <?php echo json_encode($ldjson,JSON_PRETTY_PRINT); ?>
+</script>
+<?php } ?>
 <table bgcolor="#eeeeee" width="100%" style="width: 100%">
 <tbody>
     <tr>
