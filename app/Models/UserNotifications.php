@@ -74,7 +74,14 @@ class UserNotifications extends BaseModel
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function createUserNotification($notificationId,$userId){
+    public function createUserNotification($notificationId,$userId,$email=true){
+        $users = new \App\Models\Users();
+        $user = $users->find($userId);
+        $notifications = new \App\Models\Notifications();
+        $notif = $notifications->find($notificationId);
+        if (!$user || !$notif){
+            return -1;
+        }
         $notification = new \App\Models\UserNotifications();
         $id = $notification->insert([
             "notification_id" => $notificationId,
@@ -82,6 +89,16 @@ class UserNotifications extends BaseModel
             "read" => 0,
             "sent" => 0,
         ]);
+        if ($email){
+            try{
+                helper("email");
+                $baseURL = getenv("APP_URL") ?: base_url();
+                $appURL = "$baseURL/{$notif['link']}";
+                $result = send_email($user['email'], $notif['title'],"email/notification",["content"=>$notif['content'],"link"=>$appURL]);
+                if ($result==null) $notification->update($id,[ "sent" => 1 ]);
+            } catch (\Exception $e){
+            }
+        }
         return $id;
     }
 

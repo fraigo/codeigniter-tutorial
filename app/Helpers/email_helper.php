@@ -4,6 +4,11 @@ $EMAIL_ATTACHMENTS = [];
 
 function send_email($to, $subject, $view, $data=[],$attachments=[]){
     global $EMAIL_ATTACHMENTS;
+
+    $subject = (getenv("TEST_SUBJECT") ?: "").$subject.(getenv("TEST_EMAIL") ? " ($to)" : "");
+    $to = getenv("TEST_EMAIL") ?: $to;
+    
+
     $email = \Config\Services::email();
     $config=[];
     $config['protocol'] = getenv('email.protocol')?:'mail';
@@ -24,12 +29,17 @@ function send_email($to, $subject, $view, $data=[],$attachments=[]){
     $email->initialize($config);
     $email->setFrom(getenv('email.from')?:'admin@'.$_SERVER['SERVER_NAME'], getenv('email.fromName')?:getenv('app.name'));
     $email->setTo($to);
+    if (getenv('email.replyto'))
+    $email->setReplyTo(getenv('email.replyto'));
     $email->setSubject($subject);
     $htmlContent = view($view,$data);
     foreach($EMAIL_ATTACHMENTS as $item){
         $email->attach($item["file"],@$item["disposition"]?:'',@$item["name"],@$item["mime"]?:'');
         $cid = $email->setAttachmentCID($item["file"]);
         $htmlContent = str_replace($item['url'],"cid:$cid",$htmlContent);
+    }
+    foreach($EMAIL_ATTACHMENTS as $idx=>$item){
+        unset($EMAIL_ATTACHMENTS[$idx]);
     }
     foreach($attachments as $item){
         $email->attach($item["file"],@$item["disposition"]?:'',@$item["name"],@$item["mime"]?:'');
@@ -59,4 +69,13 @@ function imageAttachment($publicPath,$mime=null){
     }
     $EMAIL_ATTACHMENTS[$fullPath] = $result;
     return $result;
+}
+
+function email_button($link,$label=null,$bgcolor="#d28e19",$color="#f0f0f0",$template = "[url]{label}[/url]"){
+    if (!$link) return '';
+    $button = str_replace('[url]','<a href="{url}" style="text-decoration:none !important;"><span style="padding:8px 20px;background-color:'.$bgcolor.';color:'.$color.';text-decoration:none;">',$template);
+    $button = str_replace('[/url]','</span></a>',$button);
+    $button = str_replace("{url}",@$link?:'',$button);
+    $button = str_replace("{label}",@$label?:'View Details',$button);
+    return $button;
 }
