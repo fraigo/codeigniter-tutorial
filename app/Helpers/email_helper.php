@@ -2,6 +2,14 @@
 
 $EMAIL_ATTACHMENTS = [];
 
+function clear_attachments(){
+    global $EMAIL_ATTACHMENTS;
+    if ($EMAIL_ATTACHMENTS)
+    foreach($EMAIL_ATTACHMENTS as $idx=>$item){
+        unset($EMAIL_ATTACHMENTS[$idx]);
+    }
+}
+
 function send_email($to, $subject, $view, $data=[],$attachments=[]){
     global $EMAIL_ATTACHMENTS;
 
@@ -38,18 +46,19 @@ function send_email($to, $subject, $view, $data=[],$attachments=[]){
         $cid = $email->setAttachmentCID($item["file"]);
         $htmlContent = str_replace($item['url'],"cid:$cid",$htmlContent);
     }
-    foreach($EMAIL_ATTACHMENTS as $idx=>$item){
-        unset($EMAIL_ATTACHMENTS[$idx]);
-    }
+    clear_attachments();
     foreach($attachments as $item){
         $email->attach($item["file"],@$item["disposition"]?:'',@$item["name"],@$item["mime"]?:'');
     }
     $email->setMessage($htmlContent);
     $result = $email->send();
     if ($result) {
+        $email->clear(true);
         return null;
     }
-    return $email->printDebugger([]);
+    $debug = $email->printDebugger([]);
+    $email->clear(true);
+    return $debug();
 }
 
 function imageAttachment($publicPath,$mime=null){

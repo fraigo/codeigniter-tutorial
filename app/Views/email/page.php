@@ -10,6 +10,7 @@ $content = str_replace("{name}",@$name,$content);
 $matches = [];
 preg_match_all('/src="([^"]+)"/',$content,$matches);
 $images = @$matches[1]?:[];
+clear_attachments();
 foreach($images as $image){
     $url = imageAttachment($image)['url'];
     $content = str_replace("$image",$url,$content);
