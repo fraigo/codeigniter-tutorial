@@ -231,7 +231,7 @@ class AdminConsole extends BaseController
             "refresh" => ["php spark migrate:refresh", "php spark db:seed AppData"],
             "migrate" => ["php spark migrate"],
             "patches" => ["unzip -o vendor_patches.zip"],
-            "zipuploads" => ["zip -o writable/images.zip writable/uploads/images/*.png writable/uploads/images/*.jpg"],
+            "zipuploads" => ["rm -f writable/images.zip","zip -o writable/images.zip writable/uploads/images/*.png writable/uploads/images/*.jpg"],
             "unzipuploads" => ["unzip -o writable/images.zip"],
         ];
         $name = @$_GET["name"];
