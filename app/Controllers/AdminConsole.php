@@ -224,14 +224,14 @@ class AdminConsole extends BaseController
     }
 
     public function command($cmd=null){
-        $composer_cmd = trim(`which composer`);
+        $composer_cmd = 'composer';
         $commands = [
             "composer" => ["$composer_cmd update --no-progress 2>&1","unzip -o vendor_patches.zip"],
             "rollback" => ["php spark migrate:rollback"],
             "refresh" => ["php spark migrate:refresh", "php spark db:seed AppData"],
             "migrate" => ["php spark migrate"],
             "patches" => ["unzip -o vendor_patches.zip"],
-            "zipuploads" => ["zip -o writable/images.zip writable/uploads/images/*.png"],
+            "zipuploads" => ["zip -o writable/images.zip writable/uploads/images/*.png writable/uploads/images/*.jpg"],
             "unzipuploads" => ["unzip -o writable/images.zip"],
         ];
         $name = @$_GET["name"];
