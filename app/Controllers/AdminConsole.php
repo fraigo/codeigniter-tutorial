@@ -238,6 +238,10 @@ class AdminConsole extends BaseController
         if ($name){
             $commands["appdata"] = ["php spark db:seed {$name}"];
         }
+        $spark_command = @$_GET["command"];
+        if ($composer_cmd){
+            $commands["spark"] = ["php spark $spark_command"];
+        }
         $commandItems = @$commands[$cmd];
         if (!$commandItems){
             return $this->notFound();
