@@ -14,6 +14,7 @@ class Users extends BaseModel
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
+    protected $imageFields      = ['avatar_url'];
     protected $allowedFields    = [
         'email',
         'name',
@@ -106,12 +107,6 @@ class Users extends BaseModel
         return $data;
     }
 
-    protected function imageConversion($data){
-        if (@$data["data"]["avatar_url"]){
-            $data["data"]["avatar_url"] = $this->imageToURL($data["data"]["avatar_url"]);
-        }
-        return $data;
-    }
 
     public function getUserOptions($id){
         $userOptions = new \App\Models\UserOptions();

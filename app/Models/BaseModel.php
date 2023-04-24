@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Commands\Png2Jpg;
 use CodeIgniter\Model;
 
 class BaseModel extends Model
@@ -9,6 +10,7 @@ class BaseModel extends Model
     // put here any common model method or attribute
     protected $relationships = [];
     protected $childModels = [];
+    protected $imageFields = [];
 
     public function getListOptions($nameFields, $id_field = "id", $condition=null){
         $result = [];
@@ -70,7 +72,7 @@ class BaseModel extends Model
         }
     }
 
-    public function imageToURL($imageURL){
+    public function imageToURL($imageURL,$target_extension=null){
         if (strpos($imageURL,"data:")===0){
             list($type, $content) = explode(';', $imageURL);
             list($proto,$mime) = explode(':', $type);
@@ -88,10 +90,32 @@ class BaseModel extends Model
             if (!file_exists($imagePath)){
                 @mkdir($imagePath);
             }
-            file_put_contents(ROOTPATH."writable$url",$contents);
+            $fullPath = ROOTPATH."writable$url";
+            $exists = file_exists($fullPath);
+            file_put_contents($fullPath,$contents);
+            if ($target_extension && $target_extension!=$ext){
+                helper('image');
+                $newUrl = rename_ext($url,$ext,$target_extension);
+                png2jpg($fullPath,ROOTPATH."writable$newUrl");
+                if (!$exists){
+                    @unlink($fullPath);
+                }
+                return $newUrl;
+            }
             return $url;
         }
         return $imageURL;
+    }
+
+    protected function imageConversion($data,$fields=null,$ext=null){
+        $ext = $ext?:"jpg";
+        $fields = $fields ?: $this->imageFields;
+        foreach($fields as $fld){
+            if (@$data["data"][$fld]){
+                $data["data"][$fld] = $this->imageToURL($data["data"][$fld],$ext);
+            }
+        }
+        return $data;
     }
 
     public function getModel(){
