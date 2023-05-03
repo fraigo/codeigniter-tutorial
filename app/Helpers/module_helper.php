@@ -55,6 +55,11 @@ function module_config(){
             "controller" => "UserNotifications"
         ],
         [
+            "route" => "events",
+            "label" => "Events",
+            "controller" => "Events"
+        ],
+        [
             "route" => "pages",
             "label" => "Pages",
             "controller" => "Pages"

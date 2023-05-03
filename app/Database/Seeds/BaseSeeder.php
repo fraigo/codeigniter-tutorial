@@ -6,7 +6,7 @@ use CodeIgniter\Database\Seeder;
 
 class BaseSeeder extends Seeder
 {
-    public function importCSV($table,$file,$truncate=true,$replace=false){
+    public function importCSV($table,$file,$truncate=true,$replace=false,$nullableFields=[]){
         if ($truncate) {
             echo "Cleanup $table\n";
             $this->db->table($table)->truncate(); 
@@ -27,8 +27,15 @@ class BaseSeeder extends Seeder
             foreach($values as $idx=>$val){
                 $row[$fields[$idx]]=$val;
             }
+            if (!@$row["created_at"])
             $row["created_at"] = date("Y-m-d H:i:s");
+            if (!@$row["updated_at"])
             $row["updated_at"] = date("Y-m-d H:i:s");
+            foreach($nullableFields as $fld){
+                if (@$row[$fld]===""){
+                    $row[$fld]=null;
+                }
+            }
             if ($replace){
                 $result = @$this->db->table($table)->replace($row);
             } else {
