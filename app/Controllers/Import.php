@@ -111,7 +111,9 @@ class Import extends BaseController
                 $parts = explode("=",trim($val));
                 $row[$parts[0]] = $parts[1];
             }
+            if (!@$row["created_at"])
             $row["created_at"] = date("Y-m-d H:i:s");
+            if (!@$row["updated_at"])
             $row["updated_at"] = date("Y-m-d H:i:s");
             try {
                 if ($replace){
