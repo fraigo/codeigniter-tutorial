@@ -385,4 +385,33 @@ class AdminConsole extends BaseController
         }
         die();
     }
+
+    function uploadImageForm(){
+        return view('default',['content'=>view('admin/upload-image.php')]);
+    }
+
+    function uploadImage(){
+        $error = !@$_FILES['file'] || $_FILES['file']['error'];
+        $success = false;
+        if (!$error){
+            $path = $_POST["path"];
+            $filename = @$_POST['name']?:$_FILES['file']['name'];
+            $source = $_FILES['file']['tmp_name'];
+            $msg = "";
+            if (!file_exists($path) && is_dir($path)){
+                $msg = "Path is invalid";
+            }
+            $target = ROOTPATH."/$path/$filename";
+            $success = @move_uploaded_file($source,$target);
+            if ($success){
+                $msg = "File Upladed Successfully";
+            } else {
+                $msg = "Error uploading file $source to $target";
+            }
+        } else {
+            $msg = "Upload Error";
+        }
+       
+        return view('default',['content'=>view('admin/upload-image.php')."<br><i>$msg</i>"]);
+    }
 }
