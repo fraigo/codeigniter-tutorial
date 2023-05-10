@@ -314,6 +314,12 @@ class AdminConsole extends BaseController
         die();
     }
 
+    public function smstest(){
+        helper('sms');
+        $result = send_sms("+16047815923","Testing SMS Service");
+        return $this->JSONResponse($result);
+    }
+
     public function sqlcommand(){
         $db = db_connect();
         $sql = @$_GET["sql"];
