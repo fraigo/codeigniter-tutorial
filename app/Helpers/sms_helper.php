@@ -16,7 +16,11 @@ function send_sms($phone,$message){
     $SnSclient = new SnsClient([
         // 'profile' => 'sns',
         'region' => 'us-east-1',
-        'version' => '2010-03-31'
+        'version' => '2010-03-31',
+        'credentials' => [
+            'key' => getenv('AWS_SNS_KEY'),
+            'secret'  => getenv('AWS_SNS_SECRET'),
+        ]
     ]);
     
     try {
