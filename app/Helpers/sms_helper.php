@@ -1,11 +1,13 @@
 <?php
-
 use Aws\Sns\SnsClient; 
 use Aws\Exception\AwsException;
 
 function send_sms($phone,$message){
     
-    
+    if (getenv('SMS_TEST_PHONE')){
+        $phone = getenv('SMS_TEST_PHONE');
+        $message = "$message ($phone)";
+    }
     /**
      * Sends a a text message (SMS message) directly to a phone number using Amazon SNS.
      *
