@@ -2,14 +2,12 @@
 
 class MYPDF extends TCPDF {
 
+    public $htmlHeader = null;
+
     //Page header
     public function Header() {
-        //$image_file = ROOTPATH.'logo_example.jpg';
-        //$this->Image($image_file, 10, 10, 15, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-        // Set font
-        //$this->SetFont('helvetica', 'B', 20);
-        // Title
-        // $this->Cell(0, 15, '<< TCPDF Example 003 >>', 0, false, 'C', 0, '', 0, false, 'M', 'M');
+        $this->setY(5);
+        $this->WriteHTML($this->htmlHeader?:'', true, false, true, false, '');
     }
 
     // Page footer
@@ -22,13 +20,14 @@ class MYPDF extends TCPDF {
     }
 }
 
-function html_to_pdf($html,$filename=null,$overwrite=false){
+function html_to_pdf($html,$htmlHeader='',$filename=null,$overwrite=false){
     $file = ROOTPATH . "writable/pdf/$filename";
     if (file_exists($file) && !$overwrite){
         return $file;
     }
     chdir(ROOTPATH.'public');
     $pdf = new MYPDF();
+    $pdf->htmlHeader = $htmlHeader;
     $pdf->SetFont ('helvetica', '', 10 , '', 'default', true );
     $pdf->setPrintHeader(true);
     $pdf->setPrintFooter(true);
