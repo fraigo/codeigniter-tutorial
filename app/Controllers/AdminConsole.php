@@ -121,8 +121,10 @@ class AdminConsole extends BaseController
         if (@$_GET["noid"]){
             unset($header["id"]);    
         }
-        unset($header["updated_at"]);
-        unset($header["created_at"]);
+        if (@$_GET["notimestamp"]){
+            unset($header["updated_at"]);
+            unset($header["created_at"]);
+        }
         $headers = array_keys($header);
         if ($fields) {
             $headers = explode(" ",$fields);
@@ -159,17 +161,21 @@ class AdminConsole extends BaseController
             }
             .email-container{
                 border: 1px solid #e0e0e0;
-                padding:12px;
                 display: flex;
                 flex-wrap: wrap;
                 margin-bottom: 8px;
             }
             .email-info{
                 margin-right: 16px;
+                padding:12px;
             }
             .email-body{
                 flex: 1;
                 min-width: 600px;
+                margin-left
+            }
+            table{
+                max-width: 98vw;
             }
         </style>";
         foreach ($files as $file){
@@ -194,6 +200,7 @@ class AdminConsole extends BaseController
                     }
                 }
                 echo "</div>";
+                $body = str_replace("cid:logo.png@",getenv('app.logo').'?',$body);
                 echo '<div class="email-body">';
                     echo $body;
                     echo '<!-- DEBUG ';
@@ -314,9 +321,9 @@ class AdminConsole extends BaseController
         die();
     }
 
-    public function smstest(){
+    public function smstest($number=null){
         helper('sms');
-        $result = send_sms("+16047815923","Testing SMS Service");
+        $result = send_sms($number?:getenv('SMS_TEST_PHONE'),"Testing SMS Service");
         return $this->JSONResponse($result);
     }
 
