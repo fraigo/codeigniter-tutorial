@@ -69,4 +69,37 @@ class Events extends BaseModel
     protected $beforeDelete   = [];
     protected $afterDelete    = ['deleteChilds'];
 
+    public function loginEvent(){
+        $loginData = [
+            "ip"=>$_SERVER["REMOTE_ADDR"],
+            "path"=>$_SERVER["PATH_INFO"]
+        ];
+        if (getenv('IPINFO_TOKEN')){
+            $requestURI = "https://ipinfo.io/{$_SERVER["REMOTE_ADDR"]}?token=".getenv('IPINFO_TOKEN');
+            $locationInfo = @file_get_contents($requestURI);
+            if ($locationInfo){
+                $locationData = json_decode($locationInfo, true);
+                if ($locationData){
+                    $loginData['loc'] = @$locationData['loc'];
+                    $loginData['postal'] = @$locationData['postal'];
+                    $loginData['timezone'] = @$locationData['timezone'];
+                    $loginData['city'] = @$locationData['city'];
+                    $loginData['country'] = @$locationData['country'];
+                }
+            }
+        }
+        return $this->addEvent('Login', json_encode($loginData), user_id());
+    }
+
+    public function addEvent($type, $value, $reference, $userId=null){
+        $userId = $userId ?: user_id();
+        $id = $this->insert([
+            'type' => $type,
+            'value' => $value,
+            'reference' => $reference,
+            'created_by' => $userId,
+        ]);
+        return $id;
+    }
+
 }
