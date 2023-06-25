@@ -133,32 +133,17 @@ class Result extends BaseResult
      */
     protected function fetchAssoc()
     {
-        /* start patch */
         $result = $this->resultID->fetch_assoc();
         if ($result){
             $fieldData = $this->resultID->fetch_fields();
             foreach($fieldData as $fld){
-                if (in_array($fld->type,[
-                    MYSQLI_TYPE_DECIMAL,
-                    MYSQLI_TYPE_NEWDECIMAL,
-                    MYSQLI_TYPE_FLOAT,
-                    MYSQLI_TYPE_DOUBLE
-                   ]) && $result[$fld->name]!==null){
-                    $result[$fld->name] = 1.0 * $result[$fld->name];
-                }
-                else if (in_array($fld->type,[
-                    MYSQLI_TYPE_LONG,
-                    MYSQLI_TYPE_LONGLONG,
-                    MYSQLI_TYPE_SHORT,
-                    MYSQLI_TYPE_TINY
-                   ]) && $result[$fld->name]!==null){
+                if (in_array($fld->type,[MYSQLI_TYPE_LONG,MYSQLI_TYPE_SHORT,MYSQLI_TYPE_TINY]) && $result[$fld->name]!==null){
                     $result[$fld->name] = 1 * $result[$fld->name];
                 }
             }
         }
         return $result;
         //return $this->resultID->fetch_assoc();
-        /* end patch */
     }
 
     /**
