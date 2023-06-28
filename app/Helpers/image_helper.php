@@ -16,3 +16,13 @@ function png2jpg($filePath, $newname=null, $quality=70){
     imagedestroy($bg);
     return $newname;
 }
+
+function dataurl_decode($dataURL){
+    list($type, $content) = explode(';', $dataURL);
+    list($proto,$mime) = explode(':', $type);
+    list($format, $rawdata)      = explode(',', $content,2);
+    return [
+        'data' => base64_decode($rawdata),
+        'mime' => $mime
+    ];
+}

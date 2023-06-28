@@ -72,4 +72,11 @@ class ListOptions extends BaseModel
         return $listOptions->getListOptions('value','name');
     }
 
+    public function getModel(){
+        $listOptions = new \App\Models\ListOptions();
+        $listOptions->join('lists','lists.id=list_options.list_id');
+        $listOptions->select('list_options.*,lists.name as list_name');
+        return $listOptions;
+    }
+
 }
