@@ -71,19 +71,20 @@ function gapi_auth($client,$redirect=null){
     if ($access_token){
         $client->setAccessToken($access_token);
     } else {
-        return false;
+        return 0;
     }
+    $renew = null;
     if ($client->isAccessTokenExpired()){
-        echo "Token has been renewed";
+        $renew = true;
         $refreshToken = $client->getRefreshToken();
         $token = $client->refreshToken($refreshToken);
-        if ($token['access_token']){
+        if (@$token['access_token']){
             gapi_save_token($client, $token);
-            return true;
+            return 2;
         }
-        return false;
+        return 0;
     }
-    return true;
+    return 1;
 }
 
 function gapi_userinfo($client){
@@ -94,6 +95,23 @@ function gapi_userinfo($client){
 function gdrive_file($client,$id,$fields='id,name,parents'){
     $drive = new \Google\Service\Drive($client);
     return $drive->files->get($id,['fields'=>$fields]);
+}
+
+function gdrive_file_upload($client,$drive_folder_id,$file,$filename=null){
+    $drive = new \Google\Service\Drive($client);
+    $filename = $filename ?: basename($file);
+    $filetype = mime_content_type($file);
+    $resource = new Google\Service\Drive\DriveFile([
+        'name' => $filename,
+        'parents' => [$drive_folder_id],
+    ]);
+
+    $result = $drive->files->create($resource, [
+        'data' => file_get_contents($file),
+        'mimeType' => $filetype,
+        'uploadType' => 'multipart',
+    ]);
+    return $result;
 }
 
 function gdrive_files($client,$id="root",$onlyFolders=true){

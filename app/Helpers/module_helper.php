@@ -75,6 +75,7 @@ function module_config(){
 function custom_modules(){
     return [
         "auth_token" => "API Token",
+        "gdrive" => "Google Drive access",
         "profile" => "Profile",
     ];
 }
