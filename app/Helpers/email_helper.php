@@ -42,6 +42,7 @@ function send_email($to, $subject, $view, $data=[],$attachments=[]){
     $email->setSubject($subject);
     $htmlContent = view($view,$data);
     foreach($EMAIL_ATTACHMENTS as $item){
+	if (!@$item['file']) continue;
         $email->attach($item["file"],@$item["disposition"]?:'',@$item["name"],@$item["mime"]?:'');
         $cid = $email->setAttachmentCID($item["file"]);
         $htmlContent = str_replace($item['url'],"cid:$cid",$htmlContent);
@@ -58,7 +59,7 @@ function send_email($to, $subject, $view, $data=[],$attachments=[]){
     }
     $debug = $email->printDebugger([]);
     $email->clear(true);
-    return $debug();
+    return $debug;
 }
 
 function imageAttachment($publicPath,$mime=null){
@@ -82,8 +83,8 @@ function imageAttachment($publicPath,$mime=null){
 
 function email_button($link,$label=null,$bgcolor="#d28e19",$color="#f0f0f0",$template = "[url]{label}[/url]"){
     if (!$link) return '';
-    $button = str_replace('[url]','<a href="{url}" style="text-decoration:none !important;"><span style="padding:8px 20px;background-color:'.$bgcolor.';color:'.$color.';text-decoration:none;">',$template);
-    $button = str_replace('[/url]','</span></a>',$button);
+    $button = str_replace('[url]','<a href="{url}" style="text-decoration:none !important;"><div style="padding:8px 20px;background-color:'.$bgcolor.';color:'.$color.';text-decoration:none;border-radius:5px 5px;display:inline-block"><span style="color:#fff">',$template);
+    $button = str_replace('[/url]','</span></div></a>',$button);
     $button = str_replace("{url}",@$link?:'',$button);
     $button = str_replace("{label}",@$label?:'View Details',$button);
     return $button;

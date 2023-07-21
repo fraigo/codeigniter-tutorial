@@ -23,7 +23,7 @@ function gapi_client($redirect,$scope=null,$offline=false){
     if ($offline) $client->setAccessType('offline');
     // Using "consent" ensures that your application always receives a refresh token.
     // If you are not using offline access, you can omit this.
-    if ($offline) $client->setPrompt('consent');
+    if ($offline) $client->setPrompt('select_account consent');
     $client->setIncludeGrantedScopes(true);   // incremental auth
     return $client;
 }
