@@ -1,5 +1,11 @@
 <?php
 
+$EXTRA_MODULES = [];
+$CUSTOM_MODULES = [];
+if (is_file(APPPATH . 'Config/CustomModules.php')) {
+    require_once APPPATH . 'Config/CustomModules.php';
+}
+
 function module_list(){
     $result = array_column(module_config(),"label","route");
     $result = array_merge($result,custom_modules());
