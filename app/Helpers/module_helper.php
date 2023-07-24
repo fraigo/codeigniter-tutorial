@@ -1,7 +1,5 @@
 <?php
 
-$EXTRA_MODULES = [];
-$CUSTOM_MODULES = [];
 if (is_file(APPPATH . 'Config/CustomModules.php')) {
     require_once APPPATH . 'Config/CustomModules.php';
 }
@@ -24,7 +22,8 @@ function module_routes(){
 }
 
 function module_config(){
-    return [
+    $EXTRA_MODULES = extra_modules();
+    return array_merge([
         [
             "route" => "users",
             "label" => "Users",
@@ -75,13 +74,14 @@ function module_config(){
             "label" => "User Options",
             "controller" => "UserOptions"
         ],
-    ];
+    ], $EXTRA_MODULES);
 }
 
 function custom_modules(){
-    return [
+    $CUSTOM_MODULES = extra_custom_modules();
+    return array_merge([
         "auth_token" => "API Token",
         "gdrive" => "Google Drive access",
         "profile" => "Profile",
-    ];
+    ], $CUSTOM_MODULES);
 }

@@ -1,4 +1,13 @@
 <?php
 
-$EXTRA_MODULES = [];
-$CUSTOM_MODULES = [];
+function extra_modules(){
+    return [
+        
+    ];
+};
+
+function extra_custom_modules(){
+    return [
+        
+    ];
+}
