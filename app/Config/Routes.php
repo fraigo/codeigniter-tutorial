@@ -78,6 +78,10 @@ $routes->get('/api/auth/logout', 'Auth::logout');
 $routes->get('/api/google/login/auth', 'Gapi::auth/login');
 $routes->get('/api/google/login/token', 'Gapi::token');
 
+$routes->group('', ['filter' => 'auth'], static function ($routes) {
+    $routes->post('/api/auth/pushnotificationstoken', 'Auth::pushNotificationsToken');
+});
+
 $routes->group('', ['filter' => 'auth:access,gdrive,2'], static function ($routes) {
     $routes->get('/api/google/drive/auth', 'Gapi::auth/drive');
     $routes->get('/api/google/drive/browse', 'Gapi::browse');
@@ -140,6 +144,7 @@ $routes->get('/_admin/schema', 'AdminConsole::schema');
 $routes->get('/_admin/uploadimage', 'AdminConsole::uploadImageForm');
 $routes->post('/_admin/uploadimage', 'AdminConsole::uploadImage');
 $routes->get('/_admin/smstest', 'AdminConsole::smstest');
+$routes->get('/_admin/smstest/(:any)', 'AdminConsole::smstest/$1');
 $routes->get('/_admin/table/(:any)', 'AdminConsole::table/$1');
 $routes->get('/_admin/table/(:any)/(:any)', 'AdminConsole::table/$1/$2');
 $routes->get('/_admin/sqlcommand', 'AdminConsole::sqlcommand');

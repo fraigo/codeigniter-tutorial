@@ -84,7 +84,7 @@ class Auth extends BaseController
             }
             return $this->form();
         }
-        $result = do_login($user['id']);
+        $result = do_login($user['id'],true);
         if (!$result){
             $this->errors = ["email"=>"The account is not available"];
             if ($this->isJson()){
@@ -224,5 +224,15 @@ class Auth extends BaseController
         }
         session()->setFlashData("success","Your account password has been reset.");
         return redirect()->back();
+    }
+
+    public function pushNotificationsToken(){
+        $result = [
+            "token" => $this->getVars('token'),
+            "user_id" => user_id(),
+        ];
+        $events = new \App\Models\Events();
+        $events->addEvent("Push Notifications",$result['token'],user_id());
+        return $this->JSONResponse($result);
     }
 }
