@@ -86,18 +86,34 @@ class Users extends BaseController
         ],
     ];
 
-    protected function getQueryModel(){
-        $query = parent::getQueryModel();
-        $access = profile_access("users");
-        if (!is_admin()){
-            $query->where("user_types.access<=$access");
-        }
-        $query->join('user_types','user_types.id=users.user_type',is_admin()?'left':'');
-        return $query;
-    }
+    
 
     protected function prepareFields($keys=null, $data=null){
         $this->fields["user_type"]["options"] = $this->getUserTypes();
+        if (module_access('auth_token',1)){
+            $segment = current_url(true)->getSegment(1);
+            $showToken = $keys && (module_access('auth_token',4) || $segment == "profile");
+            $this->fields["auth_token"] = [
+                "header" => "API Access",
+                "label" => "API Token",
+                "readonly" => true,
+                "component" => "password-view",
+                "view_component" => "password-view",
+            ];
+            if ($showToken){
+                $keys[] = "auth_token";
+            }
+            $this->fields["push_token"] = [
+                "label" => "Push Token",
+                "readonly" => true,
+                "maxlength" => "255",
+                "component" => "password-view",
+                "view_component" => "password-view",
+            ];
+            if ($showToken){
+                $keys[] = "push_token";
+            }
+        }
         if ($data){
             $userOptions = new \App\Models\UserOptions();
             $optionFields = $userOptions->getListUserOptions();
@@ -117,15 +133,41 @@ class Users extends BaseController
             $this->fields = array_merge($this->fields, $newFields);
             $this->editFields = $keys;
             $this->viewFields = $keys;
-            if (module_access('auth_token',1))
-            $this->fields["auth_token"] = [
-                "header" => "API Access",
-                "label" => "API Token",
-                "component" => "password-view",
-                "view_component" => "password-view",
-            ];
         }
         return parent::prepareFields($keys);
+    }
+
+    function getDetails($data){
+        // if (!@$data["item"]){
+        //     return null;
+        // }
+        // if (!@$data["item"]["id"]){
+        //     return null;
+        // }
+
+        // $_REQUEST["user_options_user_id"] = $data["item"]['id'];
+
+        // $contents = [];
+        // $controller = new \App\Controllers\UserOptions();
+        // $controller->initController($this->request, $this->response, $this->logger);
+        // $controller->prepareFields();
+        // $controller->fields['user_id']["hidden"] = true;
+        // $controller->viewLink = "/useroptions/view/{id}?user_id={$data["item"]['id']}";
+        // $controller->newLink = "/useroptions/new?user_id={$data["item"]['id']}";
+        // $controller->editLink = "/useroptions/edit/{id}?user_id={$data["item"]['id']}";
+        // $contents[] = view('table',$controller->getTable("container mb-4"));
+
+        // return implode("\n",$contents);
+    }
+
+    protected function getQueryModel(){
+        $query = parent::getQueryModel();
+        $access = profile_access("users");
+        if (!is_admin()){
+            $query->where("user_types.access<=$access");
+        }
+        $query->join('user_types','user_types.id=users.user_type',is_admin()?'left':'');
+        return $query;
     }
 
     public function getModelById($id){
@@ -144,7 +186,7 @@ class Users extends BaseController
     public function profile($id){
         $this->entityName = "My Profile";
         $this->editLink = "/profile/edit";
-        $this->viewFields[] = "auth_token";
+
         $this->route = "profile";
         $data = $this->getModelById($id);
         $this->prepareFields($this->viewFields, $data);
@@ -153,7 +195,6 @@ class Users extends BaseController
 
     public function editProfile($id){
         $this->entityName = "My Profile";
-        $this->editFields[] = "auth_token";
         $data = $this->getModelById($id);
         $this->prepareFields($this->editFields, $data);
         return $this->edit($id);
