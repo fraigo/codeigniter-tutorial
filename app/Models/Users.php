@@ -28,7 +28,15 @@ class Users extends BaseModel
         'phone',
         'address',
         'city',
-        'postal_code'
+        'postal_code',
+        'push_token'
+    ];
+    protected $relationships = [
+        "user_types" => [
+            "field"  => "user_type",
+            "ext_id" => "id",
+            "ext_description" => "name",
+        ]
     ];
 
     // Dates
@@ -60,29 +68,45 @@ class Users extends BaseModel
             'label' => 'Profile',
             'rules' => 'required|greater_than_equal_to[0]'
         ],
+        'avatar_url' => [
+            'label' => 'Avatar',
+            'rules' => 'permit_empty'
+        ],
+        'login_at' => [
+            'label' => 'Last Login',
+            'rules' => 'permit_empty'
+        ],
         'password_token' => [
             'label' => 'Password Token',
-            'rules' => 'max_length[64]'
+            'rules' => 'permit_empty|max_length[64]'
+        ],
+        'password_token_expires' => [
+            'label' => 'Password Token Exiration',
+            'rules' => 'permit_empty'
         ],
         'auth_token' => [
             'label' => 'Auth Token',
-            'rules' => 'max_length[128]'
+            'rules' => 'permit_empty|max_length[128]'
         ],
         'phone' => [
             'label' => 'Phone',
-            'rules' => 'max_length[64]'
+            'rules' => 'permit_empty|max_length[64]'
         ],
         'address' => [
             'label' => 'Address',
-            'rules' => 'max_length[255]'
+            'rules' => 'permit_empty|max_length[255]'
         ],
         'city' => [
             'label' => 'City',
-            'rules' => 'max_length[128]'
+            'rules' => 'permit_empty|max_length[128]'
         ],
         'postal_code' => [
             'label' => 'Postal Code',
-            'rules' => 'max_length[10]'
+            'rules' => 'permit_empty|max_length[10]'
+        ],
+        'push_token' => [
+            'label' => 'Push Token',
+            'rules' => 'permit_empty|max_length[255]'
         ]
     ];
     protected $validationMessages   = [];
@@ -113,5 +137,5 @@ class Users extends BaseModel
         $userOptions->createUserOptions($id);
         return $userOptions->getUserOptions($id);
     }
-
+    
 }

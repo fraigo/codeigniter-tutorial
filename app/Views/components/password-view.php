@@ -3,6 +3,9 @@ $config = [];
 $config['x-ref'] = "content";
 $config['x-bind:type'] = "visible ? 'text' : 'password'";
 $config["value"] = $value;
+if (@$readonly){
+    $config["readonly"] = true;
+}
 ?>
 <div class="input-group password-view" x-data="{label: 'Show', visible:false}">
 <?=form_input($config)?>
