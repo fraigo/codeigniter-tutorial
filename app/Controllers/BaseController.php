@@ -462,6 +462,9 @@ abstract class BaseController extends ResourceController
         $fields = $this->editFields;
         if ($this->isJSON()){
             $jsonData = $this->request->getJSON(true);
+            if (!$jsonData){
+                $jsonData = $this->getVars();
+            }
             if (!is_array($jsonData)){
                 return $this->JSONResponse(null,400,[
                     "message"=>"Invalid request"
