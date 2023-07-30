@@ -14,9 +14,9 @@ function create_token(){
     return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 }
 
-function do_login($id){
+function do_login($id, $event=false){
     $users = new \App\Models\Users();
-    $users->select(['id','name','email','user_type','auth_token','login_at','phone','address','city','postal_code']);
+    $users->select(['id','name','email','user_type','auth_token','push_token','login_at','phone','address','city','postal_code']);
     $user = $users->find($id);
     if ($user){
         $user["user_options"] = $users->getUserOptions($id);
@@ -42,6 +42,10 @@ function do_login($id){
     if (!$user["auth_token"]){
         $updatedData["auth_token"] = create_token();
     }
+    // if ($user['push_token']){
+    //     helper('pushnotifications');
+    //     $result = push_notification($user['push_token'],"Staff Grabs Login","User has been logged in ",);
+    // }
     $users->update($user["id"],$updatedData);
     $token = @$updatedData["auth_token"]?:$user["auth_token"];
     unset($user["auth_token"]);
@@ -55,6 +59,10 @@ function do_login($id){
     foreach($result as $key=>$value){
         $session->set($key,$value);
     }
+    if ($event){
+        $events = new \App\Models\Events();
+        $events->loginEvent();
+    }
     return $result;
 }
 
@@ -65,6 +73,13 @@ function clear_login(){
 }
 
 function check_login($request){
+    if (@$_GET['__token__']){
+        $users = new \App\Models\Users();
+        $user = $users->where('auth_token',$_GET['__token__'])->first();
+        if ($user){
+            do_login($user['id']);
+        }
+    }
     if (@$_SERVER["HTTP_AUTHORIZATION"]){
         $user = null;
         list($type,$content) = explode(" ",$_SERVER["HTTP_AUTHORIZATION"]);
@@ -92,7 +107,7 @@ function check_login($request){
 }
 
 function check_user($user){
-
+    
     return true;
 }
 

@@ -125,8 +125,7 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
-writable/*.sqlite
-writable/images.zip
-writable/folder.json
-writable/gdrive.json
+writable/*.*
+writable/documents
 google.json
+
