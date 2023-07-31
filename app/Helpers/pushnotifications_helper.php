@@ -8,7 +8,7 @@ function push_notification($deviceToken,$title,$body,$extra=[],$development=fals
         $deviceToken = substr($deviceToken,3);
     }
     if ($type=='ios'){
-        return ios_push_notification($deviceToken,$title,$body,$extra,$development);
+        return ios_push_notification($deviceToken,$title,$body,0,$extra,$development);
     }
     return [
         "success" => "true",
@@ -16,7 +16,7 @@ function push_notification($deviceToken,$title,$body,$extra=[],$development=fals
     ];
 }
 
-function ios_push_notification($deviceToken,$title,$body,$extra=[],$development=false){
+function ios_push_notification($deviceToken,$title,$body,$badge=0,$extra=[],$development=false){
     // Set the path to your p8 certificate file
     if (!getenv('PUSH_P8_FILE')) return ["success"=>true,"message"=>"No certificate file"];
     $certificateFile = ROOTPATH . getenv('PUSH_P8_FILE');
@@ -57,6 +57,9 @@ function ios_push_notification($deviceToken,$title,$body,$extra=[],$development=
                 'title' => $title,
                 'body' => $body,
             ],
+            "content-available" => 1,
+            "sound"  => "",
+            "badge" => $badge ?: 0
         ],
     ];
     if ($extra){

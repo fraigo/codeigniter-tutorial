@@ -103,7 +103,10 @@ class UserNotifications extends BaseModel
             helper('pushnotifications');
             $extra = ['link'=>$notif['link'],'notification'=>$notificationId,'usernotification'=>$id];
             $extra['payload'] = json_encode($extra);
-            $result = @push_notification($user['push_token'],$notif['title'],strip_tags($notif['content']),$extra);
+            $txtMessage = str_replace('<br>',"\n",$notif['content']);
+            $txtMessage = str_replace('<br />',"\n",$txtMessage); 
+            $txtMessage = strip_tags($txtMessage);
+            $result = @push_notification($user['push_token'],$notif['title'],$txtMessage,$extra);
         }
         return $id;
     }
