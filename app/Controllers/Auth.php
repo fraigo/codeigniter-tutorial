@@ -246,7 +246,9 @@ class Auth extends BaseController
         if ($user){
             if ($user['push_token']!=$token){
                 $result['new'] = true;
-                $users->where('push_token',$token)->update(['push_token'=>'']);
+                $query = $users->where('push_token',$token);
+                $query->set('push_token','');
+                $query->update();
                 $result["update"] = $users->update(user_id(),['push_token'=>$token]);
                 $events = new \App\Models\Events();
                 $events->addEvent("Push Notifications",$result['token'],user_id());    
