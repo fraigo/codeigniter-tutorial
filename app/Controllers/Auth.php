@@ -227,12 +227,31 @@ class Auth extends BaseController
     }
 
     public function pushNotificationsToken(){
+        $token = $this->getVars('token');
+        $platform = $this->getVars('platform') ?: '';
+        $env = $this->getVars('env') ?: '';
+        if ($env!=''){
+            $token = strtoupper($env).$token;
+        }
+        if ($platform!=''){
+            $token = strtoupper($platform).$token;
+        }
         $result = [
-            "token" => $this->getVars('token'),
+            "token" => $token,
             "user_id" => user_id(),
+            "new" => false,
         ];
-        $events = new \App\Models\Events();
-        $events->addEvent("Push Notifications",$result['token'],user_id());
+        $users = new \App\Models\Users();
+        $user = $users->find(user_id());
+        if ($user){
+            if ($user['push_token']!=$token){
+                $result['new'] = true;
+                $users->where('push_token',$token)->update(['push_token'=>'']);
+                $result["update"] = $users->update(user_id(),['push_token'=>$token]);
+                $events = new \App\Models\Events();
+                $events->addEvent("Push Notifications",$result['token'],user_id());    
+            }
+        }
         return $this->JSONResponse($result);
     }
 }

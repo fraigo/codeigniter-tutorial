@@ -2,7 +2,21 @@
 // This code uses cURL to send a POST request to the Apple Push Notification service (APNs) with the necessary headers and payload. 
 // It also generates a JWT token using the provided p8 certificate file, key ID, and team ID.
 
-function push_notification($deviceToken,$title,$body,$extra=[],$development=false){
+function push_notification($deviceToken,$title,$body,$extra=[],$development=false,$type='ios'){
+    if (strpos($deviceToken,"IOS")==0){
+        $ios = true;
+        $deviceToken = substr($deviceToken,3);
+    }
+    if ($type=='ios'){
+        return ios_push_notification($deviceToken,$title,$body,$extra,$development);
+    }
+    return [
+        "success" => "true",
+        "message" => "not implemented on $type"
+    ];
+}
+
+function ios_push_notification($deviceToken,$title,$body,$extra=[],$development=false){
     // Set the path to your p8 certificate file
     if (!getenv('PUSH_P8_FILE')) return ["success"=>true,"message"=>"No certificate file"];
     $certificateFile = ROOTPATH . getenv('PUSH_P8_FILE');
