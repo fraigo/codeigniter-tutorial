@@ -138,20 +138,24 @@ foreach($appRoutes as $route => $controller){
     });
 }
 
-$routes->get('/_admin/auth', 'AdminConsole::auth');
-$routes->get('/_admin/console', 'AdminConsole::index');
-$routes->get('/_admin/schema', 'AdminConsole::schema');
-$routes->get('/_admin/uploadimage', 'AdminConsole::uploadImageForm');
-$routes->post('/_admin/uploadimage', 'AdminConsole::uploadImage');
-$routes->get('/_admin/smstest', 'AdminConsole::smstest');
-$routes->get('/_admin/smstest/(:any)', 'AdminConsole::smstest/$1');
-$routes->get('/_admin/table/(:any)', 'AdminConsole::table/$1');
-$routes->get('/_admin/table/(:any)/(:any)', 'AdminConsole::table/$1/$2');
-$routes->get('/_admin/sqlcommand', 'AdminConsole::sqlcommand');
-$routes->get('/_admin/download/(:any)', 'AdminConsole::download/$1');
-$routes->get('/_admin/emaillogs/(:any)', 'AdminConsole::emailLogs/$1');
-$routes->get('/_admin/logs/(:any)', 'AdminConsole::logs/$1');
-$routes->get('/_admin/(:any)', 'AdminConsole::command/$1');
+$routes->group('', ['filter' => 'auth:access,admin,1'], static function ($routes) {
+    $routes->get('/_admin/auth', 'AdminConsole::auth');
+    $routes->get('/_admin/console', 'AdminConsole::index');
+    $routes->get('/_admin/schema', 'AdminConsole::schema');
+    $routes->get('/_admin/uploadimage', 'AdminConsole::uploadImageForm');
+    $routes->post('/_admin/uploadimage', 'AdminConsole::uploadImage');
+    $routes->get('/_admin/smstest', 'AdminConsole::smstest');
+    $routes->get('/_admin/smstest/(:any)', 'AdminConsole::smstest/$1');
+    $routes->get('/_admin/editor/(:any)', 'AdminConsole::editor/$1');
+    $routes->post('/_admin/editor/(:any)', 'AdminConsole::editor/$1');
+    $routes->get('/_admin/table/(:any)', 'AdminConsole::table/$1');
+    $routes->get('/_admin/table/(:any)/(:any)', 'AdminConsole::table/$1/$2');
+    $routes->get('/_admin/sqlcommand', 'AdminConsole::sqlcommand');
+    $routes->get('/_admin/download/(:any)', 'AdminConsole::download/$1');
+    $routes->get('/_admin/emaillogs/(:any)', 'AdminConsole::emailLogs/$1');
+    $routes->get('/_admin/logs/(:any)', 'AdminConsole::logs/$1');
+    $routes->get('/_admin/(:any)', 'AdminConsole::command/$1');
+});
 
 
 /*
