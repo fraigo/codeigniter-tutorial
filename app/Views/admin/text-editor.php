@@ -12,7 +12,7 @@ if (@$_POST['content']){
         <div class="form-item">
             <?php echo form_textarea([
                 "name" => "content",
-                "value" => file_get_contents(ROOTPATH.$filename),
+                "value" => @file_get_contents(ROOTPATH.$filename),
             ]); ?>
         </div>
         <div class="form-item">

@@ -428,8 +428,8 @@ class AdminConsole extends BaseController
         return view('default',['content'=>view('admin/upload-image.php')."<br><i>$msg</i>"]);
     }
 
-    function editor($filename = ".env"){
-        $filename = ".env";
+    function editor($filename = null){
+        $filename = $filename ?: ".env";
         return view('default',['content'=>view('admin/text-editor.php',['filename'=>$filename])]);
     }
 }
