@@ -102,8 +102,6 @@ class UserNotifications extends BaseModel
         if ($user['push_token']){
             helper('pushnotifications');
             $result = @push_notification($user['push_token'],$notif['title'],strip_tags($notif['content']),['link'=>$notif['link']]);
-            print_r($result);
-            die();
         }
         return $id;
     }
