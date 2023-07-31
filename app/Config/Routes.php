@@ -146,6 +146,7 @@ $routes->group('', ['filter' => 'auth:access,admin,1'], static function ($routes
     $routes->post('/_admin/uploadimage', 'AdminConsole::uploadImage');
     $routes->get('/_admin/smstest', 'AdminConsole::smstest');
     $routes->get('/_admin/smstest/(:any)', 'AdminConsole::smstest/$1');
+    $routes->get('/_admin/pushnotification/(:any)', 'AdminConsole::pushnotification/$1');
     $routes->get('/_admin/editor/(:any)', 'AdminConsole::editor/$1');
     $routes->get('/_admin/editor/(:any)/(:any)', 'AdminConsole::editor/$1/$2');
     $routes->post('/_admin/editor/(:any)', 'AdminConsole::editor/$1');

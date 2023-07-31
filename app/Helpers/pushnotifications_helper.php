@@ -4,7 +4,7 @@
 
 function push_notification($deviceToken,$title,$body,$extra=[],$development=false,$type='ios'){
     if (strpos($deviceToken,"IOS")==0){
-        $ios = true;
+        $type = 'ios';
         $deviceToken = substr($deviceToken,3);
     }
     if ($type=='ios'){

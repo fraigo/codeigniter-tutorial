@@ -433,4 +433,10 @@ class AdminConsole extends BaseController
         if ($extra) $filename = "$filename/$extra";
         return view('default',['content'=>view('admin/text-editor.php',['filename'=>$filename])]);
     }
+
+    function pushnotification($token){
+        helper('pushnotifications');
+        $result = push_notification($token,"Test Notification","Test");
+        return $this->JSONResponse($result);
+    }
 }

@@ -13,7 +13,6 @@ APNS_HOST_NAME=api.sandbox.push.apple.com
 #Set these additional shell variables just before sending a push notification:
 
 JWT_ISSUE_TIME=$(date +%s)
-JWT_ISSUE_TIME=1690735230
 JWT_HEADER=$(printf '{"alg":"ES256","kid":"%s"}' "${AUTH_KEY_ID}" | openssl base64 -e -A | tr -- '+/' '-_' | tr -d =)
 JWT_CLAIMS=$(printf '{"iss":"%s","iat":%d}' "${TEAM_ID}" "${JWT_ISSUE_TIME}" | openssl base64 -e -A | tr -- '+/' '-_' | tr -d =)
 JWT_HEADER_CLAIMS="${JWT_HEADER}.${JWT_CLAIMS}"
