@@ -7,7 +7,7 @@ if (@$_POST['content']){
 ?>
 <header class="header">
     <div class="container">
-        <h2>File Editor</h2>
+        <h2>File Editor (<?php echo $filename ?>)</h2>
         <form method=POST id=editor onsubmit="return saveFile(this)" enctype="multipart/form-data">
         <div class="form-item">
             <?php echo form_textarea([
