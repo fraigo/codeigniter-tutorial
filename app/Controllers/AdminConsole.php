@@ -436,7 +436,9 @@ class AdminConsole extends BaseController
 
     function pushnotification($token){
         helper('pushnotifications');
-        $result = push_notification($token,"Test Notification","Test");
+        $extra = ["link"=>"#/help"];
+        $extra['payload'] = json_encode($extra);
+        $result = push_notification($token,"Test Notification","Test content",1,$extra);
         return $this->JSONResponse($result);
     }
 }

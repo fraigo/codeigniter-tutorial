@@ -2,13 +2,30 @@
 // This code uses cURL to send a POST request to the Apple Push Notification service (APNs) with the necessary headers and payload. 
 // It also generates a JWT token using the provided p8 certificate file, key ID, and team ID.
 
-function push_notification($deviceToken,$title,$body,$extra=[],$development=false,$type='ios'){
-    if (strpos($deviceToken,"IOS")==0){
+function push_notification($deviceToken,$title,$body,$badge=0,$extra=[],$development=false,$type='ios'){
+    if (getenv('PUSH_TEST_DEVICE_TOKEN')){
+        $title .= " (TEST)";
+        $body .= " (" . substr($deviceToken,-8) .")";
+        $deviceToken = getenv('PUSH_TEST_DEVICE_TOKEN');
+    }
+    if (strpos($deviceToken,"IOS")===0){
         $type = 'ios';
         $deviceToken = substr($deviceToken,3);
     }
+    if (strpos($deviceToken,"ANDROID")===0){
+        $type = 'android';
+        $deviceToken = substr($deviceToken,7);
+    }
+    if (strpos($deviceToken,"DEV")===0){
+        $development = true;
+        $deviceToken = substr($deviceToken,3);
+    }
+
     if ($type=='ios'){
-        return ios_push_notification($deviceToken,$title,$body,0,$extra,$development);
+        return ios_push_notification($deviceToken,$title,$body,$badge,$extra,$development);
+    }
+    if ($type=='android'){
+        return android_push_notification($deviceToken,$title,$body,$badge,$extra,$development);
     }
     return [
         "success" => "true",
@@ -34,18 +51,7 @@ function ios_push_notification($deviceToken,$title,$body,$badge=0,$extra=[],$dev
     $bundleId = getenv('PUSH_IOS_BUNDLE_ID');
     if (!$bundleId) return ["success"=>false,"message"=>"PUSH_IOS_BUNDLE_ID not set"];
 
-    if (getenv('PUSH_TEST_DEVICE_TOKEN')){
-        $testPush = true;
-        $title .= " (TEST)";
-        $body .= " (" . substr($deviceToken,0,8) .")";
-        $deviceToken = getenv('PUSH_TEST_DEVICE_TOKEN');
-    }
-
-    $APIHOST = "api.push.apple.com/";
-    if (strpos($deviceToken,"DEV")==0){
-        $development = true;
-        $deviceToken = substr($deviceToken,3);
-    }
+    $APIHOST = "api.push.apple.com";
     if ($development){
         $APIHOST = "api.sandbox.push.apple.com";
     }
@@ -131,6 +137,82 @@ function ios_push_notification($deviceToken,$title,$body,$badge=0,$extra=[],$dev
 
 }
 
+
+function android_push_notification($deviceToken,$title,$body,$badge=0,$extra=[],$development=false){
+    // Set the server key and device token
+    if (!getenv('PUSH_ANDROID_KEY')) return ["success"=>true,"message"=>"No server key"];
+
+    $serverKey = getenv('PUSH_ANDROID_KEY');
+
+    // Set the notification message
+    $message = [
+        'title' => $title,
+        'body' => $body,
+    ];
+    if ($extra){
+        foreach($extra as $key=>$value){
+            $message[$key] = $value;
+        }
+    }
+
+    // Set the notification payload
+    $payload = [
+        'to' => $deviceToken,
+    ];
+
+    //$payload['notification'] = $message;
+    $payload['data'] = $message;
+
+    // Encode the payload as JSON
+    $payloadJson = json_encode($payload);
+
+    // Set the endpoint URL
+    $url = 'https://fcm.googleapis.com/fcm/send';
+
+    // Set the request headers
+    $headers = [
+        'Authorization: key=' . $serverKey,
+        'Content-Type: application/json',
+    ];
+
+    // Create a new cURL resource
+    $ch = curl_init();
+
+    // Set the cURL options
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payloadJson);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+    // Execute the cURL request
+    $response = curl_exec($ch);
+
+    // Check for errors
+    if ($response === false) {
+        $error = curl_error($ch);
+        curl_close($ch);
+        // Handle the error
+        return [
+            "success" => false,
+            "message" => "cURL Error: $error",
+            "url" => $url,
+            "headers" => $headers,
+            "payload" => $payloadJson,
+        ];
+    } else {
+        // Handle the response
+        curl_close($ch);
+        return [
+            "success" => true,
+            "response" => $response,
+            "url" => $url,
+            "headers" => $headers,
+            "payload" => $payloadJson,
+        ];
+    }
+}
 
 // Function to generate the JWT token
 function generateJwtToken($certificateFile, $keyId, $teamId)
