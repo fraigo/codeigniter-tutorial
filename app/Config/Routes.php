@@ -75,6 +75,10 @@ $routes->post('/api/auth/reset/(:any)', 'Auth::doReset/$1');
 $routes->get('/auth/logout', 'Auth::logout');
 $routes->get('/api/auth/logout', 'Auth::logout');
 
+$routes->get('/auth/google', 'Gapi::token/1');
+$routes->post('/auth/apple', 'AppleSignin::token/1');
+$routes->post('/auth/apple/(:any)', 'AppleSignin::token/1/$1');
+$routes->put('/api/auth/token', 'Auth::loginWithToken');
 $routes->get('/api/google/login/auth', 'Gapi::auth/login');
 $routes->get('/api/google/login/token', 'Gapi::token');
 
@@ -98,6 +102,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->post('/profile/edit', 'Auth::updateProfile');
     $routes->get('/api/profile', 'Auth::profile');
     $routes->put('/api/profile', 'Auth::updateProfile');
+    $routes->delete('/api/deleteprofile', 'Auth::deleteProfile');
 
     $routes->get('/search/select/(:any)', 'Search::select/$1');
     $routes->get('/api/app/notifications', 'UserNotifications::userNotifications');
