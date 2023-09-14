@@ -14,7 +14,7 @@ function gapi_redirect_url($redirect=null){
     return base_url() . $redirect;
 }
 
-function gapi_client($redirect,$scope=null,$offline=false){
+function gapi_client($redirect,$scope=null,$offline=false,$select_account=true){
     $client = new \Google\Client();
     $client->setAuthConfig(ROOTPATH.'/google.json');
     if ($scope) $client->addScope($scope);
@@ -23,17 +23,22 @@ function gapi_client($redirect,$scope=null,$offline=false){
     if ($offline) $client->setAccessType('offline');
     // Using "consent" ensures that your application always receives a refresh token.
     // If you are not using offline access, you can omit this.
-    if ($offline) $client->setPrompt('select_account consent');
+    $options = [];
+    if ($select_account) $options[] = 'select_account';
+    if ($offline) $options[] = 'consent';
+    if (count($options)){
+        $client->setPrompt(implode(' ',$options));
+    }
     $client->setIncludeGrantedScopes(true);   // incremental auth
     return $client;
 }
 
-function glogin_client($redirect=null){
-    return gapi_client($redirect,"https://www.googleapis.com/auth/userinfo.email");
+function glogin_client($redirect=null,$offline=false){
+    return gapi_client($redirect,"https://www.googleapis.com/auth/userinfo.email",$offline);
 }
 
-function gdrive_client($redirect=null){
-    $client = gapi_client($redirect,\Google\Service\Drive::DRIVE,true);
+function gdrive_client($redirect=null,$offline=true){
+    $client = gapi_client($redirect,\Google\Service\Drive::DRIVE,$offline);
     return $client;
 }
 

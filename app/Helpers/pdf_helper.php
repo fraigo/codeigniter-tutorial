@@ -20,8 +20,13 @@ class MYPDF extends TCPDF {
     }
 }
 
-function html_to_pdf($html,$htmlHeader='',$filename=null,$overwrite=false){
+function pdf_filename($filename){
     $file = ROOTPATH . "writable/pdf/$filename";
+    return $file;
+}
+
+function html_to_pdf($html,$htmlHeader='',$filename=null,$overwrite=false){
+    $file = pdf_filename($filename);
     if (file_exists($file) && !$overwrite){
         return $file;
     }

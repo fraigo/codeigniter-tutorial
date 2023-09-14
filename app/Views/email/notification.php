@@ -16,6 +16,13 @@ $button = email_button(@$link,"View Details");
         <td>&nbsp;</td>
         <td width="600">
         <table bgcolor="#f8f8f8" width="600">
+            <tr height="20">
+                <td width="20"></td>
+                <td align="center">
+                    <div style="height:20px">&nbsp;</div>
+                </td>
+                <td width="20"></td>
+            </tr>
             <tr height="100">
                 <td width="20"></td>
                 <td align="center">

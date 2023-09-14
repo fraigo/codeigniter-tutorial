@@ -2,8 +2,8 @@
 
 $content = @$page["contents"]?:"";
 
-$content = str_replace('[url]','<a href="{url}" style="text-decoration:none !important;"><span style="padding:8px 20px;background-color:#d28e19;color:#f0f0f0;text-decoration:none;">',$content);
-$content = str_replace('[/url]','</span></a>',$content);
+$content = str_replace('[url]','<a href="{url}" style="text-decoration:none !important;"><div style="padding:8px 20px;background-color:#d28e19;color:#f0f0f0;text-decoration:none;border-radius:5px 5px;display:inline-block"><span style="color:#fff">',$content);
+$content = str_replace('[/url]','</span></div></a>',$content);
 $content = str_replace("{url}",@$url,$content);
 
 $content = str_replace("{name}",@$name,$content);
@@ -46,6 +46,13 @@ if (@$replacements){
         <td>&nbsp;</td>
         <td width="600">
         <table bgcolor="#f8f8f8" width="600">
+            <tr height="20">
+                <td width="20"></td>
+                <td align="center">
+                    <div style="height:20px">&nbsp;</div>
+                </td>
+                <td width="20"></td>
+            </tr>
             <tr height="100">
                 <td width="20"></td>
                 <td align="center">
@@ -60,6 +67,7 @@ if (@$replacements){
                 </td>
                 <td width="20"></td>
             </tr>
+<?php if(!@$hidefooter) { ?>
             <tr>
                 <td width="20"></td>
                 <td>
@@ -71,6 +79,7 @@ Sincerely,
                 </td>
                 <td width="20"></td>
             </tr>
+<?php } ?>
         </table>
         </td>
         <td>&nbsp;</td>

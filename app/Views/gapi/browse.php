@@ -5,14 +5,21 @@
     <h3>
         <img src='/img/gapi/folder.svg' align=absmiddle width=32 height=32> 
         <?php if (@$parent) { ?>
-        <a href='/api/google/drive/browse/<?=$parent->id?>'><?=$parent->name?></a> /
+        <a href='/api/google/drive/browse/<?=$parent->id?>?format=html'><?=$parent->name?></a> /
         <?php } ?>
         <?=ucfirst($file->name)?>
     </h3>
+    <div class="buttons" style="display:flex">
     <?php if ($file->parents) { ?>
-        <a class='button' href='/api/google/drive/browse/<?=$file->parents[0]?>'>⬅ Back to Parent Folder</a>
+        <a class='button' href='/api/google/drive/browse/<?=$file->parents[0]?>?format=html'>⬅ Back to Parent Folder</a>
     <?php } ?>
-    <a class='button' href='/api/google/drive/select/<?=$file->id?>'>Select this folder</a>
+    <a class='button' href='/api/google/drive/select/<?=$file->id?>?format=html'>🗂 Select this folder</a>
+    <div style="flex:1"></div>
+    <a class='button' href='/api/google/drive/browse/?format=html'>Go to Root</a>
+    <?php if ($selected) { ?>
+        <a class='button' href='/api/google/drive/browse/<?=$selected['id']?>?format=html'>Go to Selected Folder</a>
+    <?php } ?>
+    </div>
 <?php } ?>
 <h4>Browse folders</h4>
 <?php
@@ -26,13 +33,13 @@ foreach($items as $file){
 ?>
     <div class='file-item' mime='<?=$file->mimeType?>'>
         <div style="padding-right: 4px">
-            <a href='/api/google/drive/browse/<?=$file->id?>'>
+            <a href='/api/google/drive/browse/<?=$file->id?>?format=html'>
                 <img src='/img/gapi/folder.svg' align=absmiddle width=24 height=24></a>
         </div>
         <div style='flex:1; line-height: 1.3em; max-height:2.6em;overflow:hidden;'>
-            <a href='/api/google/drive/browse/<?=$file->id?>'><?=$file->name?></a>
+            <a href='/api/google/drive/browse/<?=$file->id?>?format=html'><?=$file->name?></a>
         </div>
-        <div style=float:right ><a class='button' href='/api/google/drive/browse/<?=$file->id?>'>Browse</a></div>
+        <div style=float:right ><a class='button' href='/api/google/drive/browse/<?=$file->id?>?format=html'>Browse</a></div>
     </div>
 <?php
 }
