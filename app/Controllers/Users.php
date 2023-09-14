@@ -164,7 +164,8 @@ class Users extends BaseController
         $query = parent::getQueryModel();
         $access = profile_access("users");
         if (!is_admin()){
-            $query->where("user_types.access<=$access");
+            $uid = user_id() ?: 0;
+            $query->where("(user_types.access<=$access or users.id=$uid)");
         }
         $query->join('user_types','user_types.id=users.user_type',is_admin()?'left':'');
         return $query;

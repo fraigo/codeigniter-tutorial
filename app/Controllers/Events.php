@@ -23,6 +23,8 @@ class Events extends BaseController
         "value" => [
             "label" => "Value",
             "maxlength" => "255",
+            "view_component" => "json-view",
+            "cellAttributes" => ['style'=>'word-break: break-all'],
             "filter" => true,
         ],
         "reference" => [

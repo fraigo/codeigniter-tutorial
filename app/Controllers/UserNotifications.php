@@ -63,6 +63,7 @@ class UserNotifications extends BaseController
             'user_id' => $userID,
             'notifications.active' => 1
         ]);
+        $notifications->where('user_notifications.created_at>=',date("Y-m-d",strtotime("-1 month")));
         $notifications->orderBy('user_notifications.created_at DESC');
         $items = $notifications->findAll();
         return $this->JSONResponse([

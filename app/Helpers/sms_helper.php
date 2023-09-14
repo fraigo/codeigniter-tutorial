@@ -4,6 +4,13 @@ use Aws\Exception\AwsException;
 
 function send_sms($phone,$message){
     
+    if (empty($phone)) {
+        return [
+            "success"=>false,
+            "error"=>"No number set"
+        ];
+    }
+    $phone = str_replace([' ','-','(',')'],'',$phone);
     if (getenv('SMS_TEST_PHONE')){
         $phone = getenv('SMS_TEST_PHONE');
         $message = "$message ($phone)";
@@ -17,7 +24,7 @@ function send_sms($phone,$message){
      
     $SnSclient = new SnsClient([
         // 'profile' => 'sns',
-        'region' => 'us-east-1',
+        'region' => getenv('AWS_SNS_REGION')?:'us-east-1',
         'version' => '2010-03-31',
         'credentials' => [
             'key' => getenv('AWS_SNS_KEY'),

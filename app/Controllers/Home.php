@@ -10,4 +10,5 @@ class Home extends BaseController
         $page = $pages->find(1);
         return $this->layout('page',$page);
     }
+
 }
