@@ -37,6 +37,32 @@ class Auth extends BaseController
         $userController->initController($this->request,$this->response,$this->logger);
         return $userController->updateProfile(user_id());
     }
+
+    public function deleteProfile($userId=null){
+        $userId = $userId ?: user_id();
+        $users = new \App\Models\Users();
+        $user = $users->find($userId);
+        if (!$user){
+            return $this->notFound();
+        }
+        $users->update($userId,[
+            'user_type' => 5,
+            'address' => '',
+            'auth_token' => create_token(),
+            'avatar_url' => '',
+            'city' => '',
+            'password' => md5('deleted'.time()),
+            'password_token' => '',
+            'password_token_expires' => date("Y-m-d H:i:s"),
+            'phone' => '',
+            'postal_code' => '',
+            'push_token' => '',
+        ]);
+        $authUsers = new \App\Models\AuthUsers();
+        $authUsers->deleteProfile($userId);
+        $user = $users->find($userId);
+        return $this->JSONresponse($user);
+    }
     
     public function reset($token){
         $user = $this->model
@@ -49,6 +75,39 @@ class Auth extends BaseController
             'token'=>$token,
             'user'=>$user
         ],'login');
+    }
+
+    public function loginWithToken(){
+        $data = $this->getVars();
+        if (!is_array($data)){
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,["message"=>"Invalid Request"]);
+            }
+            $data=[];
+        }
+        $user = $this->model
+            ->where("password_token",$data["password_token"])
+            ->where("password_token_expires>",Time::now()->toDateTimeString())
+            ->first();
+        if (!$user){
+            $this->errors = ["password"=>"Invalid token"];
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
+            return $this->form();
+        }
+        $result = do_login($user['id'],true);
+        if (!$result){
+            $this->errors = ["email"=>"The account is not available"];
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
+            return $this->form();
+        }
+        if ($this->isJson()){
+            return $this->JSONResponse($result);
+        }
+        return $this->response->redirect($this->loginRedirect);
     }
 
     public function login()
@@ -131,7 +190,8 @@ class Auth extends BaseController
         $user = $this->model
             ->where("email",$data["email"])
             ->first();
-        if (!check_user($user)){
+        $authUsers = new \App\Models\AuthUsers();
+        if (!$authUsers->isActive($user['id'])){
             $user = null;
         }
         $token = null;

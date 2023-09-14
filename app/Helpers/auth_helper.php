@@ -20,6 +20,8 @@ function do_login($id, $event=false){
     $user = $users->find($id);
     if ($user){
         $user["user_options"] = $users->getUserOptions($id);
+    } else {
+        return null;
     }
     
     $userTypes = new \App\Models\UserTypes();
@@ -32,7 +34,8 @@ function do_login($id, $event=false){
         ->where("user_type_id",$user["user_type"])
         ->findAll();
 
-    if (!check_user($user)){
+    $authUsers = new \App\Models\AuthUsers();
+    if (!$authUsers->isActive($user['id'])){
         return null;
     }
     
@@ -107,8 +110,8 @@ function check_login($request){
 }
 
 function check_user($user){
-    
-    return true;
+    $authUsers = new \App\Models\AuthUsers();
+    return !$authUsers->isActive($user['id']);
 }
 
 function logged_in(){
