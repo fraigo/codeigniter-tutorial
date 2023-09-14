@@ -143,6 +143,10 @@ foreach($appRoutes as $route => $controller){
     });
 }
 
+$routes->group('', ['filter' => 'auth:access,deleteprofile,1'], static function ($routes) {
+    $routes->delete('/api/deleteprofile/(:any)', 'Auth::deleteProfile/$1');
+});
+
 $routes->group('', ['filter' => 'auth:access,admin,1'], static function ($routes) {
     $routes->get('/_admin/auth', 'AdminConsole::auth');
     $routes->get('/_admin/console', 'AdminConsole::index');

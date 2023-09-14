@@ -83,5 +83,6 @@ function custom_modules(){
         "auth_token" => "API Token",
         "gdrive" => "Google Drive access",
         "profile" => "Profile",
+        "deleteprofile" => "Delete Profile",
     ], $CUSTOM_MODULES);
 }
