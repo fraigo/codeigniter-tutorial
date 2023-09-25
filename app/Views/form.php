@@ -45,6 +45,9 @@
             $config['options']   = ([""=>@$cfg["default_option"]?:''])+$cfg["options"];
             $config['selected'] = [set_value($fld,$value,false)];
         }
+        if (@$cfg['multiple'] && @$config['selected']){
+            $config['selected'] = explode(',',set_value($fld,$value,false));
+        }
         echo form_item($config, $control);
         
     }

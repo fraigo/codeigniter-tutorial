@@ -31,7 +31,15 @@
             }
             helper('form');
             if (@$config["options"]){
-                echo @$config["options"][$value];
+                if (@$config["multiple"]){
+                    $values = explode(',',$value);
+                    foreach($values as $idx=>$val){
+                        $values[$idx] = @$config["options"][$val];
+                    }
+                    echo implode(', ',$values);    
+                } else {
+                    echo @$config["options"][$value];
+                }
             } else if (@$config["view_control"]){
                 $config["value"] = $value;
                 $config["readonly"] = true;

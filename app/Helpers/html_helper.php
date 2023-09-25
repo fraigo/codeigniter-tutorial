@@ -136,6 +136,15 @@ function htmlRow($row,$columns,$header=false){
             }
             if (@$cfg["options"]){
                 $content = @$cfg["options"][@$row[$fld]];
+                if (@$cfg['multiple']){
+                    $contentValues = [];
+                    if (@$row[$fld]){
+                        foreach(explode(',',$row[$fld]) as $val){
+                            $contentValues[] = @$cfg["options"][$val];
+                        }
+                    }
+                    $content = implode(', ',$contentValues);
+                }
             }
         }
         $cols[] = htmlCell($content,$header,@$cfg["cellAttributes"]);
