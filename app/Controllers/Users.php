@@ -180,6 +180,7 @@ class Users extends BaseController
                 ->findAll();
             $result["permissions"] = array_column($permissions,"access","module");
             $result["user_options"] = $this->model->getUserOptions($id);
+            $result["user_values"] = $this->model->getUserValues($id);
         }
         return $result;
     }
@@ -249,6 +250,15 @@ class Users extends BaseController
         $res = $userOptions->setUserOptions($id, $options);
         if ($res){
             $this->errors = [ "user_options" => $res];
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
+            return $this->edit($id);
+        }
+        $options = $this->request->getVar("user_values");
+        $res = $userOptions->setUserValues($id, $options);
+        if ($res){
+            $this->errors = [ "user_values" => $res];
             if ($this->isJson()){
                 return $this->JSONResponse(null,400,$this->errors);
             }

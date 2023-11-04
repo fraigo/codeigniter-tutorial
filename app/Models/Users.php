@@ -135,7 +135,27 @@ class Users extends BaseModel
     public function getUserOptions($id){
         $userOptions = new \App\Models\UserOptions();
         $userOptions->createUserOptions($id);
-        return $userOptions->getUserOptions($id);
+        $options = array_keys($userOptions->getListUserOptions());
+        $opts = $userOptions->getUserOptions($id);
+        foreach($opts as $key=>$value){
+            if (!in_array($key,$options)){
+                unset($opts[$key]);
+            }
+        }
+        return $opts;
+    }
+
+    public function getUserValues($id){
+        $userOptions = new \App\Models\UserOptions();
+        $userOptions->createUserOptions($id);
+        $options = array_keys($userOptions->getListUserOptions());
+        $opts = $userOptions->getUserOptions($id);
+        foreach($opts as $key=>$value){
+            if (in_array($key,$options)){
+                unset($opts[$key]);
+            }
+        }
+        return $opts;
     }
     
 }

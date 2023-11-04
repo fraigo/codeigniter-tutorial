@@ -120,4 +120,28 @@ class UserOptions extends BaseModel
         return $errors;
     }
 
+    public function setUserValues($user_id, $userOptions){
+        $userModel = new \App\Models\Users();
+        $user = $userModel->find($user_id);
+        if (!$user) return [];
+        if (!$userOptions) return [];
+        $errors = [];
+        foreach($userOptions as $opt=>$value){
+            $query = $this->where(['user_id'=>$user_id,'option'=>$opt]);
+            $exists = $query->first();
+            if ($exists){
+                $query = $this->where(['user_id'=>$user_id,'option'=>$opt]);
+                $query->set('value',$value);
+                $query->update();    
+            } else {
+                $this->insert([
+                    'user_id' => $user_id,
+                    'option' => $opt,
+                    'value' => $value
+                ]);
+            }
+        }
+        return $errors;
+    }
+
 }
