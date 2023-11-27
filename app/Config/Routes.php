@@ -106,6 +106,8 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
 
     $routes->get('/search/select/(:any)', 'Search::select/$1');
     $routes->get('/api/app/notifications', 'UserNotifications::userNotifications');
+    $routes->get('/api/app/notifications/(:any)', 'UserNotifications::userNotifications/$1');
+    $routes->get('/api/app/unreadnotifications', 'UserNotifications::unreadNotifications');
     $routes->put('/api/app/usernotifications/(:any)', 'UserNotifications::updateUserNotification/$1');
     $routes->get('/api/app/lists', 'ListOptions::all');
 });

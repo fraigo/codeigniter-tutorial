@@ -55,19 +55,40 @@ class UserNotifications extends BaseController
         return parent::prepareFields($keys);
     }
 
-    function userNotifications(){
+    function unreadNotifications(){
+        $notifications = $this->userNotifications(null,true);
+        $unread = array_filter($notifications, function($item) {
+            return $item['read'] == 0 || $item['read'] == null;
+        });
+        $last_id = null;
+        if (count($unread)){
+            $last_id = $unread[0]['id'];
+        }
+        return $this->JSONResponse([
+            "last_id" => $last_id,
+            "total" => count($notifications),
+            "unread" => count($unread),
+        ]);
+    }
+
+    function userNotifications($date=null, $return=false){
+        if (!$date) {
+            $date = date("Y-m-d",strtotime("-1 month")) . " 00:00:00";
+        }
         $userID = user_id();
         $notifications = $this->model;
         $notifications->getRelationshipModel("notifications",['title','content','link']);
         $notifications->where([
             'user_id' => $userID,
+            'user_notifications.created_at>' => $date,
             'notifications.active' => 1
         ]);
-        $notifications->where('user_notifications.created_at>=',date("Y-m-d",strtotime("-1 month")));
         $notifications->orderBy('user_notifications.created_at DESC');
         $items = $notifications->findAll();
+        if ($return) return $items;
         return $this->JSONResponse([
             "notifications" => $items,
+            "from" => $date,
         ]);
     }
 
