@@ -58,12 +58,14 @@ abstract class BaseController extends ResourceController
     protected $formAttributes = null;
     protected $actionColumn = null;
     protected $returnJSONDetails = false;
+    protected $startTime = null;
 
     /**
      * Constructor.
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
+        $this->startTime = microtime(true);
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
@@ -87,7 +89,18 @@ abstract class BaseController extends ResourceController
         return null;
     }
 
+    protected function apilog($category,$message=''){
+        $time = round(microtime(true) - $this->startTime,2);
+        $userId = user_id() ?: '';
+        $timeLimit = 2.0;
+        if ($time > $timeLimit){
+            $path = $_SERVER["REQUEST_URI"];
+            error_log(date("Y-m-d H:i:s")."\t$time\t$userId\t$path\t$category\t$message\n", 3, WRITEPATH.'logs/api-'.date("Y-m-d").'.log');    
+        }
+    }
+
     protected function notFound($message=null){
+        $this->apilog('NOT_FOUND');
         if ($this->isJson()){
             $this->JSONResponse(null,404,["message"=>$message?:"Not found"])->send();
             die();
@@ -367,6 +380,8 @@ abstract class BaseController extends ResourceController
     }
 
     protected function JSONResponse($data, $status=200, $errors=null, $extra=null){
+        $this->apilog('OK');
+        session_write_close();
         $response = [
             "success" => ($errors === null),
             "date" => date("Y-m-d H:i:s"),

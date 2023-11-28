@@ -62,6 +62,7 @@ class AdminConsole extends BaseController
         echo $this->consoleLink("/_admin/unzipuploads?$extra","Restore Images",["target"=>"output"]);
         echo $this->consoleLink("/_admin/download/images.zip?$extra","Download Images",["target"=>"output"]);
         echo $this->consoleLink("/_admin/logs/$date","Current Logs",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/logs/$date/api","API Logs",["target"=>"output"]);
         echo $this->consoleLink("/_admin/emaillogs/$date","Email Logs",["target"=>"output"]);
         echo $this->consoleLink("/_admin/patches?$extra","Vendor Patches",["target"=>"output"]);
         echo $this->consoleLink("/import","Import",["target"=>"_blank"]);
@@ -81,8 +82,8 @@ class AdminConsole extends BaseController
         $this->response->redirect("./console");
     }
 
-    public function logs($date){
-        $logfile = realpath(ROOTPATH."writable/logs/log-$date.log");
+    public function logs($date,$type="log"){
+        $logfile = realpath(ROOTPATH."writable/logs/$type-$date.log");
         if (file_exists($logfile)){
             $content = file_get_contents($logfile);
             $matches = [];
@@ -220,7 +221,8 @@ class AdminConsole extends BaseController
     public function download($id){
         chdir(ROOTPATH);
         $files = [
-            "images.zip" => "writable/images.zip"
+            "images.zip" => "writable/images.zip",
+            "custom.zip" => "writable/custom.zip"
         ];
         $file = @$files[$id];
         if ($file && file_exists($file)){
@@ -238,8 +240,10 @@ class AdminConsole extends BaseController
             "refresh" => ["php spark migrate:refresh", "php spark db:seed AppData"],
             "migrate" => ["php spark migrate"],
             "patches" => ["unzip -o vendor_patches.zip"],
-            "zipuploads" => ["rm -f writable/images.zip","zip -o writable/images.zip writable/uploads/images/*.png writable/uploads/images/*.jpg"],
-            "unzipuploads" => ["unzip -o writable/images.zip"],
+            "zipuploads" => ["rm -f writable/images.zip","zip -o writable/images.zip writable/uploads/images/*.png writable/uploads/images/*.jpg","zip -o writable/documents.zip writable/documents/*.pdf writable/documents/*.jpeg writable/documents/*.jpg"],
+            "unzipuploads" => ["unzip -o writable/images.zip","unzip -o writable/documents.zip"],
+            "zipcustom" => ["zip -r -o writable/custom.zip public/img/uniform/* public/pdf/*"],
+            "unzipcustom" => ["unzip -o writable/custom.zip"],
         ];
         $name = @$_GET["name"];
         if ($name){
@@ -436,9 +440,25 @@ class AdminConsole extends BaseController
 
     function pushnotification($token){
         helper('pushnotifications');
-        $extra = ["link"=>"#/help"];
+        $users = new \App\Models\Users();
+        $user = $users->where('push_token',$token)->first();
+        $message = "This is a test notification from Staff Grabs App";
+        if ($user){
+            $userId = $user["id"];
+            $notification = new \App\Models\UserNotifications();
+            $pending = $notification
+                ->where([
+                    'user_id'=>$userId,
+                    'read'=>0
+                ])
+                ->where("user_notifications.created_at>=",date("Y-m-d",strtotime("-1 month")))
+                ->findColumn('id');
+            $pendingItems = $pending ? count($pending) : 0;
+            $message = "You have $pendingItems unread notifications";
+        }
+        $extra = ["link"=>"#/profile"];
         $extra['payload'] = json_encode($extra);
-        $result = push_notification($token,"Test Notification","Test content",1,$extra);
+        $result = push_notification($token,"Test Notification",$message,1,$extra);
         return $this->JSONResponse($result);
     }
 }
