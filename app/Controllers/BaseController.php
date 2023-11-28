@@ -92,7 +92,7 @@ abstract class BaseController extends ResourceController
     protected function apilog($category,$message=''){
         $time = round(microtime(true) - $this->startTime,2);
         $userId = user_id() ?: '';
-        $timeLimit = 2.0;
+        $timeLimit = getenv('api.logtimeout')?:2.0 * 1.0;
         if ($time > $timeLimit){
             $path = $_SERVER["REQUEST_URI"];
             error_log(date("Y-m-d H:i:s")."\t$time\t$userId\t$path\t$category\t$message\n", 3, WRITEPATH.'logs/api-'.date("Y-m-d").'.log');    
