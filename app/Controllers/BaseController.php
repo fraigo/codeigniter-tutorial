@@ -380,7 +380,7 @@ abstract class BaseController extends ResourceController
     }
 
     protected function JSONResponse($data, $status=200, $errors=null, $extra=null){
-        $this->apilog('OK');
+        $this->apilog('JSON',$status);
         session_write_close();
         $response = [
             "success" => ($errors === null),
