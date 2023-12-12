@@ -334,8 +334,13 @@ class AdminConsole extends BaseController
     public function sqlcommand(){
         $db = db_connect();
         $sql = @$_GET["sql"];
+        $type = @$_GET["type"] ?: "json";
         if (strpos(strtolower("$sql"),"select ")===0){
-            header("Content-Type: text/json");
+            if ($type=="csv"){
+                header("Content-Type: text/plain");
+            } else {
+                header("Content-Type: text/json");
+            }
             try {
                 $result = [ 
                     "sql" => $sql,
@@ -346,7 +351,17 @@ class AdminConsole extends BaseController
                     "error" => $e->getMessage()
                 ];
             }
-            echo json_encode($result,JSON_PRETTY_PRINT);
+            if ($type=="csv" && $result['result']){
+                $res = $result['result'];
+                echo implode("\t", array_keys($res[0]));
+                echo "\n";
+                foreach($res as $idx=>$row){
+                    echo implode("\t", $row);
+                    echo "\n";
+                }
+            } else {
+                echo json_encode($result,JSON_PRETTY_PRINT);
+            }
         }
         else if($sql){
             header("Content-Type: text/json");
@@ -370,6 +385,10 @@ class AdminConsole extends BaseController
                         <input type='button' value='Last Query' onclick=\"this.form.sql.value = localStorage.getItem('last_query')\">
                         <select style='max-width:200px' id=query_history onchange=\"this.form.sql.value = this.value\" >
                             <option value=''>SQL History</option>
+                        </select>
+                        <select style='max-width:100px' name=type >
+                            <option value='json'>JSON</option>
+                            <option value='csv'>CSV</option>
                         </select>
                         <div style=\"flex:1\"></div>
                         <input type=submit style='font-weight:bold' value=Submit onclick=\"saveQuery(this.form)\" >
