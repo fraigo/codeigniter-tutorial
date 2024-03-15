@@ -1,6 +1,6 @@
 ENV=$1
 echo "Installing composer packages..."
-composer update
+composer install
 if [ ! -e ".dev" ]; then
     echo "creating env file from $ENV.env ..."
     cp $ENV.env .env
