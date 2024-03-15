@@ -4,6 +4,7 @@ jobs:
   FTP-Deploy-Action:
     name: FTP-Deploy-Action
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
     - name: Checkout Files
       uses: actions/checkout@v3
