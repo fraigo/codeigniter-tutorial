@@ -1,3 +1,8 @@
+:root{
+    --primary: #f17d30;
+    --primary-dark: #ee6911;
+}
+
 html, body{
     font-family: Helvetica, Arial, sans-serif;
     font-size: 16px;
@@ -174,6 +179,33 @@ ul.pagination li.active{
         right:1rem;
         top:1rem;
     }
+}
+
+.btn-primary{
+    color: #fff;
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline-primary{
+    color: var(--primary);
+    border-color: var(--primary);
+}
+.btn-outline-primary:hover{
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+a{
+    color: var(--primary);
+}
+a:hover{
+    color: var(--primary-dark);
+}
+
+.btn-primary:hover{
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
 }
 
 
