@@ -47,7 +47,7 @@ function do_login($id, $event=false){
     }
     // if ($user['push_token']){
     //     helper('pushnotifications');
-    //     $result = push_notification($user['push_token'],"Staff Grabs Login","User has been logged in ",);
+    //     $result = push_notification($user['push_token'],"Login","User has been logged in ",);
     // }
     $users->update($user["id"],$updatedData);
     $token = @$updatedData["auth_token"]?:$user["auth_token"];

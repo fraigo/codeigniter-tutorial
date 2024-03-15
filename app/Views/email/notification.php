@@ -49,7 +49,7 @@ $button = email_button(@$link,"View Details");
 <br/>
 Sincerely,
 <br/>
-<b>The Staff Grabs Team</b>
+<b>The <?php echo getenv('app.name')?:'App' ?> Team</b>
 <p>&nbsp;</p>
                 </td>
                 <td width="20"></td>

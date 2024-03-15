@@ -275,9 +275,9 @@ class AdminConsole extends BaseController
     public function schema(){
         header("Content-Type: text/plain");
         $data = [];
-        $data["name"] = "Staffgrabs";
+        $data["name"] = getenv('app.name')?:'App';
         $metadata = [
-            "name" => "staffgrabs",
+            "name" => strtolower($data["name"]),
             "tables" => [],
         ];
         $db = db_connect();
@@ -461,7 +461,8 @@ class AdminConsole extends BaseController
         helper('pushnotifications');
         $users = new \App\Models\Users();
         $user = $users->where('push_token',$token)->first();
-        $message = "This is a test notification from Staff Grabs App";
+        $appname = getenv('app.name')?:'App';
+        $message = "This is a test notification from $appname";
         if ($user){
             $userId = $user["id"];
             $notification = new \App\Models\UserNotifications();

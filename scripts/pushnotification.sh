@@ -3,7 +3,7 @@
 TEAM_ID=8SUQQ8935B
 TOKEN_KEY_FILE_NAME=writable/certificate.p8
 AUTH_KEY_ID=TB29CC5FKN
-TOPIC=io.fraigo.staffgrabs
+TOPIC=io.fraigo.appname
 DEVICE_TOKEN=$1
 APNS_HOST_NAME=api.sandbox.push.apple.com
 
