@@ -38,7 +38,9 @@ We received a password reset request for your account.<br>
 <div>&nbsp;</div>
 You can reset your password by clicking the link below:<br>
 <div>&nbsp;</div>
-<a href="<?=$url?>"><?=$url?></a>
+<a href="<?=$url?>">
+<?=$url?>
+</a>
 <div>&nbsp;</div>
 <?=@$sender?:'<b>'.getenv('app.name').'</b>'?></b><br>
 <div>&nbsp;</div>

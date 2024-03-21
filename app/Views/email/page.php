@@ -2,8 +2,8 @@
 
 $content = @$page["contents"]?:"";
 
-$content = str_replace('[url]','<a href="{url}" style="text-decoration:none !important;"><div style="padding:8px 20px;background-color:#d28e19;color:#f0f0f0;text-decoration:none;border-radius:5px 5px;display:inline-block"><span style="color:#fff">',$content);
-$content = str_replace('[/url]','</span></div></a>',$content);
+$content = str_replace('[url]','<a href="{url}" style="text-decoration:none !important;">\n<div style="padding:8px 20px;background-color:#d28e19;color:#f0f0f0;text-decoration:none;border-radius:5px 5px;display:inline-block">\n<span style="color:#fff">',$content);
+$content = str_replace('[/url]','</span>\n</div></a>',$content);
 $content = str_replace("{url}",@$url,$content);
 
 $content = str_replace("{name}",@$name,$content);
