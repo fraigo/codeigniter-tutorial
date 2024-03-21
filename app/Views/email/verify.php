@@ -4,7 +4,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Password Recovery</title>
+  <title>Email Verification</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
@@ -34,9 +34,7 @@
 <div>&nbsp;</div>
 Hello <?=$name?>,<br>
 <div>&nbsp;</div>
-We received a password reset request for your account.<br>
-<div>&nbsp;</div>
-You can reset your password by clicking the link below:<br>
+Please verify your email for <?php echo getenv('app.name') ?> by clicking the link below:<br>
 <div>&nbsp;</div>
 <a href="<?=$url?>">
 <?=$url?>

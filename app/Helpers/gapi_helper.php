@@ -14,10 +14,15 @@ function gapi_redirect_url($redirect=null){
     return base_url() . $redirect;
 }
 
-function gapi_client($redirect,$scope=null,$offline=false,$select_account=true){
+function gapi_client($redirect,$scopes=null,$offline=false,$select_account=true){
     $client = new \Google\Client();
     $client->setAuthConfig(ROOTPATH.'/google.json');
-    if ($scope) $client->addScope($scope);
+    if ($scopes){
+        if (!is_array($scopes)) $scopes = [$scopes];
+        foreach($scopes as $scope){
+            $client->addScope($scope);
+        }
+    }
     $redirect_uri = gapi_redirect_url($redirect);
     $client->setRedirectUri($redirect_uri);
     if ($offline) $client->setAccessType('offline');
@@ -34,7 +39,11 @@ function gapi_client($redirect,$scope=null,$offline=false,$select_account=true){
 }
 
 function glogin_client($redirect=null,$offline=false){
-    return gapi_client($redirect,"https://www.googleapis.com/auth/userinfo.email",$offline);
+    $scopes = [
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+    ];
+    return gapi_client($redirect,$scopes,$offline);
 }
 
 function gdrive_client($redirect=null,$offline=true){

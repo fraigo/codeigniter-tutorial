@@ -42,9 +42,17 @@ class ListOptions extends BaseController
         return parent::prepareFields($keys);
     }
 
-    public function all(){
+    public function basic(){
+        return $this->all([1,2,3,4,5]);
+    }
+
+    public function all($ids=[]){
         $lists = new \App\Models\Lists();
-        $allLists = $lists->findAll();
+        if (count($ids)) {
+            $allLists = $lists->whereIn("id",$ids)->findAll();
+        } else {
+            $allLists = $lists->findAll();
+        }
         $result = [];
         foreach($allLists as $list){
             $options = $this->model->where('list_id',$list['id'])->findAll();

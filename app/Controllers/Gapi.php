@@ -82,6 +82,25 @@ class Gapi extends BaseController
                         'userinfo' => $userinfo
                     ]);
                 } else {
+                    if (getenv("REGISTER_USER")=="true"){
+                        $passwd = "p".rand(1000000,99999999);
+                        // $userinfo["givenName"] $userinfo["familyName"] 
+                        $result = $users->insert([
+                            "name" => @$userinfo['name'] ?: explode('@',$userinfo['email'])[0],
+                            "email" => $userinfo['email'],
+                            "user_type" => getenv('REGISTER_USER_TYPE')?:1,
+                            "password" => $passwd,
+                            "repeat_password" => $passwd,
+                        ]);
+                        $user = $users->where('email',$userinfo['email'])->first();
+                        if ($user) {
+                            $login = do_login($user['id'],true);
+                            return $this->JSONResponse([
+                                'user' => $login,
+                                'userinfo' => $userinfo
+                            ]);    
+                        }
+                    }
                     if ($app){
                         return $this->layout('auth/notfound',[
                             'email'=>$userinfo['email'],
@@ -94,10 +113,10 @@ class Gapi extends BaseController
                 return $this->JSONResponse([
                     'redirect' => $redirect,
                     'code'=>$_GET['code'],
-                    'token' => $token
+                    'token' => $token,
+                    'line'=>$e->getLine(),
                 ],400,[
                     'email'=>$e->getMessage(),
-                    'line'=>$e->getLine(),
                 ]);
             }
             

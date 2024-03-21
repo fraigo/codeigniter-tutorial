@@ -75,6 +75,17 @@ $routes->post('/api/auth/reset/(:any)', 'Auth::doReset/$1');
 $routes->get('/auth/logout', 'Auth::logout');
 $routes->get('/api/auth/logout', 'Auth::logout');
 
+if (getenv("REGISTER_USER")=="true"){
+    $routes->post('/api/auth/register', 'Auth::doRegister');
+} else {
+    $routes->post('/api/auth/register', static function(){
+        $response = \Config\Services::response();
+        $response->setStatusCode(400);
+        $response->setJSON(["success"=>false,"message"=>"Registration Not Available"])->send();
+        die();
+    });
+}
+
 $routes->get('/auth/google', 'Gapi::token/1');
 $routes->post('/auth/apple', 'AppleSignin::token/1');
 $routes->post('/auth/apple/(:any)', 'AppleSignin::token/1/$1');
@@ -95,6 +106,8 @@ $routes->group('', ['filter' => 'auth:access,gdrive,2'], static function ($route
 
 $routes->get('/page/(:any)', 'Pages::viewBySlug/$1');
 $routes->get('/uploads/images/(:any)', 'ImageController::imageUploads/$1');
+$routes->get('/api/app/basiclists', 'ListOptions::basic');
+
 
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/profile', 'Auth::profile');

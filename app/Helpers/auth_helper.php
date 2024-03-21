@@ -146,7 +146,7 @@ function module_access($module, $access){
 function profile_access($module){
     if (is_admin()) return 4;
     $profile = session('profile');
-    $profileAccess = @$profile["access"];
+    $profileAccess = @$profile["access"]?:0;
     $permissions = session('permissions');
     if ($permissions){
         $profileAccess = @$permissions[$module]?:0;

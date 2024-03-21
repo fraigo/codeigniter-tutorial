@@ -173,6 +173,75 @@ class Auth extends BaseController
         return $this->response->redirect($this->logoutRedirect);
     }
 
+    function doRegister(){
+        $data = $this->getVars();
+        $rules = [
+            "name" => "required|max_length[64]",
+            "email" => "required|valid_email",
+            "password" => "required|max_length[32]|password_strength",
+            "repeat_password" => [
+                "rules" => 'matches[password]',
+                "label" => "Repeat password"
+            ],
+        ];
+        $validation = \Config\Services::validation();
+        $validation->setRules($rules);
+        if (!$validation->run($data)){
+            $this->errors = $validation->getErrors();
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
+            return $this->recover();
+        }
+        $user = $this->model
+            ->where("email",$data["email"])
+            ->first();
+        if ($user) {
+            return $this->JSONResponse(null,400,[
+                "email" => "Email Already Used"
+            ]);
+        }
+        $token = create_token();
+        $result = $this->model->insert([
+            "name" => $data["name"],
+            "email" => $data["email"],
+            "user_type" => getenv('REGISTER_USER_TYPE')?:1,
+            "password" =>  $data["password"],
+            "repeat_password" =>  $data["repeat_password"],
+            "password_token" => $token,
+            "password_token_expires" => Time::parse("+6 hours")->toDateTimeString()
+        ]);
+        $errors = $this->model->errors();
+        if ($errors) {
+            return $this->JSONResponse(null,400,$errors);
+        }
+        $user = $this->model
+            ->where("email",$data["email"])
+            ->first();
+        helper('email');
+        $baseUrl = (@$data["baseurl"]?:base_url()."/auth/reset");
+        $errors = send_email($user['email'], "Verify Your Email", "email/verify",[
+            "name" => $user["name"],
+            "url" => "$baseUrl/$token"
+        ]);
+        if ($errors){
+            $error = explode("<br>",$errors)[0];
+            $this->errors = [
+                "message" => getenv('email.debug') ? $errors : "Send Error: $error"
+            ];
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
+            return $this->form();
+        }
+        $message = "You will receive an email to verify your account";
+        if ($this->isJson()){
+            return $this->JSONResponse(["message"=>$message]);
+        }
+        session()->setFlashData("success",$message);
+        return redirect()->back();
+    }
+
     function doRecover(){
         $data = $this->getVars();
         $rules = [
