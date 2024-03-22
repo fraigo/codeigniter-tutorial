@@ -10,14 +10,7 @@ function clear_attachments(){
     }
 }
 
-function send_email($to, $subject, $view, $data=[],$attachments=[]){
-    global $EMAIL_ATTACHMENTS;
-
-    $subject = (getenv("TEST_SUBJECT") ?: "").$subject.(getenv("TEST_EMAIL") ? " ($to)" : "");
-    $to = getenv("TEST_EMAIL") ?: $to;
-    
-
-    $email = \Config\Services::email();
+function email_config(){
     $config=[];
     $config['protocol'] = getenv('email.protocol')?:'mail';
     $config['mailPath'] = getenv('email.mailPath')?:'/usr/sbin/sendmail';
@@ -29,6 +22,18 @@ function send_email($to, $subject, $view, $data=[],$attachments=[]){
     $config['SMTPPass'] = getenv('email.SMTPPass')?:'secret.1';
     $config['SMTPPort'] = getenv('email.SMTPPort')?:'1025';
     $config['SMTPCrypto'] = getenv('email.SMTPCrypto')?:'';
+    return $config;
+}
+
+function send_email($to, $subject, $view, $data=[],$attachments=[]){
+    global $EMAIL_ATTACHMENTS;
+
+    $subject = (getenv("TEST_SUBJECT") ?: "").$subject.(getenv("TEST_EMAIL") ? " ($to)" : "");
+    $to = getenv("TEST_EMAIL") ?: $to;
+    
+    $config = email_config();
+    $email = \Config\Services::email();
+    
     $newLines = [
         '\r\n' => "\r\n",
         '\n' => "\n",
