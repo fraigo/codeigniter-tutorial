@@ -81,7 +81,7 @@ class Auth extends BaseController
         $data = $this->getVars();
         if (!is_array($data)){
             if ($this->isJson()){
-                return $this->JSONResponse(null,400,["message"=>"Invalid Request"]);
+                return $this->JSONResponse(null,400,["message"=>lang('App.invalid_request')]);
             }
             $data=[];
         }
@@ -90,7 +90,7 @@ class Auth extends BaseController
             ->where("password_token_expires>",Time::now()->toDateTimeString())
             ->first();
         if (!$user){
-            $this->errors = ["password"=>"Invalid token"];
+            $this->errors = ["password"=>lang('App.invalid_token')];
             if ($this->isJson()){
                 return $this->JSONResponse(null,400,$this->errors);
             }
@@ -98,7 +98,7 @@ class Auth extends BaseController
         }
         $result = do_login($user['id'],true);
         if (!$result){
-            $this->errors = ["email"=>"The account is not available"];
+            $this->errors = ["email"=>lang('App.account_unavailable')];
             if ($this->isJson()){
                 return $this->JSONResponse(null,400,$this->errors);
             }
@@ -115,7 +115,7 @@ class Auth extends BaseController
         $data = $this->getVars();
         if (!is_array($data)){
             if ($this->isJson()){
-                return $this->JSONResponse(null,400,["message"=>"Invalid Request"]);
+                return $this->JSONResponse(null,400,["message"=>lang('App.invalid_request')]);
             }
             $data=[];
         }
@@ -137,7 +137,7 @@ class Auth extends BaseController
             ->where("password",md5($data["password"]))
             ->first();
         if (!$user){
-            $this->errors = ["password"=>"User or password is incorrect"];
+            $this->errors = ["password"=>lang('App.user_password_incorrect')];
             if ($this->isJson()){
                 return $this->JSONResponse(null,400,$this->errors);
             }
@@ -145,7 +145,7 @@ class Auth extends BaseController
         }
         $result = do_login($user['id'],true);
         if (!$result){
-            $this->errors = ["email"=>"The account is not available"];
+            $this->errors = ["email"=>lang('App.account_unavailable')];
             if ($this->isJson()){
                 return $this->JSONResponse(null,400,$this->errors);
             }
@@ -181,7 +181,7 @@ class Auth extends BaseController
             "password" => "required|max_length[32]|password_strength",
             "repeat_password" => [
                 "rules" => 'matches[password]',
-                "label" => "Repeat password"
+                "label" => "Repeat Password"
             ],
         ];
         $validation = \Config\Services::validation();
@@ -198,7 +198,7 @@ class Auth extends BaseController
             ->first();
         if ($user) {
             return $this->JSONResponse(null,400,[
-                "email" => "Email Already Used"
+                "email" => lang('App.email_already_used')
             ]);
         }
         $token = create_token();
@@ -209,7 +209,7 @@ class Auth extends BaseController
             "password" =>  $data["password"],
             "repeat_password" =>  $data["repeat_password"],
             "password_token" => $token,
-            "password_token_expires" => Time::parse("+6 hours")->toDateTimeString()
+            "password_token_expires" => Time::parse("+24 hours")->toDateTimeString()
         ]);
         $errors = $this->model->errors();
         if ($errors) {
@@ -219,22 +219,22 @@ class Auth extends BaseController
             ->where("email",$data["email"])
             ->first();
         helper('email');
-        $baseUrl = (@$data["baseurl"]?:base_url()."/auth/reset");
-        $errors = send_email($user['email'], "Verify Your Email", "email/verify",[
+        $baseUrl = (@$data["baseurl"]?:base_url("/auth/verify"));
+        $errors = send_email($user['email'], lang('App.verify_email'), "email/verify",[
             "name" => $user["name"],
             "url" => "$baseUrl/$token"
         ]);
         if ($errors){
             $error = explode("<br>",$errors)[0];
             $this->errors = [
-                "message" => getenv('email.debug') ? $errors : "Send Error: $error"
+                "message" => getenv('email.debug') ? $errors : lang('App.send_error') . ": $error"
             ];
             if ($this->isJson()){
                 return $this->JSONResponse(null,400,$this->errors);
             }
             return $this->form();
         }
-        $message = "You will receive an email to verify your account";
+        $message = lang('App.you_will_receive_an_email_to_verify_your_account');
         if ($this->isJson()){
             return $this->JSONResponse(["message"=>$message]);
         }
@@ -242,7 +242,11 @@ class Auth extends BaseController
         return redirect()->back();
     }
 
-    function doRecover(){
+    function sendVerify(){
+        return $this->doRecover("email/verify","/auth/verify","App.verify_email","+24 hours");
+    }
+
+    function doRecover($view="email/reset",$path="/auth/reset",$subject='App.password_recovery_request',$expires="+6 hours"){
         $data = $this->getVars();
         $rules = [
             "email" => "required|valid_email",
@@ -260,7 +264,7 @@ class Auth extends BaseController
             ->where("email",$data["email"])
             ->first();
         $authUsers = new \App\Models\AuthUsers();
-        if (!$authUsers->isActive($user['id'])){
+        if ($user && !$authUsers->isActive($user['id'])){
             $user = null;
         }
         $token = null;
@@ -268,7 +272,7 @@ class Auth extends BaseController
             $token = create_token();
             $result = $this->model->update($user['id'],[
                 "password_token" => $token,
-                "password_token_expires" => Time::parse("+6 hours")->toDateTimeString()
+                "password_token_expires" => Time::parse($expires)->toDateTimeString()
             ]);
             if (!$result){
                 $this->errors = [
@@ -280,15 +284,15 @@ class Auth extends BaseController
                 return $this->recover();
             }
             helper('email');
-            $baseUrl = (@$data["baseurl"]?:base_url()."/auth/reset");
-            $errors = send_email($user['email'], "Password Recovery request", "email/recovery",[
+            $baseUrl = (@$data["baseurl"]?:base_url($path));
+            $errors = send_email($user['email'], lang($subject), $view,[
                 "name" => $user["name"],
                 "url" => "$baseUrl/$token"
             ]);
             if ($errors){
                 $error = explode("<br>",$errors)[0];
                 $this->errors = [
-                    "message" => getenv('email.debug') ? $errors : "Send Error: $error"
+                    "message" => getenv('email.debug') ? $errors : lang('App.send_error') . ": $error"
                 ];
                 if ($this->isJson()){
                     return $this->JSONResponse(null,400,$this->errors);
@@ -297,7 +301,7 @@ class Auth extends BaseController
             }
 
         }
-        $message = "If your email is registered, you will receive an email with account recovery instructions.";
+        $message = lang('App.recovery_sent');
         if ($this->isJson()){
             return $this->JSONResponse(["message"=>$message]);
         }
@@ -314,7 +318,7 @@ class Auth extends BaseController
         if (!$user){
             if ($this->isJson()){
                 return $this->JSONResponse(null,400,[
-                    "token" => "Token is invalid or has expired" 
+                    "token" => lang('App.token_is_invalid_or_has_expired') 
                 ]);
             }
             return $this->reset($token);
@@ -323,7 +327,7 @@ class Auth extends BaseController
             "new_password" => $this->model->getValidationRules()['password'],
             "repeat_password" => [
                 "rules" => 'matches[new_password]',
-                "label" => "Repeat password"
+                "label" => 'Repeat Password',
             ]
         ];
         $validation = \Config\Services::validation();
@@ -342,16 +346,51 @@ class Auth extends BaseController
         ];
         $result = $this->model->update($user['id'],$data);
         if (!$result){
-            $this->errors = ["user"=>"Cannot update user with password"];
+            $this->errors = ["user"=>lang('App.cannot_update_information')];
             if ($this->isJson()){
                 return $this->JSONResponse(null,400,$this->errors);
             }
             return $this->reset($token);
         }
         if ($this->isJson()){
-            return $this->JSONResponse(["message"=>"Your account password has been reset."]);
+            return $this->JSONResponse(["message"=>lang('App.your_account_password_has_been_reset')]);
         }
-        session()->setFlashData("success","Your account password has been reset.");
+        session()->setFlashData("success",lang('App.your_account_password_has_been_reset'));
+        return redirect()->back();
+    }
+
+    function doVerify($token){
+        $user = $this->model
+            ->where("password_token",$token)
+            ->where("password_token_expires>",Time::now()->toDateTimeString())
+            ->first();
+        if (!$user){
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,[
+                    "token" => lang('App.token_is_invalid_or_has_expired') 
+                ]);
+            }
+            return $this->reset($token);
+        }
+        $data = [
+            "password_token" => "",
+            "password_token_expires" => "",
+        ];
+        $result = $this->model->update($user['id'],$data);
+        if (!$result){
+            $this->errors = ["message"=>lang('App.cannot_update_information')];
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
+            return $this->reset($token);
+        }
+        if ($this->isJson()){
+            return $this->JSONResponse([
+                "message" => lang('App.your_email_has_been_verified'),
+                "email" => $user['email']?:"",
+            ]);
+        }
+        session()->setFlashData("success",lang('App.your_email_has_been_verified'));
         return redirect()->back();
     }
 

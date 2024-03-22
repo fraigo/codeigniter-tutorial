@@ -482,7 +482,7 @@ abstract class BaseController extends ResourceController
             }
             if (!is_array($jsonData)){
                 return $this->JSONResponse(null,400,[
-                    "message"=>"Invalid request"
+                    "message"=>lang('App.invalid_request')
                 ]);
             }
             $fields = array_intersect($fields,array_keys($jsonData));

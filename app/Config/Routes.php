@@ -77,6 +77,8 @@ $routes->get('/api/auth/logout', 'Auth::logout');
 
 if (getenv("REGISTER_USER")=="true"){
     $routes->post('/api/auth/register', 'Auth::doRegister');
+    $routes->post('/api/auth/verify', 'Auth::sendVerify');    
+    $routes->post('/api/auth/verify/(:any)', 'Auth::doVerify/$1');
 } else {
     $routes->post('/api/auth/register', static function(){
         $response = \Config\Services::response();

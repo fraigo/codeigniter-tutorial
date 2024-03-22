@@ -26,7 +26,7 @@ class AppleSignin extends BaseController
                     if ($user){
                         $login = do_login($user['id'],true);
                         if (!$login){
-                            return $this->JSONResponse(null,400,["email"=>"The account is not available"]);
+                            return $this->JSONResponse(null,400,["email"=>lang('App.account_unavailable')]);
                         }
                         if ($app){
                             $tokenid = substr($result['access_token'],0,64);

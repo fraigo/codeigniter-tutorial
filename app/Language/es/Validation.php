@@ -7,7 +7,9 @@ return [
     'unique_fields' => 'Los valores deben ser únicos.',
     'valid_email' => 'El correo electronico no es válido.',
     'required' => 'El valor para {{field}} es requerido.',
+    'matches' => 'El valor de {{field}} debe ser igual al valor para {{param}}.',
     'max_length' => 'El valor para {{field}} no puede exceder {param} carácteres.',
     'min_length' => 'El valor para {{field}} debe tener por lo menos {param} caracteres.',
     'is_unique'  => 'El valor para {{field}} debe ser único.',
+
 ];
