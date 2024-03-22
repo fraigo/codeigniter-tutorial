@@ -23,7 +23,7 @@ function send_email($to, $subject, $view, $data=[],$attachments=[]){
     $config['mailPath'] = getenv('email.mailPath')?:'/usr/sbin/sendmail';
     $config['mailType'] = getenv('email.mailType')?:'html';
     $config['charset']  = getenv('email.charset')?:'UTF-8';
-    $config['wordWrap'] = getenv('email.wordWrap') ? true : false;
+    $config['wordWrap'] = getenv('email.wordWrap') == 1 ? true : false;
     $config['SMTPHost'] = getenv('email.SMTPHost')?:'localhost';
     $config['SMTPUser'] = getenv('email.SMTPUser')?:'project.1';
     $config['SMTPPass'] = getenv('email.SMTPPass')?:'secret.1';
