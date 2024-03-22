@@ -40,7 +40,7 @@ function send_email($to, $subject, $view, $data=[],$attachments=[]){
     if (getenv('email.replyto'))
     $email->setReplyTo(getenv('email.replyto'));
     $email->setSubject($subject);
-    $htmlContent = view($view,$data);
+    $htmlContent = str_replace("\n"," ",view($view,$data));
     foreach($EMAIL_ATTACHMENTS as $item){
 	if (!@$item['file']) continue;
         $email->attach($item["file"],@$item["disposition"]?:'',@$item["name"],@$item["mime"]?:'');
