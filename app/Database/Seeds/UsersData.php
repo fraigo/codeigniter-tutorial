@@ -48,6 +48,13 @@ class UsersData extends Seeder
             "created_at" => date("Y-m-d H:i:s"),
             "updated_at" => date("Y-m-d H:i:s")
         ]);
+        $this->db->table('user_types')->insert([
+            "id" => 5,
+            "name" => "Removed",
+            "access" => 0,
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s")
+        ]);
 
         echo "Add Permissions\n";
         $this->db->table('permissions')->insert([

@@ -61,8 +61,8 @@ class Gapi extends BaseController
                     if ($app){
                         if (!$login){
                             return $this->layout('auth/error',[
-                                'title'=>'Account is unavailable',
-                                'message'=>'Your account is not available.',
+                                'title'=>'Error',
+                                'message'=>lang('App.account_unavailable'),
                                 'url'=>$BASEURL
                             ],'login');
                         }
@@ -75,7 +75,7 @@ class Gapi extends BaseController
                         return $this->layout('auth/google',['url'=>$url,'token'=>$tokenid],'login');
                     }
                     if (!$login){
-                        return $this->JSONResponse(null,400,["email"=>"The account is not available"]);
+                        return $this->JSONResponse(null,400,["email"=>lang('App.account_unavailable')]);
                     }
                     return $this->JSONResponse([
                         'user' => $login,
