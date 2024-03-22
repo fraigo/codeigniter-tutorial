@@ -39,6 +39,16 @@ class AdminConsole extends BaseController
         return anchor($link,$label,$attrs);
     }
 
+    public function emailtest($email=null){
+        helper("email");
+        print_r($email);
+        $errors = send_email($email, "Email Test", "email/test",[]);
+        if ($errors){
+            $error = explode("<br>",$errors)[0];
+            print_r($error);
+        }
+    }
+
     public function index(){
         if (!$this->isAuthenticated()){
             return $this->doAuth();
