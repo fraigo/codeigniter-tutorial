@@ -44,7 +44,7 @@ class AppleSignin extends BaseController
                     } else {
                         if (getenv("REGISTER_USER")=="true"){
                             $passwd = "p".rand(1000000,99999999);
-                            $result = $users->insert([
+                            $users->insert([
                                 "name" => @$name ?: explode('@',$email)[0],
                                 "email" => $email,
                                 "user_type" => getenv('REGISTER_USER_TYPE')?:1,
