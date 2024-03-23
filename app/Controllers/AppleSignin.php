@@ -21,6 +21,7 @@ class AppleSignin extends BaseController
                 }
                 if ($result && @$result['token_data']){
                     $email = @$result['token_data'][1]["email"];
+                    $name = @$result['token_data'][1]["name"];
                     $users = new \App\Models\Users();
                     $user = $users->where('email',$email)->first();
                     if ($user){
@@ -38,9 +39,36 @@ class AppleSignin extends BaseController
                         }
                         return $this->JSONResponse([
                             'user' => $login,
-                            'userinfo' => $userinfo
+                            'userinfo' => $result
                         ]);
                     } else {
+                        if (getenv("REGISTER_USER")=="true"){
+                            $passwd = "p".rand(1000000,99999999);
+                            $result = $users->insert([
+                                "name" => @$name ?: explode('@',$email)[0],
+                                "email" => $email,
+                                "user_type" => getenv('REGISTER_USER_TYPE')?:1,
+                                "password" => $passwd,
+                                "repeat_password" => $passwd,
+                            ]);
+                            $user = $users->where('email',$email)->first();
+                            if ($user) {    
+                                if ($app){
+                                    $tokenid = substr($result['access_token'],0,64);
+                                    $users->update($user['id'],[
+                                        'password_token' => $tokenid,
+                                        'password_token_expires' => Time::parse('+1 hours')->toDateTimeString()
+                                    ]);
+                                    $url = getenv('APP_URL')."/";
+                                    return $this->layout('auth/apple',['url'=>$url,'token'=>$tokenid],'login');    
+                                }
+                                $login = do_login($user['id'],true);
+                                return $this->JSONResponse([
+                                    'user' => $login,
+                                    'userinfo' => $result
+                                ]);    
+                            }
+                        }
                         if ($email){
                             return $this->layout('auth/notfound',['url'=>$BASEURL,'email'=>$email],'login');
                         } else {
