@@ -93,7 +93,16 @@ class Gapi extends BaseController
                             "repeat_password" => $passwd,
                         ]);
                         $user = $users->where('email',$userinfo['email'])->first();
-                        if ($user) {
+                        if ($user) {    
+                            if ($app){
+                                $tokenid = substr($token['access_token'],0,64);
+                                $users->update($user['id'],[
+                                    'password_token' => $tokenid,
+                                    'password_token_expires' => Time::parse('+1 hours')->toDateTimeString()
+                                ]);
+                                $url = getenv('APP_URL')."/";
+                                return $this->layout('auth/google',['url'=>$url,'token'=>$tokenid],'login');    
+                            }
                             $login = do_login($user['id'],true);
                             return $this->JSONResponse([
                                 'user' => $login,
