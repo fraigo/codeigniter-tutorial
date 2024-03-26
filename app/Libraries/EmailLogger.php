@@ -24,6 +24,7 @@ class EmailLogger extends Email{
             "protocol" => $type,
             "body" => $this->body,
             "headers" => $this->headers,
+            "finalBody" => @$this->finalBody,
             "debug" => $debug
         ];
         error_log(date("Y-m-d H:i:s").' '.json_encode($log)."\n", 3, $this->logPath().'/email-'.date("Y-m-d").'.log');

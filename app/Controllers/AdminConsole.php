@@ -181,14 +181,15 @@ class AdminConsole extends BaseController
                 font-family: Arial, Helvetica, sans-serif;
             }
             .email-container{
-                border: 1px solid #e0e0e0;
+                border: 1px solid #c0c0c0;
                 display: flex;
                 flex-wrap: wrap;
-                margin-bottom: 8px;
+                margin-bottom: 16px;
             }
             .email-info{
                 margin-right: 16px;
                 padding:12px;
+                background-color: rgba(128,128,128,0.2);
             }
             .email-body{
                 flex: 1;
@@ -215,7 +216,7 @@ class AdminConsole extends BaseController
                 $debug = @$contents["debug"];
                 unset($contents["body"]);
                 foreach($contents as $key=>$value){
-                    if (!is_array($value)){
+                    if (!is_array($value) && $key!="finalBody"){
                         echo "<b>$key</b><br>";
                         echo "$value<br>";
                     }
@@ -224,6 +225,14 @@ class AdminConsole extends BaseController
                 $body = str_replace("cid:logo.png@",getenv('app.logo').'?',$body);
                 echo '<div class="email-body">';
                     echo $body;
+                    if (@$contents["finalBody"]){
+                        echo '<div style="background-color:rgba(255,255,0,0.1)">';
+                        echo '<pre style="overflow:hidden;height:1em" onclick="this.style.height=\'auto\'" >'."\n";
+                        echo " \n";
+                        echo @$contents["finalBody"]."\n";
+                        echo '</pre>'."\n";
+                        echo '</div>'."\n";    
+                    }
                     echo '<!-- DEBUG ';
                     echo is_array($debug) ? implode('<br>',$debug) : $debug;
                     echo '-->';
