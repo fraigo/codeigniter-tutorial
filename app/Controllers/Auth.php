@@ -201,7 +201,7 @@ class Auth extends BaseController
                 "email" => lang('App.email_already_used')
             ]);
         }
-        $token = create_token();
+        $token = create_token(true);
         $result = $this->model->insert([
             "name" => $data["name"],
             "email" => $data["email"],
@@ -269,7 +269,7 @@ class Auth extends BaseController
         }
         $token = null;
         if ($user){
-            $token = create_token();
+            $token = create_token(true);
             $result = $this->model->update($user['id'],[
                 "password_token" => $token,
                 "password_token_expires" => Time::parse($expires)->toDateTimeString()

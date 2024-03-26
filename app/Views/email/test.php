@@ -1,5 +1,5 @@
 <?php
-$url = getenv('APP_URL') . '/test/email?code=1234567890-1234567890';
+$url = getenv('APP_URL') . '/#login/verify/'.create_token(true);
 $name = 'Test User';
 ?><!DOCTYPE html>
 <html>

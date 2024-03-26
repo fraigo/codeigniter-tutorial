@@ -1,8 +1,12 @@
 <?php
 
-function create_token(){
+function create_token($short=false){
+    if ($short) {
+        $data = random_bytes(8);
+        return vsprintf('%s%s-%s%s', str_split(bin2hex($data), 4));
+    }
     // Generate 16 bytes (128 bits) of random data or use the data passed into the function.
-    $data = $data ?? random_bytes(16);
+    $data = random_bytes(16);
     assert(strlen($data) == 16);
 
     // Set version to 0100
