@@ -9,50 +9,26 @@ $name = 'Test User';
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-<table bgcolor="#eeeeee" width="100%" style="width: 100%">
-<tbody>
-  <tr>
-        <td>&nbsp;</td>
-        <td width="600">
-        <table bgcolor="#f8f8f8" width="600">
-            <tr height="20">
-                <td width="20"></td>
-                <td align="center">
-                    <div style="height:20px">&nbsp;</div>
-                </td>
-                <td width="20"></td>
-            </tr>
-            <tr height="100">
-                <td width="20"></td>
-                <td align="center">
-<img src="<?=imageAttachment(getenv('app.logo'))['url']?>" 
-  alt="Logo" height="92">
-                </td>
-                <td width="20"></td>
-            </tr>
-            <tr>
-                <td width="20"></td>
-                <td>
-<div>&nbsp;</div>
-<?=lang('App.hello',[$name])?>,<br>
-<div>&nbsp;</div>
-<?=lang('App.verify_email_message',[getenv('app.name')])?><br>
-<div>&nbsp;</div>
-<a href="<?=$url?>">
-<?=$url?>
+<p style="margin:16px 0">
+ <img src="<?php echo imageAttachment(getenv('app.logo'))['url']?>" 
+alt="Logo" height="92" />
+</p>
+<p style="margin:16px 0">
+ <?=lang('App.hello',[$name])?>,<br>
+</p>
+<p style="margin:16px 0"
+><?=lang('App.verify_email_message',[getenv('app.name')])?><br>
+</p>
+<p style="margin:16px 0">
+<a href="<?php echo $url ?>"
+><?php echo $url ?>
 </a>
-<div>&nbsp;</div>
-<?=@$sender?:'<b>'.lang('App.email_sender',[getenv('app.name')]).'</b>'?></b><br>
-<div>&nbsp;</div>
+</p>
+<p style="margin:16px 0">
+<b><?php echo @$sender?:lang('App.email_sender',[getenv('app.name')]) ?></b>
+</p>
+<p style="margin:16px 0">
 <?=@$footer?>
-                </td>
-                <td width="20"></td>
-            </tr>
-        </table>
-        </td>
-        <td>&nbsp;</td>
-    </tr>
-<tbody>
-</table>
+</p>
 </body>
 </html>
