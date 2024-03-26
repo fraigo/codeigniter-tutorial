@@ -41,15 +41,22 @@ class AdminConsole extends BaseController
 
     public function emailtest($email=null){
         helper("email");
+        echo "<pre>";
         print_r([$email]);
         if (@$_GET['config']){
             print_r(email_config());
         }
         $date = date("Ymd H:i");
-        $result = send_email($email, "Email Test $date", "email/test", [], []);
-        if ($result){
+        $result = send_email($email, "Email Test $date", "email/test", [], [], true);
+        if (@$result->archive){
+            print_r([
+                "body" => @$result->archive['finalBody'],
+                "response" => $result->archive['debugMessageRaw']
+            ]);
+        } else if ($result){
             print_r($result);
         }
+        echo "</pre>";
     }
 
     public function index(){
