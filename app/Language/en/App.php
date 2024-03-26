@@ -10,7 +10,7 @@ return [
     'invalid_request' => 'Invalid request.',
     'invalid_token' => 'Invalid token.',
     'password_recovery_request' => 'Password Recovery request',
-    'password_recovery_message' => 'We received a password reset request for your account.</br>You can reset your password by clicking the link below:',
+    'password_recovery_message' => "We received a password reset request for your account.</br>\nYou can reset your password by clicking the link below:",
     'recovery_sent' => 'If your email is registered, you will receive an email with account recovery instructions.',
     'repeat_password' => 'Repeat password',
     'send_error' => 'Send error',
