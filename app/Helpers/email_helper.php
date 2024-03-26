@@ -25,7 +25,7 @@ function email_config(){
     return $config;
 }
 
-function send_email($to, $subject, $view, $data=[],$attachments=[]){
+function send_email($to, $subject, $view, $data=[],$attachments=[], $return=false){
     global $EMAIL_ATTACHMENTS;
 
     $subject = (getenv("TEST_SUBJECT") ?: "").$subject.(getenv("TEST_EMAIL") ? " ($to)" : "");
@@ -61,7 +61,7 @@ function send_email($to, $subject, $view, $data=[],$attachments=[]){
     $result = $email->send();
     if ($result) {
         $email->clear(true);
-        return null;
+        return $return ? $email : null;
     }
     $debug = $email->printDebugger([]);
     $email->clear(true);

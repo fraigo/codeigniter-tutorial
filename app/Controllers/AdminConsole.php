@@ -46,10 +46,9 @@ class AdminConsole extends BaseController
             print_r(email_config());
         }
         $date = date("Ymd H:i");
-        $errors = send_email($email, "Email Test $date", "email/test",[]);
-        if ($errors){
-            $error = explode("<br>",$errors)[0];
-            print_r($error);
+        $result = send_email($email, "Email Test $date", "email/test",[]);
+        if ($result){
+            print_r($result);
         }
     }
 
