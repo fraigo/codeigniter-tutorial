@@ -246,7 +246,7 @@ class Auth extends BaseController
         return $this->doRecover("email/verify","/auth/verify","App.verify_email","+24 hours");
     }
 
-    function doRecover($view="email/reset",$path="/auth/reset",$subject='App.password_recovery_request',$expires="+6 hours"){
+    function doRecover($view="email/recovery",$path="/auth/reset",$subject='App.password_recovery_request',$expires="+6 hours"){
         $data = $this->getVars();
         $rules = [
             "email" => "required|valid_email",
