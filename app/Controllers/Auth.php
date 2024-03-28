@@ -46,7 +46,7 @@ class Auth extends BaseController
             return $this->notFound();
         }
         $users->update($userId,[
-            'user_type' => 5,
+            'user_type' => getenv('DELETED_USER_TYPE')?:5,
             'address' => '',
             'auth_token' => create_token(),
             'avatar_url' => '',
