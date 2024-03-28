@@ -10,7 +10,7 @@ return [
     'invalid_request' => 'Solicitud incorrecta.',
     'invalid_token' => 'Codigo inválido.',
     'password_recovery_request' => 'Solicitud de recuperación de contraseña',
-    'password_recovery_message' => "Hemos recibido una solicitud de recuperacion de contraseña.</br>\nPuede reiniciar su contraseña haciendo clic en el siguiente enlace:",
+    'password_recovery_message' => "Hemos recibido una solicitud de recuperacion de contraseña. Puede reiniciar su contraseña haciendo clic aquí:",
     'recovery_sent' => 'Si su correo electrónico está registrado, recibirá un correo electrónico con instrucciones para recuperar la cuenta.',
     'repeat_password' => 'Repetir password',
     'send_error' => 'Error de envío',
