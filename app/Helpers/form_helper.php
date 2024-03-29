@@ -108,6 +108,7 @@ function form_filters($filters=[],$title="Filters"){
         if (@$cfg["hidden"]) continue;
         $inputs[] = $cfg["name"];
         $control = @$cfg["control"]?:"form_input";
+        $selvalue = @$cfg["options"] ? $cfg["options"][@$cfg['value']] : null;
         $item = [
             "name" => @$cfg["name"],
             "value" => @$cfg["value"],
@@ -116,8 +117,12 @@ function form_filters($filters=[],$title="Filters"){
             "selected" => @$cfg["selected"],
             "onreset" => "this.value=''",
             "onchange" => "this.form.submit()",
-        ];
-        $content[] = form_item($item,$control,"form-item col-12 col-md-6 col-lg-4");
+        ];        
+        $script = '';
+        if ($selvalue && $cfg['value']=="0"){
+            $script = "<script>document.querySelector(\"select[name='{$cfg["name"]}']\").value='{$cfg["value"]}'</script>";
+        }
+        $content[] = form_item($item,$control,"form-item col-12 col-md-6 col-lg-4") . $script;
     }
     foreach($_GET as $fld=>$value){
         if (!in_array("$fld",$inputs)){

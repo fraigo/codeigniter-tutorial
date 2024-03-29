@@ -191,11 +191,11 @@ abstract class BaseController extends ResourceController
                 $filters[$field]["control"] = "form_dropdown";
                 $filters[$field]["options"] = ([""=>""])+$config["options"];
                 $filters[$field]["selected"] = $value ? [$value] : [];
-                if ($value){
+                if ($value!=""){
                     $query = $query->where("$tableField",$value);
                 }
             }
-            else if ($value){
+            else if ($value!=""){
                 $query = $query->like("$tableField",$value);
             }
         }
