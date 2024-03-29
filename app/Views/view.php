@@ -43,10 +43,20 @@
             } else if (@$config["view_control"]){
                 $config["value"] = $value;
                 $config["readonly"] = true;
+                if ($config["view_control_options"]){
+                    foreach($config["view_control_options"] as $opt=>$value){
+                        $config[$opt]=$value;
+                    }
+                }
                 echo form_control($config["view_control"],$config);
             } else if (@$config["view_component"]){
                 $config["value"] = $value;
                 $config["readonly"] = true;
+                if ($config["view_component_options"]){
+                    foreach($config["view_component_options"] as $opt=>$value){
+                        $config[$opt]=$value;
+                    }
+                }
                 echo form_component($config["view_component"],$config);
             } else if (@$config["value"]){
                 echo $config["value"];
