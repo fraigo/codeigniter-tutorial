@@ -1,11 +1,12 @@
 <?php
+ $initialValue = $value;
  $value = $value ?: @$default_image;
  $width = @$width ?: 64;
  $height = @$height ?: 64;
  $contain = @$contain ? 1 : 0;
  $class = $contain ? "avatar-rect ".@$class : @$class;
 ?>
-<input id="<?=@$id?>" type="hidden" name="<?=@$name?>"  >
+<input id="<?=@$id?>" type="hidden" name="<?=@$name?>" value="<?=$initialValue?>" >
 <div id="avatar_<?=@$id?>" class="avatar <?=$class?>" 
     onclick="<?=htmlentities(@$onclick?:'')?>" value="<?=@$value?>"  
     style="background-image:url('<?=$value?>');width:<?=$width?:128?>px;height:<?=$height?:128?>px">
