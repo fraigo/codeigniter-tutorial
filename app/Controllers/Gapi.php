@@ -42,6 +42,7 @@ class Gapi extends BaseController
         $redirect = @$_GET['redirect'] ?: "api/google/login";
         if ($app) $redirect = "https://{$_SERVER['HTTP_HOST']}".explode('?',$_SERVER['REQUEST_URI'])[0];
         $client = glogin_client($redirect);
+        $BASEURL = getenv('APP_URL')."/";
         if (@$_GET['code']){
             try{
                 $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
