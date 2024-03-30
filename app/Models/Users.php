@@ -158,4 +158,8 @@ class Users extends BaseModel
         return $opts;
     }
     
+
+    public function customCleanup($id){
+        
+    }
 }

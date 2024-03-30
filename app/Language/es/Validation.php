@@ -5,6 +5,7 @@
 return [
     'password_strength' => 'La contraseña debe contener numeros y letras.',
     'unique_fields' => 'Los valores deben ser únicos.',
+    "older_than" => "Debe ser mayor a {param} años",
     'valid_email' => 'El correo electronico no es válido.',
     'required' => 'El valor para {{field}} es requerido.',
     'matches' => 'El valor de {{field}} debe ser igual al valor para {{param}}.',

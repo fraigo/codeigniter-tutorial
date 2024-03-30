@@ -24,4 +24,11 @@ class CustomValidations {
         return $result ? $result[0]->id == $id : true;
     }
 
+    public function older_than($value, $params)
+    {
+        @list($years) = explode(',',$params);
+        $limitDate = date("Y-m-d",strtotime("-$years years"));
+        return $value!='' && $value<=$limitDate;
+    }
+
 }

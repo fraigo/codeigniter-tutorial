@@ -58,6 +58,7 @@ class Auth extends BaseController
             'postal_code' => '',
             'push_token' => '',
         ]);
+        $users->customCleanup($userId);
         $authUsers = new \App\Models\AuthUsers();
         $authUsers->deleteProfile($userId);
         $user = $users->find($userId);
