@@ -50,7 +50,7 @@ function form_item($config,$control="form_input",$class="form-item"){
     $error = @$config['errors'] ? "<div class='alert alert-danger p-1 mt-1'>".htmlentities(@$config['errors'])."</div>" : '';
     $errors = "<div class=\"form-error\">$error</div>";
     if (@$config["component"]){
-        if ($config["component_options"]){
+        if (@$config["component_options"]){
             foreach($config["component_options"] as $opt=>$value){
                 $config[$opt]=$value;
             }

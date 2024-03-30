@@ -52,7 +52,7 @@
             } else if (@$config["view_component"]){
                 $config["value"] = $value;
                 $config["readonly"] = true;
-                if ($config["view_component_options"]){
+                if (@$config["view_component_options"]){
                     foreach($config["view_component_options"] as $opt=>$value){
                         $config[$opt]=$value;
                     }
