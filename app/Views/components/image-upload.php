@@ -1,4 +1,5 @@
 <?php
+ $initialValue = $value;
  $value = $value ?: @$default_image ?: '';
  $tmp_id = $id ?: "tmp_$name";
  $width = @$width ?: 64;
@@ -9,7 +10,7 @@
     <?=form_component('avatar',[
         'id'=>"$tmp_id",
         'name'=>"$name",
-        'value'=>"$value",
+        'value'=>"$initialValue",
         'width'=>$width,
         'height'=>$height,
         'contain'=>$contain,
