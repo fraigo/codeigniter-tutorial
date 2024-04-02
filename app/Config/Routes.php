@@ -114,10 +114,7 @@ $routes->get('/api/app/basiclists', 'ListOptions::basic');
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/profile', 'Auth::profile');
     $routes->get('/profile/edit', 'Auth::editProfile');
-    $routes->post('/profile/edit', 'Auth::updateProfile');
     $routes->get('/api/profile', 'Auth::profile');
-    $routes->put('/api/profile', 'Auth::updateProfile');
-    $routes->delete('/api/deleteprofile', 'Auth::deleteProfile');
 
     $routes->get('/search/select/(:any)', 'Search::select/$1');
     $routes->get('/api/app/notifications', 'UserNotifications::userNotifications');
@@ -126,6 +123,16 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->put('/api/app/usernotifications/(:any)', 'UserNotifications::updateUserNotification/$1');
     $routes->get('/api/app/lists', 'ListOptions::all');
 });
+
+$routes->group('', ['filter' => 'auth:access,profile,2'], static function ($routes) {
+    $routes->post('/profile/edit', 'Auth::updateProfile');
+    $routes->put('/api/profile', 'Auth::updateProfile');
+});
+
+$routes->group('', ['filter' => 'auth:access,profile,4'], static function ($routes) {
+    $routes->delete('/api/deleteprofile', 'Auth::deleteProfile');
+});
+
 
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/import', 'Import::index');

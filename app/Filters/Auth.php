@@ -40,7 +40,7 @@ class Auth implements FilterInterface
                 $module = @$arguments[1];
                 $access = @$arguments[2];
                 if (!module_access($module, $access)){
-                    return $this->reject($request,403,"Access Forbidden ($module)");
+                    return $this->reject($request,403,lang("App.access_forbidden")." ($module)");
                 }
             }
         }
@@ -57,7 +57,7 @@ class Auth implements FilterInterface
             return $response->setStatusCode($status)->setJSON([
                 "success"=>false,
                 "errors"=>[
-                    "auth" => $message ?: "Access Forbidden"
+                    "auth" => $message ?: lang("App.access_forbidden")
                 ],
             ]);
         }

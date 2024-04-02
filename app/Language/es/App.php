@@ -2,6 +2,7 @@
 
 // override core en language system validation or define your own en language validation message
 return [
+    'access_forbidden' => 'Acceso Restringido',
     'account_unavailable' => 'La cuenta ya no esta disponible.',
     'cannot_update_information' => 'No se ha podido actualizar la información. Intente de nuevo más tarde.',
     'email_already_used' => 'La dirección de correo ya ha sido usada.',
