@@ -20,7 +20,7 @@ function create_token($short=false){
 
 function do_login($id, $event=false){
     $users = new \App\Models\Users();
-    $users->select(['id','name','email','user_type','auth_token','push_token','login_at','phone','address','city','postal_code']);
+    $users->select(['id','name','email','user_type','avatar_url','auth_token','push_token','login_at','phone','address','city','postal_code']);
     $user = $users->find($id);
     if ($user){
         $user["user_options"] = $users->getUserOptions($id);
