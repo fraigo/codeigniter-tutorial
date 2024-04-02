@@ -46,7 +46,7 @@ function send_email($to, $subject, $view, $data=[],$attachments=[], $return=fals
     $email->setReplyTo(getenv('email.replyto'));
     $email->setSubject($subject);
     $htmlMessage = "".view($view,$data);
-    $htmlContent = wordwrap(str_replace("\n"," ",$htmlMessage),40,"\r\n");
+    $htmlContent = $htmlMessage;
     if (@$EMAIL_ATTACHMENTS)
     foreach($EMAIL_ATTACHMENTS as $item){
 	if (!@$item['file']) continue;
@@ -59,7 +59,8 @@ function send_email($to, $subject, $view, $data=[],$attachments=[], $return=fals
         $email->attach($item["file"],@$item["disposition"]?:'',@$item["name"],@$item["mime"]?:'');
     }
     $email->setMessage($htmlContent);
-    $email->setAltMessage(preg_replace( "/\n\s+/", "\n", rtrim(html_entity_decode(strip_tags($htmlMessage)))));
+    $textMessage = preg_replace( "/\n\s+/", "\n", rtrim(html_entity_decode(strip_tags($htmlMessage))));
+    $email->setAltMessage(preg_replace( "/\n\s+/", "\n", $textMessage));
     $result = $email->send();
     if ($result) {
         $email->clear(true);
