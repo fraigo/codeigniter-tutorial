@@ -1,5 +1,9 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 $EMAIL_ATTACHMENTS = [];
 
 function clear_attachments(){
@@ -26,6 +30,74 @@ function email_config(){
 }
 
 function send_email($to, $subject, $view, $data=[],$attachments=[], $return=false){
+    global $EMAIL_ATTACHMENTS;
+
+    $config = email_config();
+    $subject = (getenv("TEST_SUBJECT") ?: "").$subject.(getenv("TEST_EMAIL") ? " ($to)" : "");
+    $to = getenv("TEST_EMAIL") ?: $to;
+
+    $htmlMessage = "".view($view,$data);
+    $htmlContent = $htmlMessage;
+    $textMessage = preg_replace( "/\n\s+/", "\n", rtrim(html_entity_decode(strip_tags($htmlMessage))));
+
+
+    try{
+        $mail = new PHPMailer();
+        //use PHPMailer\PHPMailer\SMTP;
+        //use PHPMailer\PHPMailer\Exception;
+        if ($return){
+            ob_start();
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+        }
+        $mail->isSMTP();                                            //Send using SMTP
+        $mail->Host       = $config['SMTPHost'];                     //Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->Username   = $config['SMTPUser'];                     //SMTP username
+        $mail->Password   = $config['SMTPPass'];
+        if ($config['SMTPCrypto']){
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+        }
+        $mail->Port       = $config['SMTPPort']*1;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+    
+        //Recipients
+        $name = getenv('email.fromName')?:getenv('app.name');
+        $mail->setFrom(getenv('email.from'), $name);
+        $mail->addAddress($to);     //Add a recipient
+        if (getenv('email.replyto')){
+            $mail->addReplyTo(getenv('email.replyto'));
+        }
+
+        if (@$EMAIL_ATTACHMENTS)
+        foreach($EMAIL_ATTACHMENTS as $item){
+            if (!@$item['file']) continue;
+            $name = basename($item['file']);
+            $cid = str_replace(".","_",$name);
+            $mail->AddEmbeddedImage($item["file"], $cid, $name);
+            $htmlContent = str_replace($item['url'],"cid:$cid",$htmlContent);
+        }    
+            
+        $mail->isHTML(true);                                  //Set email format to HTML
+        $mail->Subject = $subject;
+        $mail->Body    = $htmlContent;
+        $mail->AltBody = $textMessage;
+
+        $mail->send();
+
+        if ($return){
+            $result = ob_get_clean();
+            return explode("\n",$result);
+        }
+        return [];
+    } catch (Exception $e) {
+        return [
+            "errors" => $mail->ErrorInfo
+        ];
+    }
+
+
+}
+
+function send_emai2l($to, $subject, $view, $data=[],$attachments=[], $return=false){
     global $EMAIL_ATTACHMENTS;
 
     $subject = (getenv("TEST_SUBJECT") ?: "").$subject.(getenv("TEST_EMAIL") ? " ($to)" : "");
