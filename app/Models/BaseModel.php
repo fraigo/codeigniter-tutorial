@@ -11,6 +11,7 @@ class BaseModel extends Model
     protected $relationships = [];
     protected $childModels = [];
     protected $imageFields = [];
+    protected $changes = [];
 
     public function getListOptions($nameFields, $id_field = "id", $condition=null){
         $result = [];
