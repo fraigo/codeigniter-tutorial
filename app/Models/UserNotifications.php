@@ -93,7 +93,7 @@ class UserNotifications extends BaseModel
             try{
                 helper("email");
                 $baseURL = getenv("APP_URL") ?: base_url();
-                $appURL = strpos($notif['link'],"http")==0 ? $notif['link'] : "$baseURL/{$notif['link']}";
+                $appURL = strpos($notif['link'],"http")===0 ? $notif['link'] : "$baseURL/{$notif['link']}";
                 $result = send_email($user['email'], $notif['title'],"email/notification",["content"=>$notif['content'],"link"=>$appURL]);
                 if ($result==null) $notification->update($id,[ "sent" => 1 ]);
             } catch (\Exception $e){

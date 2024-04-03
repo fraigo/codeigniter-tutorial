@@ -189,6 +189,7 @@ $routes->group('', ['filter' => 'auth:access,admin,1'], static function ($routes
     $routes->get('/_admin/sqlcommand', 'AdminConsole::sqlcommand');
     $routes->get('/_admin/download/(:any)', 'AdminConsole::download/$1');
     $routes->get('/_admin/emaillogs/(:any)', 'AdminConsole::emailLogs/$1');
+    $routes->get('/_admin/usernotification/(:any)', 'AdminConsole::usernotification/$1');
     $routes->get('/_admin/emailtest/(:any)', 'AdminConsole::emailtest/$1');
     $routes->get('/_admin/logs/(:any)', 'AdminConsole::logs/$1');
     $routes->get('/_admin/logs/(:any)/(:any)', 'AdminConsole::logs/$1/$2');

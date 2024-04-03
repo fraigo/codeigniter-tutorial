@@ -81,4 +81,27 @@ class Notifications extends BaseModel
         return $id;
     }
 
+    public function createUserNotification($notificationId,$user_ids=[],$template=null,$params=[]){
+        $notifications =  new \App\Models\Notifications();
+        if (!$notificationId){
+            $notificationId = $notifications->insert([
+                'title' => $title,
+                'content' => $message,
+                'icon' => null,
+                'active' => 1,
+                'link' => $link,
+            ]);
+        }
+        $result =[];
+        $userNotifications = new \App\Models\UserNotifications();
+        $users = new \App\Models\Users();
+        foreach($user_ids as $userId){
+            $user = $users->find($userId);
+            if ($user){
+                $result[] = $userNotifications->createUserNotification($notificationId,$userId,true);
+            }
+        } 
+        return $result;
+    }
+
 }

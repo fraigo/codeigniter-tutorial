@@ -74,7 +74,7 @@ class AdminConsole extends BaseController
         $extra = @$_GET["failsafe"] ? "&failsafe=1" : "";
         $date = date("Y-m-d");
         echo "<h2>Admin Console</h2>";
-        echo $this->consoleLink("/_admin/composer?$extra","Composer Update",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/composer?$extra","Composer Install",["target"=>"output"]);
         echo $this->consoleLink("/_admin/migrate?$extra","Run Migration",["target"=>"output"]);
         echo $this->consoleLink("/_admin/rollback?$extra","Rollback Migration",["target"=>"output"]);
         echo $this->consoleLink("/_admin/refresh?$extra","Refresh Database",["target"=>"output"]);
@@ -264,7 +264,7 @@ class AdminConsole extends BaseController
     public function command($cmd=null){
         $composer_cmd = 'composer';
         $commands = [
-            "composer" => ["$composer_cmd update --no-progress 2>&1","unzip -o vendor_patches.zip"],
+            "composer" => ["$composer_cmd install --no-progress 2>&1","unzip -o vendor_patches.zip"],
             "rollback" => ["php spark migrate:rollback"],
             "refresh" => ["php spark migrate:refresh", "php spark db:seed AppData"],
             "migrate" => ["php spark migrate"],
@@ -484,6 +484,17 @@ class AdminConsole extends BaseController
         $filename = $filename ?: ".env";
         if ($extra) $filename = "$filename/$extra";
         return view('default',['content'=>view('admin/text-editor.php',['filename'=>$filename])]);
+    }
+
+    function usernotification($userid){
+        $notifications = new \App\Models\Notifications();
+        $id = $notifications->createNotification("Test Notification","This is a test notification","#/home");
+        echo "<pre>";
+        echo "Notification ID $id<br>";
+        $results = $notifications->createUserNotification($id,[$userid]);
+        echo "Results<br>";
+        print_r($results);
+        if (count($results)==0) $notifications->delete($id);
     }
 
     function pushnotification($token){

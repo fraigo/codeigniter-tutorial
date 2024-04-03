@@ -87,7 +87,7 @@ function send_email($to, $subject, $view, $data=[],$attachments=[], $return=fals
             $result = ob_get_clean();
             return explode("\n",$result);
         }
-        return [];
+        return null;
     } catch (Exception $e) {
         return [
             "errors" => $mail->ErrorInfo
