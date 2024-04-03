@@ -50,6 +50,7 @@ function send_email($to, $subject, $view, $data=[],$attachments=[], $return=fals
             $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
         }
         $mail->isSMTP();                                            //Send using SMTP
+        $mail->CharSet    = $config['charset'];
         $mail->Host       = $config['SMTPHost'];                     //Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
         $mail->Username   = $config['SMTPUser'];                     //SMTP username
