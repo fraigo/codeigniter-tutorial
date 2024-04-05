@@ -6,6 +6,7 @@ return [
     'account_unavailable' => 'The account is not available.',
     'cannot_update_information' => 'Cannot update information. Please try again later.',
     'email_already_used' => 'Email already used.',
+    'email_not_verified' => 'The email has not been verified yet. Please check your validation email or request a password reset.',
     'email_sender' => 'The {0} Team',
     'hello' => 'Hello {0}',
     'invalid_request' => 'Invalid request.',

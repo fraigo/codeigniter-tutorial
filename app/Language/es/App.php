@@ -6,6 +6,7 @@ return [
     'account_unavailable' => 'La cuenta ya no esta disponible.',
     'cannot_update_information' => 'No se ha podido actualizar la información. Intente de nuevo más tarde.',
     'email_already_used' => 'La dirección de correo ya ha sido usada.',
+    'email_not_verified' => 'El correo no ha sido validado aun. Por favor revise su correo de validacion o solicite recuperar la contraseña.',
     'email_sender' => 'El equipo de {0}',
     'hello' => 'Hola {0}',
     'invalid_request' => 'Solicitud incorrecta.',

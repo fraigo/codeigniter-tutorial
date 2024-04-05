@@ -97,6 +97,13 @@ class Auth extends BaseController
             }
             return $this->form();
         }
+        if ($user['password_token']!='' && $user['login_at']==''){
+            $this->errors = ["password"=>lang('App.email_not_verified')];
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
+            return $this->form();
+        }
         $result = do_login($user['id'],true);
         if (!$result){
             $this->errors = ["email"=>lang('App.account_unavailable')];
@@ -139,6 +146,13 @@ class Auth extends BaseController
             ->first();
         if (!$user){
             $this->errors = ["password"=>lang('App.user_password_incorrect')];
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
+            return $this->form();
+        }
+        if ($user['password_token']!='' && $user['login_at']==''){
+            $this->errors = ["password"=>lang('App.email_not_verified')];
             if ($this->isJson()){
                 return $this->JSONResponse(null,400,$this->errors);
             }
