@@ -25,7 +25,7 @@
       <?php if(module_access("users",1)) { ?>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle text-dark" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
-        <div class="dropdown-menu" aria-labelledby="dropdown03">
+        <div class="dropdown-menu" aria-labelledby="dropdown03" style="max-height:90vh;overflow-y:auto;">
         <?php foreach (module_menu() as $route => $label) { ?>
           <?php if(module_access($route,1)) { ?>
             <a class="dropdown-item" href="/<?=$route?>"><?=$label?></a>
