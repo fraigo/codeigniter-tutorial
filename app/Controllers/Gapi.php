@@ -69,6 +69,7 @@ class Gapi extends BaseController
                         }
                         $tokenid = substr($token['access_token'],0,64);
                         $users->update($user['id'],[
+                            'login_at' => date("Y-m-d H:i:s"),
                             'password_token' => $tokenid,
                             'password_token_expires' => Time::parse('+1 hours')->toDateTimeString()
                         ]);
@@ -98,6 +99,7 @@ class Gapi extends BaseController
                             if ($app){
                                 $tokenid = substr($token['access_token'],0,64);
                                 $users->update($user['id'],[
+                                    'login_at' => date("Y-m-d H:i:s"),
                                     'password_token' => $tokenid,
                                     'password_token_expires' => Time::parse('+1 hours')->toDateTimeString()
                                 ]);
