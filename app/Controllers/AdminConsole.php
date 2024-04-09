@@ -481,10 +481,10 @@ class AdminConsole extends BaseController
     }
 
     function editor($filename = null,$extra=null,$extra2=null){
-        $filename = $filename ?: ".env";
-        if ($extra) $filename = "$filename/$extra";
-        if ($extra && $extra2) $filename = "$filename/$extra/$extra2";
-        return view('default',['content'=>view('admin/text-editor.php',['filename'=>$filename])]);
+        $path = $filename ?: ".env";
+        if ($extra) $path = "$filename/$extra";
+        if ($extra && $extra2) $path = "$filename/$extra/$extra2";
+        return view('default',['content'=>view('admin/text-editor.php',['filename'=>$path])]);
     }
 
     function usernotification($userid){
