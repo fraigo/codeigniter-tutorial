@@ -184,8 +184,10 @@ $routes->group('', ['filter' => 'auth:access,admin,1'], static function ($routes
     $routes->get('/_admin/pushnotification/(:any)', 'AdminConsole::pushnotification/$1');
     $routes->get('/_admin/editor/(:any)', 'AdminConsole::editor/$1');
     $routes->get('/_admin/editor/(:any)/(:any)', 'AdminConsole::editor/$1/$2');
+    $routes->get('/_admin/editor/(:any)/(:any)/(:any)', 'AdminConsole::editor/$1/$2/$3');
     $routes->post('/_admin/editor/(:any)', 'AdminConsole::editor/$1');
     $routes->post('/_admin/editor/(:any)/(:any)', 'AdminConsole::editor/$1/$2');
+    $routes->post('/_admin/editor/(:any)/(:any)/(:any)', 'AdminConsole::editor/$1/$2/$3');
     $routes->get('/_admin/table/(:any)', 'AdminConsole::table/$1');
     $routes->get('/_admin/table/(:any)/(:any)', 'AdminConsole::table/$1/$2');
     $routes->get('/_admin/sqlcommand', 'AdminConsole::sqlcommand');

@@ -480,9 +480,10 @@ class AdminConsole extends BaseController
         return view('default',['content'=>view('admin/upload-image.php')."<br><i>$msg</i>"]);
     }
 
-    function editor($filename = null,$extra=null){
+    function editor($filename = null,$extra=null,$extra2=null){
         $filename = $filename ?: ".env";
         if ($extra) $filename = "$filename/$extra";
+        if ($extra && $extra2) $filename = "$filename/$extra/$extra2";
         return view('default',['content'=>view('admin/text-editor.php',['filename'=>$filename])]);
     }
 
