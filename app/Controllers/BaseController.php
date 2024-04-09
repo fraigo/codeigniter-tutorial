@@ -195,6 +195,9 @@ abstract class BaseController extends ResourceController
                     $query = $query->where("$tableField",$value);
                 }
             }
+            else if (@$config['type']=="number"){
+                $query = $query->where("$tableField",$value);
+            }
             else if ($value!=""){
                 $query = $query->like("$tableField",$value);
             }

@@ -140,6 +140,9 @@ class Result extends BaseResult
                 if (in_array($fld->type,[MYSQLI_TYPE_LONG,MYSQLI_TYPE_SHORT,MYSQLI_TYPE_TINY]) && $result[$fld->name]!==null){
                     $result[$fld->name] = 1 * $result[$fld->name];
                 }
+                if (in_array($fld->type,[MYSQLI_TYPE_FLOAT,MYSQLI_TYPE_DOUBLE]) && $result[$fld->name]!==null){
+                    $result[$fld->name] = 1.0 * $result[$fld->name];
+                }
             }
         }
         return $result;
