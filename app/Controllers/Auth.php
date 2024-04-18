@@ -78,6 +78,33 @@ class Auth extends BaseController
         ],'login');
     }
 
+
+    public function loginWithCustomToken(){
+        $data = $this->getVars();
+        if (!is_array($data)){
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,["message"=>lang('App.invalid_request')]);
+            }
+            $data=[];
+        }
+        if (!@$data["custom_token"]){
+            return $this->JSONResponse(null,400,["message"=>lang('App.invalid_token')]);
+        }
+
+        $result = false; // not implemented
+        if (!$result){
+            $this->errors = ["email"=>lang('App.account_unavailable')];
+            if ($this->isJson()){
+                return $this->JSONResponse(null,400,$this->errors);
+            }
+            return $this->form();
+        }
+        if ($this->isJson()){
+            return $this->JSONResponse($result);
+        }
+        return $this->response->redirect($this->loginRedirect);
+    }
+
     public function loginWithToken(){
         $data = $this->getVars();
         if (!is_array($data)){
@@ -85,6 +112,12 @@ class Auth extends BaseController
                 return $this->JSONResponse(null,400,["message"=>lang('App.invalid_request')]);
             }
             $data=[];
+        }
+        if (@$data["custom_token"]){
+            return $this->loginWithCustomToken();
+        }
+        if (!@$data["password_token"]){
+            return $this->JSONResponse(null,400,["message"=>lang('App.invalid_token')]);
         }
         $user = $this->model
             ->where("password_token",$data["password_token"])
