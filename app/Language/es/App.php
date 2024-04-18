@@ -20,6 +20,7 @@ return [
     'user_password_incorrect' => 'Usuario o contraseña inválidos.',
     'verify_email' => 'Verique su correo electrónico',
     'verify_email_message' => 'Por favor, verifique su correo en {0} haciendo clic en el siguiente enlace:',
+    'view_details' => 'Ver Detalles',
     'you_will_receive_an_email_to_verify_your_account' => 'Se ha enviado un correo electronico para verificar su cuenta.',
     'your_account_password_has_been_reset' => 'Su contraseña ha sido actualizada.',
     'your_email_has_been_verified' => 'Su correo ha sido verificado.',

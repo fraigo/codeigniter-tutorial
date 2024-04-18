@@ -1,6 +1,6 @@
 <?php
 
-$button = email_button(@$link,"View Details");
+$button = email_button(@$link,lang('App.view_details'));
 
 ?><!DOCTYPE html>
 <html>
@@ -47,9 +47,7 @@ $button = email_button(@$link,"View Details");
                 <td width="20"></td>
                 <td>
 <br/>
-Sincerely,
-<br/>
-<b>The <?php echo getenv('app.name')?:'App' ?> Team</b>
+<b><?php echo @$sender?:lang('App.email_sender',[getenv('app.name')]) ?></b>
 <p>&nbsp;</p>
                 </td>
                 <td width="20"></td>

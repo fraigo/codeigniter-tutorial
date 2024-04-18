@@ -168,6 +168,6 @@ function email_button($link,$label=null,$bgcolor="#d28e19",$color="#f0f0f0",$tem
     $button = str_replace('[url]','<a href="{url}" style="text-decoration:none !important;"><div style="padding:8px 20px;background-color:'.$bgcolor.';color:'.$color.';text-decoration:none;border-radius:5px 5px;display:inline-block"><span style="color:#fff">',$template);
     $button = str_replace('[/url]','</span></div></a>',$button);
     $button = str_replace("{url}",@$link?:'',$button);
-    $button = str_replace("{label}",@$label?:'View Details',$button);
+    $button = str_replace("{label}",@$label?:lang('App.view_details'),$button);
     return $button;
 }

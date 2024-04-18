@@ -20,6 +20,7 @@ return [
     'user_password_incorrect' => 'User or password is incorrect',
     'verify_email' => 'Verify Your Email',
     'verify_email_message' => 'Please verify your email for {0} by clicking the link below:',
+    'view_details' => 'View Details',
     'you_will_receive_an_email_to_verify_your_account' => 'An email to verify your account has been sent.',
     'your_account_password_has_been_reset' => 'Your account password has been reset.',
     'your_email_has_been_verified' => 'Your email has been verified.',
