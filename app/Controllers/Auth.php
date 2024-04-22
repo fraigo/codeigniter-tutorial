@@ -137,7 +137,8 @@ class Auth extends BaseController
             }
             return $this->form();
         }
-        $result = do_login($user['id'],true);
+        $deviceid = @$data['deviceid'];
+        $result = do_login($user['id'],true,$deviceid);
         if (!$result){
             $this->errors = ["email"=>lang('App.account_unavailable')];
             if ($this->isJson()){
@@ -191,7 +192,8 @@ class Auth extends BaseController
             }
             return $this->form();
         }
-        $result = do_login($user['id'],true);
+        $deviceid = @$data['deviceid'];
+        $result = do_login($user['id'],true, $deviceid);
         if (!$result){
             $this->errors = ["email"=>lang('App.account_unavailable')];
             if ($this->isJson()){

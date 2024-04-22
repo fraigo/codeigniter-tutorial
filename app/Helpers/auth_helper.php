@@ -1,5 +1,10 @@
 <?php
 
+function device_token($id){
+    $data = substr(md5($id),0,16);
+    return vsprintf('%s%s-%s%s%s-%s%s%s', str_split(bin2hex($data), 4));
+}
+
 function create_token($short=false){
     if ($short) {
         $data = random_bytes(8);
@@ -18,7 +23,7 @@ function create_token($short=false){
     return vsprintf('%s%s-%s%s%s-%s%s%s', str_split(bin2hex($data), 4));
 }
 
-function do_login($id, $event=false){
+function do_login($id, $event=false, $deviceid = null){
     $users = new \App\Models\Users();
     $users->select(['id','name','email','user_type','avatar_url','auth_token','push_token','login_at','phone','address','city','postal_code']);
     $user = $users->find($id);
@@ -48,6 +53,9 @@ function do_login($id, $event=false){
     ];
     if (!$user["auth_token"]){
         $updatedData["auth_token"] = create_token();
+    }
+    if ($deviceid!=null){
+        $updatedData["auth_token"] = device_token("$id$deviceid");
     }
     // if ($user['push_token']){
     //     helper('pushnotifications');

@@ -29,12 +29,12 @@ class Auth implements FilterInterface
         check_login($request);
         if (!logged_in()){
             if ($this->isJson($request)){
-                return $this->reject($request,401,"Not Logged In");
+                return $this->reject($request,401,lang("App.not_logged_in"));
             }
             return redirect()->to(site_url('/'));
         } else if ($arguments){
             if ($arguments[0]=='admin' && is_admin()){
-                return $this->reject($request,403,"Not Admin"); 
+                return $this->reject($request,403,lang("App.not_admin")); 
             }
             if ($arguments[0]=='access'){
                 $module = @$arguments[1];

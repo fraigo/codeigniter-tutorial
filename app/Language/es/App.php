@@ -11,6 +11,8 @@ return [
     'hello' => 'Hola {0}',
     'invalid_request' => 'Solicitud incorrecta.',
     'invalid_token' => 'Codigo inválido.',
+    'not_admin' => 'Requiere acceso de administrador',
+    'not_logged_in' => 'La sesión ya no es válida',
     'password_recovery_request' => 'Solicitud de recuperación de contraseña',
     'password_recovery_message' => "Hemos recibido una solicitud de recuperacion de contraseña. Puede reiniciar su contraseña haciendo clic aquí:",
     'recovery_sent' => 'Si su correo electrónico está registrado, recibirá un correo electrónico con instrucciones para recuperar la cuenta.',
