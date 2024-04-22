@@ -134,6 +134,10 @@ class Gapi extends BaseController
             }
             
         }
+        if (@$_GET['error']=="access_denied"){
+            $url = getenv('APP_URL')."/";
+            return $this->layout('auth/google',['url'=>$url,'token'=>''],'login');
+        }
         return $this->JSONResponse(null,200,['email'=>'Invalid Authentication Token']);
     }
 
