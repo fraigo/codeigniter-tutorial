@@ -4,6 +4,7 @@
 return [
     'access_forbidden' => 'Access Forbidden',
     'account_unavailable' => 'The account is not available.',
+    'back_to_app' => 'Back to App',
     'cannot_update_information' => 'Cannot update information. Please try again later.',
     'email_already_used' => 'Email already used.',
     'email_not_verified' => 'The email has not been verified yet. Please check your validation email or request a password reset.',
@@ -11,6 +12,7 @@ return [
     'hello' => 'Hello {0}',
     'invalid_request' => 'Invalid request.',
     'invalid_token' => 'Invalid token.',
+    'login_successful' => 'Login Successful',
     'not_admin' => 'Not an Administrator',
     'not_logged_in' => 'Not Logged In',
     'password_recovery_request' => 'Password Recovery request',

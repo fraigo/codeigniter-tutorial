@@ -4,6 +4,7 @@
 return [
     'access_forbidden' => 'Acceso Restringido',
     'account_unavailable' => 'La cuenta ya no esta disponible.',
+    'back_to_app' => 'Volver a la aplicación',
     'cannot_update_information' => 'No se ha podido actualizar la información. Intente de nuevo más tarde.',
     'email_already_used' => 'La dirección de correo ya ha sido usada.',
     'email_not_verified' => 'El correo no ha sido validado aun. Por favor revise su correo de validacion o solicite recuperar la contraseña.',
@@ -11,6 +12,7 @@ return [
     'hello' => 'Hola {0}',
     'invalid_request' => 'Solicitud incorrecta.',
     'invalid_token' => 'Codigo inválido.',
+    'login_successful' => 'Ingreso Exitoso',
     'not_admin' => 'Requiere acceso de administrador',
     'not_logged_in' => 'La sesión ya no es válida',
     'password_recovery_request' => 'Solicitud de recuperación de contraseña',
