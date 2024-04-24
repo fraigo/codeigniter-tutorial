@@ -86,6 +86,16 @@ class Users extends BaseController
         ],
     ];
 
+
+    function log($level=3){
+        $userId = user_id();
+        $data = $this->getVars("data");
+        if (trim($data)=="") {
+            return $this->JSONResponse(false);
+        }
+        $result = error_log($data, $level, WRITEPATH.'logs/user'.$userId.'-'.date("Y-m-d").'.log');
+        return $this->JSONResponse($result);
+    }
     
 
     protected function prepareFields($keys=null, $data=null){

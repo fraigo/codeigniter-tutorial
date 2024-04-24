@@ -116,6 +116,9 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/profile/edit', 'Auth::editProfile');
     $routes->get('/api/profile', 'Auth::profile');
 
+    $routes->post('/api/app/userlog', 'Users::log');
+    $routes->post('/api/app/userlog/(:any)', 'Users::log/$1');
+
     $routes->get('/search/select/(:any)', 'Search::select/$1');
     $routes->get('/api/app/notifications', 'UserNotifications::userNotifications');
     $routes->get('/api/app/notifications/(:any)', 'UserNotifications::userNotifications/$1');
