@@ -29,12 +29,43 @@ function email_config(){
     return $config;
 }
 
-function send_email($to, $subject, $view, $data=[],$attachments=[], $return=false){
+function send_email($recipients, $subject, $view, $data=[],$attachments=[], $return=false){
     global $EMAIL_ATTACHMENTS;
 
+    $cc = null;
+    $toCC = null;
+    $toName = null;
+    $originalEmail = $recipients;
+    $originalCC = null;
+    if (is_array($originalEmail)){
+        $originalEmail = @$recipients['to'] ?: 'no-email';
+        $originalCC = @$recipients['cc'];
+    }
+    $recipients = getenv("TEST_EMAIL") ?: $recipients;
+    if (is_array($recipients)){
+        $cc = $recipients['cc'];
+        $to = $recipients['to'];
+    } else {
+        $to = $recipients;
+        if ($originalCC){
+            $cc = getenv("TEST_EMAIL_CC");
+        }
+    }
+    $parts = explode(' ',$to,2);
+    if (@$parts[1]!=''){
+        $toName = $parts[1];
+        $to = $parts[0];
+    }
+    if ($cc){
+        $parts = explode(' ',$cc,2);
+        if (@$parts[1]!=''){
+            $toCC = $parts[1];
+            $cc = $parts[0];
+        }    
+    }
+
     $config = email_config();
-    $subject = (getenv("TEST_SUBJECT") ?: "").$subject.(getenv("TEST_EMAIL") ? " ($to)" : "");
-    $to = getenv("TEST_EMAIL") ?: $to;
+    $subject = (getenv("TEST_SUBJECT") ?: "").$subject.(getenv("TEST_EMAIL") ? " $cc/$toCC ($originalEmail cc:$originalCC)" : "");
 
     $htmlMessage = "".view($view,$data);
     $htmlContent = $htmlMessage;
@@ -63,7 +94,10 @@ function send_email($to, $subject, $view, $data=[],$attachments=[], $return=fals
         //Recipients
         $name = getenv('email.fromName')?:getenv('app.name');
         $mail->setFrom(getenv('email.from'), $name);
-        $mail->addAddress($to);     //Add a recipient
+        $mail->addAddress($to,$toName);     //Add a recipient
+        if ($cc){
+            $mail->addCC($cc,$toCC);     //Add cc
+        }
         if (getenv('email.replyto')){
             $mail->addReplyTo(getenv('email.replyto'));
         }
