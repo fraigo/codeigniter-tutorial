@@ -16,4 +16,10 @@ class Location extends BaseController
         }
     }
 
+    function keys(){
+        return $this->JSONResponse([
+            "GOOGLE_MAPS_API_KEY" => getenv('GOOGLE_MAPS_API_KEY')?:''
+        ],200);
+    }
+
 }

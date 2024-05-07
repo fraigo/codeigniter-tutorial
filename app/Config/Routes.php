@@ -127,6 +127,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/api/app/lists', 'ListOptions::all');
 
     $routes->get('/api/app/location', 'Location::location');
+    $routes->get('/api/app/locationkeys', 'Location::keys');
 });
 
 $routes->group('', ['filter' => 'auth:access,profile,2'], static function ($routes) {
