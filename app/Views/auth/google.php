@@ -1,6 +1,11 @@
 <?php
 
 if ($token){
+
+    if (getenv("CUSTOM_URL_SCHEME")){
+        $url = str_replace("https:",getenv("CUSTOM_URL_SCHEME"),$url);
+    }
+
 ?>
 <div id="message" style="display:none">
 <h2><?php lang('App.login_successful')?></h2>
