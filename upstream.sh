@@ -5,4 +5,4 @@ if [ "$UPSTREAMOK" == "" ]; then
     git fetch upstream
     git checkout --track upstream/tutorial
 fi
-git checkout tutorial && git add . && git commit -m "$1" && echo "Pushing $1 to upstream" && sleep 2 && git push && git checkout $BRANCH_NAME && git merge tutorial
+git checkout tutorial && git pull && git add . && git commit -m "$1" && echo "Pushing $1 to upstream" && sleep 2 && git push && git checkout $BRANCH_NAME && git merge tutorial
