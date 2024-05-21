@@ -103,6 +103,16 @@ class AdminConsole extends BaseController
     }
 
     public function logs($date,$type="log"){
+        if ($type=="user"){
+            $logpath = realpath(ROOTPATH."writable/logs");
+            $pattern = "$logpath/user*-$date.log";
+            $files = glob($pattern);
+            foreach ($files as $file) {
+                $prefix = explode("-",basename($file))[0];
+                echo "<a href='/_admin/logs/$date/$prefix'>$prefix</a><br>\n";
+            }
+            die("ok");
+        }
         $logfile = realpath(ROOTPATH."writable/logs/$type-$date.log");
         if (file_exists($logfile)){
             $content = file_get_contents($logfile);
