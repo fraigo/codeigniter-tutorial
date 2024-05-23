@@ -57,9 +57,9 @@ class UserNotifications extends BaseController
 
     function unreadNotifications(){
         $notifications = $this->userNotifications(null,true);
-        $unread = array_filter($notifications, function($item) {
+        $unread = array_values(array_filter($notifications, function($item) {
             return $item['read'] == 0 || $item['read'] == null;
-        });
+        }));
         $last_id = null;
         if (count($unread)){
             $last_id = $unread[0]['id'];
