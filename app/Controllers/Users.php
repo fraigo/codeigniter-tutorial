@@ -8,8 +8,8 @@ class Users extends BaseController
     protected $route = "users";
     protected $entityName = "User";
     protected $entityGroup = "Users";
-    protected $viewFields = ['name','email','user_type','avatar_url','updated_at','login_at','phone','address','city','postal_code'];
-    protected $editFields = ['name','email','user_type','avatar_url','password','repeat_password','phone','address','city','postal_code'];
+    protected $viewFields = ['name','email','user_type','avatar_url','updated_at','login_at','phone','address','city','postal_code','birth_date'];
+    protected $editFields = ['name','email','user_type','avatar_url','password','repeat_password','phone','address','city','postal_code','birth_date'];
     public $fields = [
         "id" => [
             "label" => "Id",
@@ -67,6 +67,25 @@ class Users extends BaseController
             "type" => "password",
             "hidden" => true,
         ],
+        "password_token" => [
+            "label" => "Password Token",
+            "maxlength" => "64",
+            "hidden" => true,
+        ],
+        "password_token_expires" => [
+            "label" => "Password Token Exiration",
+            "hidden" => true,
+            "component" => "datetime-input",
+        ],
+        "auth_token" => [
+            "header" => "API Access",
+            "label" => "API Token",
+            "maxlength" => "128",
+            "hidden" => true,
+            "readonly" => true,
+            "component" => "password-view",
+            "view_component" => "password-view"
+        ],
         "phone" => [
             "header" => "Contact Information",
             "label" => "Phone",
@@ -82,6 +101,19 @@ class Users extends BaseController
         ],
         "postal_code" => [
             "label" => "Postal Code",
+            "hidden" => true,
+        ],
+        "push_token" => [
+            "label" => "Push Token",
+            "maxlength" => "255",
+            "hidden" => true,
+            "readonly" => true,
+            "component" => "password-view",
+            "view_component" => "password-view",
+            "maxlength" => "255",
+        ],
+        "birth_date" => [
+            "label" => "Birth Date",
             "hidden" => true,
         ],
     ];
@@ -100,26 +132,18 @@ class Users extends BaseController
 
     protected function prepareFields($keys=null, $data=null){
         $this->fields["user_type"]["options"] = $this->getUserTypes();
+        $auth_token = $this->fields["auth_token"];
+        unset($this->fields["auth_token"]);
+        $push_token = $this->fields["push_token"];
+        unset($this->fields["push_token"]);
         if (module_access('auth_token',1)){
             $segment = current_url(true)->getSegment(1);
             $showToken = $keys && (module_access('auth_token',4) || $segment == "profile");
-            $this->fields["auth_token"] = [
-                "header" => "API Access",
-                "label" => "API Token",
-                "readonly" => true,
-                "component" => "password-view",
-                "view_component" => "password-view",
-            ];
+            $this->fields["auth_token"] = $auth_token;
             if ($showToken){
                 $keys[] = "auth_token";
             }
-            $this->fields["push_token"] = [
-                "label" => "Push Token",
-                "readonly" => true,
-                "maxlength" => "255",
-                "component" => "password-view",
-                "view_component" => "password-view",
-            ];
+            $this->fields["push_token"] = $push_token;
             if ($showToken){
                 $keys[] = "push_token";
             }

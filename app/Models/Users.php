@@ -29,7 +29,8 @@ class Users extends BaseModel
         'address',
         'city',
         'postal_code',
-        'push_token'
+        'push_token',
+        'birth_date'
     ];
     protected $relationships = [
         "user_types" => [
@@ -107,6 +108,10 @@ class Users extends BaseModel
         'push_token' => [
             'label' => 'Push Token',
             'rules' => 'permit_empty|max_length[255]'
+        ],
+        'birth_date' => [
+            'label' => 'Birth Date',
+            'rules' => 'permit_empty'
         ]
     ];
     protected $validationMessages   = [];
