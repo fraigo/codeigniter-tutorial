@@ -1,0 +1,19 @@
+{
+    "success" : true,
+    "id" : "20240510.1858a",
+    "version" : "20240510.1858",
+    "title" : "New App Version",
+    "content" : "<p><b>New App Version</b> will be available on May 26th</p>Please make sure you have installed the latest version of the app for optimal results.",
+    "buttons": {
+        "store": "Test",
+        "ok" : "Ok"
+    },
+    "actions": {
+        "store": {
+            "scope" : "layout",
+            "method" : "alert",
+            "param1" : "Alert Title",
+            "param2" : "Alert Message"
+        }
+    }
+}

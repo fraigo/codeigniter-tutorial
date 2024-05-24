@@ -125,6 +125,16 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('/api/app/unreadnotifications', 'UserNotifications::unreadNotifications');
     $routes->put('/api/app/usernotifications/(:any)', 'UserNotifications::updateUserNotification/$1');
     $routes->get('/api/app/lists', 'ListOptions::all');
+    $routes->get('/api/app/announcement', static function(){
+        $response = \Config\Services::response();
+        $result = @file_get_contents(ROOTPATH."/announcement.json") ?: null;
+        if (!$result){
+            http_response_code(404);
+            die();
+        }
+        $response->setJSON($result)->send();
+        die();
+    });
 
     $routes->get('/api/app/location', 'Location::location');
     $routes->get('/api/app/locationkeys', 'Location::keys');
