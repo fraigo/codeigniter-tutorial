@@ -132,9 +132,9 @@ class Users extends BaseController
 
     protected function prepareFields($keys=null, $data=null){
         $this->fields["user_type"]["options"] = $this->getUserTypes();
-        $auth_token = $this->fields["auth_token"];
+        $auth_token = @$this->fields["auth_token"];
         unset($this->fields["auth_token"]);
-        $push_token = $this->fields["push_token"];
+        $push_token = @$this->fields["push_token"];
         unset($this->fields["push_token"]);
         if (module_access('auth_token',1)){
             $segment = current_url(true)->getSegment(1);
