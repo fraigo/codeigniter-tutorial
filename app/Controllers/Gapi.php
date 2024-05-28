@@ -44,6 +44,7 @@ class Gapi extends BaseController
         $client = glogin_client($redirect);
         $BASEURL = getenv('APP_URL')."/";
         $deviceid = @$_GET['deviceid'] ?: '';
+        $version = @$_GET['version'] ?: '';
         if (@$_GET['code']){
             try{
                 $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
@@ -59,7 +60,7 @@ class Gapi extends BaseController
                 $users = new \App\Models\Users();
                 $user = $users->where('email',$userinfo['email'])->first();
                 if ($user){
-                    $login = do_login($user['id'],true,$deviceid);
+                    $login = do_login($user['id'],true,$deviceid, $version);
                     if ($app){
                         if (!$login){
                             return $this->layout('auth/error',[
@@ -107,7 +108,7 @@ class Gapi extends BaseController
                                 $url = getenv('APP_URL')."/";
                                 return $this->layout('auth/google',['url'=>$url,'token'=>$tokenid],'login');    
                             }
-                            $login = do_login($user['id'],true,$deviceid);
+                            $login = do_login($user['id'],true,$deviceid, $version);
                             return $this->JSONResponse([
                                 'user' => $login,
                                 'userinfo' => $userinfo

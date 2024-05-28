@@ -69,11 +69,9 @@ class Events extends BaseModel
     protected $beforeDelete   = [];
     protected $afterDelete    = ['deleteChilds'];
 
-    public function loginEvent(){
-        $loginData = [
-            "ip"=>$_SERVER["REMOTE_ADDR"],
-            "path"=>$_SERVER["PATH_INFO"]
-        ];
+    public function loginEvent($loginData=[]){
+        $loginData["ip"] = $_SERVER["REMOTE_ADDR"];
+        $loginData["path"] = $_SERVER["PATH_INFO"];
         if (getenv('IPINFO_TOKEN')){
             $requestURI = "https://ipinfo.io/{$_SERVER["REMOTE_ADDR"]}?token=".getenv('IPINFO_TOKEN');
             $locationInfo = @file_get_contents($requestURI);

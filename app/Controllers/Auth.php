@@ -45,7 +45,13 @@ class Auth extends BaseController
         if (!$user){
             return $this->notFound();
         }
+        $parts = explode(' ',$user['name']);
+        $initials = [];
+        foreach($parts as $part){
+            $initials[]=substr($part,0,1);
+        }
         $users->update($userId,[
+            'name' => implode('',$initials),
             'user_type' => getenv('DELETED_USER_TYPE')?:5,
             'address' => '',
             'auth_token' => create_token(),
@@ -138,7 +144,8 @@ class Auth extends BaseController
             return $this->form();
         }
         $deviceid = @$data['deviceid'];
-        $result = do_login($user['id'],true,$deviceid);
+        $version = @$data['version'];
+        $result = do_login($user['id'],true,$deviceid,$version);
         if (!$result){
             $this->errors = ["email"=>lang('App.account_unavailable')];
             if ($this->isJson()){
@@ -193,7 +200,8 @@ class Auth extends BaseController
             return $this->form();
         }
         $deviceid = @$data['deviceid'];
-        $result = do_login($user['id'],true, $deviceid);
+        $version = @$data['version'];
+        $result = do_login($user['id'],true, $deviceid, $version);
         if (!$result){
             $this->errors = ["email"=>lang('App.account_unavailable')];
             if ($this->isJson()){

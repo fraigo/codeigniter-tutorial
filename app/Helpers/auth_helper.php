@@ -23,7 +23,7 @@ function create_token($short=false){
     return vsprintf('%s%s-%s%s%s-%s%s%s', str_split(bin2hex($data), 4));
 }
 
-function do_login($id, $event=false, $deviceid = null){
+function do_login($id, $event=false, $deviceid = null, $version = null){
     $users = new \App\Models\Users();
     $users->select(['id','name','email','user_type','avatar_url','auth_token','push_token','login_at','phone','address','city','postal_code']);
     $user = $users->find($id);
@@ -76,7 +76,10 @@ function do_login($id, $event=false, $deviceid = null){
     }
     if ($event){
         $events = new \App\Models\Events();
-        $events->loginEvent();
+        $data = [];
+        if ($deviceid) $data['deviceid'] = $deviceid;
+        if ($version) $data['version'] = $version;
+        $events->loginEvent($data);
     }
     return $result;
 }
