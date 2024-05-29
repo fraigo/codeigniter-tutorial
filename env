@@ -179,3 +179,39 @@ api.logtimeout = 2.0
 # email.from = notifications@server.com
 # email.debug = 0
 # email.newline = \r\n
+
+# AWS_ACCESS_KEY_ID=***
+# AWS_SECRET_ACCESS_KEY=***
+# AWS_SNS_KEY=***
+# AWS_SNS_SECRET=***
+# AWS_SNS_REGION=us-west-2
+
+# TEST_EMAIL=admin@example.com
+# TEST_SUBJECT=[Test] 
+# APP_URL=http://localhost:5501
+# CUSTOM_URL_SCHEME=myapp:
+
+
+# IPINFO_TOKEN = ***
+# SMS_TEST_PHONE = +15551234567
+
+
+# PUSH_P8_FILE = writable/certificate.p8
+# PUSH_IOS_KEY_ID = ***
+# PUSH_IOS_TEAM_ID = ***
+# PUSH_IOS_BUNDLE_ID = my.app.bundle.id
+# PUSH_ANDROID_KEY = ***
+# PUSH_TEST_DEVICE_TOKEN = ***
+
+# APPLE_SIGNIN_CLIENT_ID = com.myapp.app.signin
+# APPLE_SIGNIN_KEY_ID = ***
+# APPLE_SIGNIN_TEAM_ID = ***
+# APPLE_SIGNIN_P8_FILE = writable/applesignin.p8
+# APPLE_SIGNIN_SCOPE = "name email"
+
+# REGISTER_USER = true
+# REGISTER_USER_TYPE = 11
+# DELETED_USER_TYPE = 5
+# MULTI_DEVICE = false
+
+# GOOGLE_MAPS_API_KEY = ***

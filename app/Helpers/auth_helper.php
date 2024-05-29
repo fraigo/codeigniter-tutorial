@@ -54,7 +54,8 @@ function do_login($id, $event=false, $deviceid = null, $version = null){
     if (!$user["auth_token"]){
         $updatedData["auth_token"] = create_token();
     }
-    if ($deviceid!=null){
+    $MULTI = getenv('MULTI_DEVICE')=="true";
+    if ($deviceid!=null && !$MULTI){
         $updatedData["auth_token"] = device_token("$id$deviceid");
     }
     // if ($user['push_token']){
@@ -68,7 +69,8 @@ function do_login($id, $event=false, $deviceid = null, $version = null){
         "user" => $user,
         "profile" => $userType,
         "permissions" => array_column($permissions,"access","module"),
-        "token" => $token
+        "token" => $token,
+        "multi" => $MULTI,
     ];
     $session = session();
     foreach($result as $key=>$value){
