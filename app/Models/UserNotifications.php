@@ -101,7 +101,7 @@ class UserNotifications extends BaseModel
             } catch (\Exception $e){
             }
         }
-        if ($user['push_token'] && @$opts['app_notifications']==1){
+        if (@$user['push_token'] && @$opts['app_notifications']==1){
             helper('pushnotifications');
             $extra = ['link'=>$notif['link'],'notification'=>$notificationId,'usernotification'=>$id];
             $extra['payload'] = json_encode($extra);
