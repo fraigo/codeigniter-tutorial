@@ -77,6 +77,8 @@ class UserNotifications extends BaseModel
     public function createUserNotification($notificationId,$userId,$email=true){
         $users = new \App\Models\Users();
         $user = $users->find($userId);
+        $options = new \App\Models\UserOptions();
+        $opts = $options->getUserOptions($userId);
         $notifications = new \App\Models\Notifications();
         $notif = $notifications->find($notificationId);
         if (!$user || !$notif){
@@ -89,7 +91,7 @@ class UserNotifications extends BaseModel
             "read" => 0,
             "sent" => 0,
         ]);
-        if ($email){
+        if ($email && @$opts['email_notifications']==1){
             try{
                 helper("email");
                 $baseURL = getenv("APP_URL") ?: base_url();
@@ -99,7 +101,7 @@ class UserNotifications extends BaseModel
             } catch (\Exception $e){
             }
         }
-        if ($user['push_token']){
+        if ($user['push_token'] && @$opts['app_notifications']==1){
             helper('pushnotifications');
             $extra = ['link'=>$notif['link'],'notification'=>$notificationId,'usernotification'=>$id];
             $extra['payload'] = json_encode($extra);
