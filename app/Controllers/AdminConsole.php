@@ -374,7 +374,13 @@ class AdminConsole extends BaseController
         $db = db_connect();
         $sql = @$_GET["sql"];
         $type = @$_GET["type"] ?: "json";
-        if (strpos(strtolower("$sql"),"select ")===0){
+        $dataQueries = [
+            "select",
+            "describe",
+            "show",
+        ];
+        $queryType = explode(' ',trim(strtolower($sql)))[0];
+        if (in_array($queryType,$dataQueries)){
             if ($type=="csv"){
                 header("Content-Type: text/plain");
             } else {
