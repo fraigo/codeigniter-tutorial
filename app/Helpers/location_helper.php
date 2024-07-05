@@ -1,4 +1,4 @@
-<?php
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <?php
 
 function get_location($ip=null,$cache=true){
 
@@ -15,7 +15,7 @@ function get_location($ip=null,$cache=true){
         $locationInfo = @file_get_contents($requestURI);
         if ($locationInfo){
             $locationData = json_decode($locationInfo, true);
-            if ($locationData){
+            if ($locationData && @$locationData['loc']){ 
                 $latlng = explode(',',@$locationData['loc']?:',');
                 $locationData['lat'] = $latlng[0]*1.0;
                 $locationData['lng'] = $latlng[1]*1.0;
