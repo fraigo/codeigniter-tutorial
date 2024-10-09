@@ -509,7 +509,7 @@ class AdminConsole extends BaseController
         $path = @$specialPaths[$filename] ?: $filename;
         if ($extra) $path = "$filename/$extra";
         if ($extra && $extra2) $path = "$filename/$extra/$extra2";
-        if (!file_exists($path)|| !is_file($path)) return $this->notFound();
+        if (!file_exists(ROOTPATH.$path)|| !is_file(ROOTPATH.$path)) return $this->notFound();
         return view('default',['content'=>view('admin/text-editor.php',['filename'=>$path])]);
     }
 
