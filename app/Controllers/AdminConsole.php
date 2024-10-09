@@ -281,7 +281,7 @@ class AdminConsole extends BaseController
             "patches" => ["unzip -o vendor_patches.zip"],
             "zipuploads" => ["rm -f writable/images.zip","zip -o writable/images.zip writable/uploads/images/*.png writable/uploads/images/*.jpg","zip -o writable/documents.zip writable/documents/*.pdf writable/documents/*.jpeg writable/documents/*.jpg"],
             "unzipuploads" => ["unzip -o writable/images.zip","unzip -o writable/documents.zip"],
-            "zipcustom" => ["zip -r -o writable/custom.zip public/img/uniform/* public/pdf/*"],
+            "zipcustom" => ["zip -r -o writable/custom.zip public/img/uniform/* public/img/position/* public/pdf/*"],
             "unzipcustom" => ["unzip -o writable/custom.zip"],
         ];
         $name = @$_GET["name"];
@@ -411,7 +411,10 @@ class AdminConsole extends BaseController
         else if($sql){
             header("Content-Type: text/json");
             try {
-                $result = [ "result" => $db->simpleQuery($sql) ];
+                $result = [ 
+                    "result" => $db->simpleQuery($sql),
+                    "rows" => $db->affectedRows(), 
+                ];
             } catch (\Throwable $e) {
                 $result = [
                     "error" => $e->getMessage()
@@ -497,9 +500,16 @@ class AdminConsole extends BaseController
     }
 
     function editor($filename = null,$extra=null,$extra2=null){
-        $path = $filename ?: ".env";
+        if (strpos($extra,".")!==false) return $this->notFound();
+        if (strpos($extra2,".")!==false) return $this->notFound();
+        $specialPaths = [
+            "_env" => ".env",
+            "_envjs" => getenv('APP_ENV_JS') ?: "../app/env.js",
+        ];
+        $path = @$specialPaths[$filename] ?: $filename;
         if ($extra) $path = "$filename/$extra";
         if ($extra && $extra2) $path = "$filename/$extra/$extra2";
+        if (!file_exists($path)|| !is_file($path)) return $this->notFound();
         return view('default',['content'=>view('admin/text-editor.php',['filename'=>$path])]);
     }
 
