@@ -500,8 +500,9 @@ class AdminConsole extends BaseController
     }
 
     function editor($filename = null,$extra=null,$extra2=null){
-        if (strpos($extra,".")!==false) return $this->notFound();
-        if (strpos($extra2,".")!==false) return $this->notFound();
+        if (strpos($filename,"..")!==false) return $this->notFound();
+        if (strpos($extra,"..")!==false) return $this->notFound();
+        if (strpos($extra2,"..")!==false) return $this->notFound();
         $specialPaths = [
             "_env" => ".env",
             "_envjs" => getenv('APP_ENV_JS') ?: "../app/env.js",
