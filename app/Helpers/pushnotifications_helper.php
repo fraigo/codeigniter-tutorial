@@ -139,6 +139,70 @@ function ios_push_notification($deviceToken,$title,$body,$badge=0,$extra=[],$dev
 
 
 function android_push_notification($deviceToken,$title,$body,$badge=0,$extra=[],$development=false){
+    helper('gapi');
+    $projectId = getenv('FIREBASE_PROJECT_ID') ?: 'firebase_project_id';
+    $accessToken = fcm_access_token();
+    $url = 'https://fcm.googleapis.com/v1/projects/' . $projectId . '/messages:send';
+
+    $data = $extra;
+    $data['title'] = $title;
+    $data['body'] = $body;
+    $data['image'] = 'https://appserver.staffgrabs.com/img/staffgrabs/logo.png';
+    //$data['data'] = json_encode($extra);
+
+    // Create the message payload
+    $message = [
+        'message' => [
+            'token' => $deviceToken,  // Targeted device token
+            'android' => [
+                'priority' => 'high',
+            ],
+            'data' => $data,
+        ]
+    ];
+
+    // Set up the HTTP headers
+    $headers = [
+        'Authorization: Bearer ' . $accessToken,  // OAuth2 access token
+        'Content-Type: application/json',
+    ];
+
+    // Initialize CURL
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($message));
+
+    // Execute CURL request
+    $result = curl_exec($ch);
+    if ($result === FALSE) {
+        $error = curl_error($ch);
+        curl_close($ch);
+        return [
+            "success" => false,
+            "device_token" => $deviceToken,
+            "message" => "cURL Error: $error",
+            "url" => $url,
+            "headers" => $headers,
+            "payload" => $message,
+        ];
+    } else {
+        curl_close($ch);
+        return [
+            "success" => true,
+            "device_token" => $deviceToken,
+            "response" => $result,
+            "url" => $url,
+            "headers" => $headers,
+            "payload" => $message,
+        ];
+    }
+}
+
+function android_push_notification_old($deviceToken,$title,$body,$badge=0,$extra=[],$development=false){
     // Set the server key and device token
     if (!getenv('PUSH_ANDROID_KEY')) return ["success"=>true,"message"=>"No server key"];
 

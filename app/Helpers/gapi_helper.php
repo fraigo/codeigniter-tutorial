@@ -71,6 +71,40 @@ function gapi_fetch_token($client,$code,$save=true){
     return null;
 }
 
+function fcm_access_token() {
+    // Set the scope for Firebase Cloud Messaging (FCM)
+    $scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
+    $serviceAccountJsonPath = ROOTPATH."/writable/firebase.json";
+    $result = @file_get_contents(ROOTPATH."/writable/fcm_token.txt") ?: '';
+    if ($result){
+        $timestamp = filemtime(ROOTPATH."/writable/fcm_token.txt");
+        $diff = time() - $timestamp;
+        $MINUTES = 30;
+        if ($diff<60*$MINUTES){
+            return $result;
+        }
+    }
+
+    if (!file_exists($serviceAccountJsonPath)){
+        return 'no_firebase_json';
+    }
+
+    // Load the service account key file (the JSON file)
+    $jsonKey = json_decode(file_get_contents($serviceAccountJsonPath), true);
+
+    // Set up Google credentials
+    $credentials = new \Google\Auth\Credentials\ServiceAccountCredentials(
+        $scopes,
+        $jsonKey
+    );
+
+    // Get the access token
+    $accessToken = $credentials->fetchAuthToken()['access_token'];
+    file_put_contents(ROOTPATH."/writable/fcm_token.txt",$accessToken);
+
+    return $accessToken;
+}
+
 function gapi_auth($client,$redirect=null){
     $access_token = null;
     if (isset($_GET['code'])) {
