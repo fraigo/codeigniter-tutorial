@@ -144,11 +144,11 @@ function android_push_notification($deviceToken,$title,$body,$badge=0,$extra=[],
     $accessToken = fcm_access_token();
     $url = 'https://fcm.googleapis.com/v1/projects/' . $projectId . '/messages:send';
 
-    $data = $extra;
+    $data = [];
     $data['title'] = $title;
     $data['body'] = $body;
-    $data['image'] = 'https://appserver.staffgrabs.com/img/staffgrabs/logo.png';
-    //$data['data'] = json_encode($extra);
+    $data['payload'] = json_encode($extra);
+    if (@$extra['link']) $data['link'] = $extra['link'];
 
     // Create the message payload
     $message = [
