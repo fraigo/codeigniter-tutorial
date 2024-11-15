@@ -83,6 +83,7 @@ class AdminConsole extends BaseController
         echo $this->consoleLink("/_admin/download/images.zip?$extra","Download Images",["target"=>"output"]);
         echo $this->consoleLink("/_admin/logs/$date","Current Logs",["target"=>"output"]);
         echo $this->consoleLink("/_admin/logs/$date/api","API Logs",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/logs/$date/user","User Error Logs",["target"=>"output"]);
         echo $this->consoleLink("/_admin/emaillogs/$date","Email Logs",["target"=>"output"]);
         echo $this->consoleLink("/_admin/patches?$extra","Vendor Patches",["target"=>"output"]);
         echo $this->consoleLink("/import","Import",["target"=>"_blank"]);
