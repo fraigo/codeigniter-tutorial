@@ -69,11 +69,11 @@ class Notifications extends BaseModel
     protected $beforeDelete   = [];
     protected $afterDelete    = ['deleteChilds'];
 
-    public function createNotification($title,$content=null,$link=null){
+    public function createNotification($title,$content=null,$link=null,$icon=null){
         $notification = new \App\Models\Notifications();
         $id = $notification->insert([
             "title" => $title,
-            "icon" => "",
+            "icon" => $icon ?: '',
             "content" => $content,
             "active" => 1,
             "link" => $link
@@ -81,24 +81,15 @@ class Notifications extends BaseModel
         return $id;
     }
 
-    public function createUserNotification($notificationId,$user_ids=[],$template=null,$params=[]){
+    public function createUserNotification($notificationId,$user_ids=[],$email=true){
         $notifications =  new \App\Models\Notifications();
-        if (!$notificationId){
-            $notificationId = $notifications->insert([
-                'title' => $title,
-                'content' => $message,
-                'icon' => null,
-                'active' => 1,
-                'link' => $link,
-            ]);
-        }
         $result =[];
         $userNotifications = new \App\Models\UserNotifications();
         $users = new \App\Models\Users();
         foreach($user_ids as $userId){
             $user = $users->find($userId);
             if ($user){
-                $result[] = $userNotifications->createUserNotification($notificationId,$userId,true);
+                $result[] = $userNotifications->createUserNotification($notificationId,$userId,$email);
             }
         } 
         return $result;

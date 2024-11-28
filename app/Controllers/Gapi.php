@@ -124,10 +124,17 @@ class Gapi extends BaseController
                     throw new \Exception('Email '.$userinfo['email'].' Not registered');
                 }
             } catch(\Exception $e) {
+                if ($app){
+                    return $this->layout('auth/error',[
+                        'title'=>'Authentication error',
+                        'message'=>$e->getMessage(),
+                        'url'=>$BASEURL
+                    ],'login');
+                }
                 return $this->JSONResponse([
                     'redirect' => $redirect,
                     'code'=>$_GET['code'],
-                    'token' => $token,
+                    'token' => '',
                     'line'=>$e->getLine(),
                 ],400,[
                     'email'=>$e->getMessage(),

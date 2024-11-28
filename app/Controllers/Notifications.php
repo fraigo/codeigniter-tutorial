@@ -37,7 +37,7 @@ class Notifications extends BaseController
         ],
         "updated_at" => [
             "label" => "Updated",
-            "hidden" => true,
+            "sort" => true,
         ],
         "link" => [
             "label" => "Link",

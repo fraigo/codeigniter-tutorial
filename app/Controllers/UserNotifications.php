@@ -60,14 +60,18 @@ class UserNotifications extends BaseController
         $unread = array_values(array_filter($notifications, function($item) {
             return $item['read'] == 0 || $item['read'] == null;
         }));
+        $alerts = array_values(array_filter($notifications, function($item) {
+            return ($item['read'] == 0 || $item['read'] == null) && $item['icon'] == 'mdi-alert';
+        }));
         $last_id = null;
         if (count($unread)){
-            $last_id = $unread[0]['id'];
+            $last_id = @$unread[0]['id'];
         }
         return $this->JSONResponse([
             "last_id" => $last_id,
             "total" => count($notifications),
             "unread" => count($unread),
+            "alert" => count($alerts) ? array_pop($alerts) : null,
         ]);
     }
 
@@ -77,7 +81,7 @@ class UserNotifications extends BaseController
         }
         $userID = user_id();
         $notifications = $this->model;
-        $notifications->getRelationshipModel("notifications",['title','content','link']);
+        $notifications->getRelationshipModel("notifications",['title','content','link','icon']);
         $notifications->where([
             'user_id' => $userID,
             'user_notifications.created_at>' => $date,

@@ -39,6 +39,7 @@ class Events extends BaseController
         ],
         "created_at" => [
             "label" => "Created",
+            "filter" => true,
             "sort" => true,
         ],
         "updated_at" => [
