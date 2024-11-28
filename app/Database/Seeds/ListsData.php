@@ -42,6 +42,20 @@ class ListsData extends Seeder
             "created_at" => date("Y-m-d H:i:s"),
             "updated_at" => date("Y-m-d H:i:s")
         ]);
+        $this->db->table('list_options')->insert([
+            "list_id" => 1,
+            "name" => "app_notifications",
+            "value" => "App Notifications",
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s")
+        ]);
+        $this->db->table('list_options')->insert([
+            "list_id" => 1,
+            "name" => "email_notifications",
+            "value" => "Email Notifications",
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s")
+        ]);
 
         $this->db->table('lists')->insert([
             "id" => 2,
@@ -68,6 +82,20 @@ class ListsData extends Seeder
             "list_id" => 2,
             "name" => "timezone",
             "value" => "America/New_York",
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s")
+        ]);
+        $this->db->table('list_options')->insert([
+            "list_id" => 2,
+            "name" => "app_notifications",
+            "value" => "1",
+            "created_at" => date("Y-m-d H:i:s"),
+            "updated_at" => date("Y-m-d H:i:s")
+        ]);
+        $this->db->table('list_options')->insert([
+            "list_id" => 2,
+            "name" => "email_notifications",
+            "value" => "1",
             "created_at" => date("Y-m-d H:i:s"),
             "updated_at" => date("Y-m-d H:i:s")
         ]);

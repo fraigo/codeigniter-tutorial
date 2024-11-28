@@ -9,7 +9,7 @@ class Pages extends BaseController
     protected $entityName = "Page";
     protected $entityGroup = "Pages";
     protected $viewFields = [];
-    protected $editFields = ['title','description','slug','contents'];
+    protected $editFields = ['title','description','slug','contents','category'];
     public $fields = [
         "id" => [
             "label" => "Id",
@@ -17,14 +17,17 @@ class Pages extends BaseController
         ],
         "title" => [
             "label" => "Title",
+            "maxlength" => "255",
             "filter" => true,
         ],
         "description" => [
             "label" => "Description",
+            "maxlength" => "255",
             "filter" => true,
         ],
         "slug" => [
             "label" => "Slug",
+            "maxlength" => "255",
             "filter" => true,
         ],
         "contents" => [
@@ -32,6 +35,11 @@ class Pages extends BaseController
             "label" => null,
             "hidden" => true,
             "component" => "html-editor",
+        ],
+        "category" => [
+            "label" => "Category",
+            "maxlength" => "255",
+            "filter" => true,
         ],
         "created_at" => [
             "label" => "Created",
@@ -42,6 +50,12 @@ class Pages extends BaseController
             "hidden" => true,
         ],
     ];
+
+    protected function prepareFields($keys=null, $data=null){
+        $listOptions = new \App\Models\ListOptions();
+        $this->fields["category"]["options"] = $listOptions->getOptionsByName("page_categories");
+        return parent::prepareFields($keys);
+    }
 
     public function view($id){
         $page = $this->getModelById($id);

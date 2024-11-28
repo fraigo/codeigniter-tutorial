@@ -18,7 +18,11 @@ class Pages extends BaseModel
         'title',
         'description',
         'slug',
-        'contents'
+        'contents',
+        'category'
+    ];
+    protected $relationships = [
+        
     ];
 
     // Dates
@@ -36,15 +40,19 @@ class Pages extends BaseModel
         ],
         'description' => [
             'label' => 'Description',
-            'rules' => 'max_length[255]'
+            'rules' => 'permit_empty|max_length[255]'
         ],
         'slug' => [
             'label' => 'Slug',
-            'rules' => 'max_length[255]|is_unique[pages.slug,id,{id}]'
+            'rules' => 'permit_empty|max_length[255]|is_unique[pages.slug,id,{id}]'
         ],
         'contents' => [
             'label' => 'Contents',
             'rules' => 'required'
+        ],
+        'category' => [
+            'label' => 'Category',
+            'rules' => 'permit_empty|max_length[255]'
         ]
     ];
     protected $validationMessages   = [];
@@ -60,6 +68,6 @@ class Pages extends BaseModel
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    protected $afterDelete    = ['deleteChilds'];
 
 }
