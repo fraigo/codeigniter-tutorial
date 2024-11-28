@@ -74,11 +74,11 @@ class UserNotifications extends BaseModel
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function createUserNotification($notificationId,$userId,$email=true){
+    public function createUserNotification($notificationId,$userId,$email=true,$notificationEnabled=true){
         $users = new \App\Models\Users();
         $user = $users->find($userId);
         $options = new \App\Models\UserOptions();
-        $opts = $options->getUserOptions($userId);
+        $opts = $options->getUserOptions($userId) ?: [];
         $notifications = new \App\Models\Notifications();
         $notif = $notifications->find($notificationId);
         if (!$user || !$notif){
@@ -91,24 +91,29 @@ class UserNotifications extends BaseModel
             "read" => 0,
             "sent" => 0,
         ]);
-        if ($email && @$opts['email_notifications']==1){
+        if ($email && @$opts['email_notifications']!=2){
             try{
                 helper("email");
                 $baseURL = getenv("APP_URL") ?: base_url();
                 $appURL = strpos($notif['link'],"http")===0 ? $notif['link'] : "$baseURL/{$notif['link']}";
-                $result = send_email($user['email'], $notif['title'],"email/notification",["content"=>$notif['content'],"link"=>$appURL]);
+                $emailContent = str_replace("<a href='#/","<a href='$baseURL/#/",$notif['content']);
+                $result = send_email($user['email'], $notif['title'],"email/notification",["content"=>$emailContent,"link"=>$appURL]);
                 if ($result==null) $notification->update($id,[ "sent" => 1 ]);
             } catch (\Exception $e){
             }
         }
-        if (@$user['push_token'] && @$opts['app_notifications']==1){
+        if (@$user['push_token'] && @$opts['app_notifications']!=2 && $notificationEnabled){
             helper('pushnotifications');
-            $extra = ['link'=>$notif['link'],'notification'=>$notificationId,'usernotification'=>$id];
+            $pending = $notification->where([
+                'user_id'=>$userId,
+                'read'=>0
+            ])->findColumn('id');
+            $extra = ['link'=>$notif['link'],'notification'=>$notificationId,'usernotification'=>$id,'pendingnotifications'=>$pending];
             $extra['payload'] = json_encode($extra);
             $txtMessage = str_replace('<br>',"\n",$notif['content']);
             $txtMessage = str_replace('<br />',"\n",$txtMessage); 
             $txtMessage = strip_tags($txtMessage);
-            $result = @push_notification($user['push_token'],$notif['title'],$txtMessage,$extra);
+            $result = @push_notification($user['push_token'],$notif['title'],$txtMessage,count($pending),$extra);
         }
         return $id;
     }
