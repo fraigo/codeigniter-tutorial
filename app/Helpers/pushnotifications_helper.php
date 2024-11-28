@@ -147,6 +147,7 @@ function android_push_notification($deviceToken,$title,$body,$badge=0,$extra=[],
     $data = [];
     $data['title'] = $title;
     $data['body'] = $body;
+    $data['icon'] = 'ic_notification';
     $data['payload'] = json_encode($extra);
     if (@$extra['link']) $data['link'] = $extra['link'];
 

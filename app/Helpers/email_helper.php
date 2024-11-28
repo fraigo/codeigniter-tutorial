@@ -108,7 +108,18 @@ function send_email($recipients, $subject, $view, $data=[],$attachments=[], $ret
             $name = basename($item['file']);
             $cid = str_replace(".","_",$name);
             $mail->AddEmbeddedImage($item["file"], $cid, $name);
-            $htmlContent = str_replace($item['url'],"cid:$cid",$htmlContent);
+            $htmlContent = str_replace($item['url'],"cid:$cid",$htmlContent);    
+        }  
+        if (@$attachments)
+        foreach($attachments as $idx => $item){
+            if (@$item['file']){
+                $name = @$item['name'] ?: basename($item['file']);
+                $mail->addAttachment($item["file"],$name,$mail::ENCODING_BASE64,$item['mime']?:'');    
+            }
+            else if (@$item['contents']){
+                $name = @$item['name'] ?: "attachment_$idx";
+                $mail->addStringAttachment($item['contents'],$name,$mail::ENCODING_BASE64,$item['mime']?:'');    
+            }
         }    
             
         $mail->isHTML(true);                                  //Set email format to HTML

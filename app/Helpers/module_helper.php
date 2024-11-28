@@ -84,5 +84,6 @@ function custom_modules(){
         "gdrive" => "Google Drive access",
         "profile" => "Profile",
         "deleteprofile" => "Delete Profile",
+        "showprofile" => "Profile Menu",
     ], $CUSTOM_MODULES);
 }

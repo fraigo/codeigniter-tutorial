@@ -15,7 +15,7 @@ class MYPDF extends TCPDF {
         // Position at 15 mm from bottom
         $this->SetY(-15);
         $this->SetFont('helvetica', 'I', 8);
-        $this->Cell(0, 10, 'Generated '.date("D, M js Y g:i A"), 0, false, 'L');
+        $this->Cell(0, 10, 'Generated '.date("D, M jS Y g:i A"), 0, false, 'L');
         $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().' of '.$this->getAliasNbPages(), 0, false, 'R');
     }
 }
