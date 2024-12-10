@@ -389,6 +389,9 @@ abstract class BaseController extends ResourceController
             "success" => ($errors === null),
             "date" => date("Y-m-d H:i:s"),
         ];
+        if ($this->startTime){
+            $response["response_time"] = microtime(true) - $this->startTime;
+        }
         if (is_array($extra))
         foreach($extra as $key => $values){
             $response[$key] = $values;
