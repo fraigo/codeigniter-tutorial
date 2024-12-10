@@ -84,6 +84,7 @@ class AdminConsole extends BaseController
         echo $this->consoleLink("/_admin/logs/$date","Current Logs",["target"=>"output"]);
         echo $this->consoleLink("/_admin/logs/$date/api","API Logs",["target"=>"output"]);
         echo $this->consoleLink("/_admin/logs/$date/user","User Error Logs",["target"=>"output"]);
+        echo $this->consoleLink("/_admin/logs/$date/debugbar","Debugbar Logs",["target"=>"output"]);
         echo $this->consoleLink("/_admin/emaillogs/$date","Email Logs",["target"=>"output"]);
         echo $this->consoleLink("/_admin/patches?$extra","Vendor Patches",["target"=>"output"]);
         echo $this->consoleLink("/import","Import",["target"=>"_blank"]);
@@ -108,11 +109,77 @@ class AdminConsole extends BaseController
             $logpath = realpath(ROOTPATH."writable/logs");
             $pattern = "$logpath/user*-$date.log";
             $files = glob($pattern);
+            $count = 0;
             foreach ($files as $file) {
+                $count++;
                 $prefix = explode("-",basename($file))[0];
                 echo "<a href='/_admin/logs/$date/$prefix'>$prefix</a><br>\n";
             }
-            die("ok");
+            die("<br>$count items");
+        }
+        if ($type=="debugbar"){
+            $logpath = realpath(ROOTPATH."writable/debugbar/");
+            $pattern = "$logpath/*.json";
+            $files = glob($pattern);
+            $count = 0;
+            foreach ($files as $file) {
+                $filemtime = date("Y-m-d",filemtime($file));
+                if ($filemtime==$date) {
+                    $count++;
+                    $name = basename($file);
+                    $data = json_decode(file_get_contents($file),true);
+                    echo "<a href='/_admin/logs/debugbar/$name'>{$data['url']} [{$data['totalTime']}ms]</a><br>\n";
+                }
+            }
+            die("<br>$count items");
+        }
+        if ($date=="debugbar"){
+            $logpath = realpath(ROOTPATH."writable/debugbar/$type");
+            if ($logpath!=''){
+                $data = json_decode(file_get_contents($logpath),true);
+                $contents = [];
+                $contents['url'] = $data['url'];
+                $contents['totalTime'] = $data['totalTime'];
+                $contents['totalMemory'] = $data['totalMemory'];
+                $contents['timelineData'] = [];
+                $contents['queryData'] = [];
+                foreach ($data['collectors'] as $coll){
+                    if ($coll['title'] == 'Timers'){
+                        foreach ($coll['timelineData'] as $tl){
+                            $contents['timelineData'][] = '<label>' . $tl['name'] . '</label>: ' . $tl['duration'];
+                        }    
+                        $contents['timelineData'] = implode('<br>',$contents['timelineData']);  
+                    }
+
+                    if ($coll['title'] == 'Database'){
+                        foreach ($coll['display']['queries'] as $idx=>$q){
+                            if (strpos($q['duration'],"0")!==0){
+                                $sfiles = [];
+                                foreach($q['trace'] as $tr){
+                                    $skip = strpos($tr['file'],'APPPATH')!==0;
+                                    if (strpos($tr['function'],'App\\Controllers')>0){
+                                        $skip = false;
+                                    }
+                                    if ($skip) continue;
+                                    $sfiles[] = $tr['file'] . ' ' . trim($tr['function']);
+                                    //if (count($sfiles)>=3) break;
+                                }
+                                $contents['queryData'][] = $q['duration'] . ' ' . $q['class'] . '<br>'  . implode('<br>',$sfiles) . '<pre>' . $q['sql'] . '</pre>';    
+                            }
+                        }  
+                        $contents['queryData'] = implode('<br>',$contents['queryData']);  
+                    }
+                }
+                foreach($contents as $label=>$value){
+                    if (is_array($value)){
+                        $value = str_replace("\\n","\n",json_encode($value, JSON_PRETTY_PRINT| JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+                    }
+                    echo "<div class='entry'><label style='font-weight: bold'>$label</label><div style='white-space: pre-wrap' class='value'>$value</div></div>";
+                }
+                echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+            }
+            die();
         }
         $logfile = realpath(ROOTPATH."writable/logs/$type-$date.log");
         if (file_exists($logfile)){
