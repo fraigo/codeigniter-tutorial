@@ -9,7 +9,7 @@ if (!@$editable){
 }
 ?>
 <div class="input-group search-input">
-<?=form_hidden($name,$value?:'')?>
+<?=form_hidden($name,$value?''.$value:'')?>
 <?=form_input($config)?>
 <?php if (!@$readonly){ ?>
 <div class="input-group-append" >
