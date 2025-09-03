@@ -95,4 +95,44 @@ class Notifications extends BaseModel
         return $result;
     }
 
+    function createUsersNotification($userIds,$title,$contents,$link, $email=true, $icon=null){
+        $notification = new \App\Models\Notifications();
+        $userNotification = new \App\Models\UserNotifications();
+        $un_ids = [];
+        $n_ids = [];
+        $recipients = $userIds;
+        $notif = true;
+        $users = new \App\Models\Users();
+        $multi = strpos($title,'{recipient}')!==false || strpos($contents,'{recipient}')!==false;
+        if (!$multi){
+            $id = $notification->createNotification(
+                $title,
+                $contents,
+                $link,
+                $icon);
+            $n_ids[] = $id ? $id : $notification->errors();
+        }
+        foreach($recipients as $userId){
+            $user = $users->find($userId);
+            if ($multi){
+                $id = $notification->createNotification(
+                    str_replace('{recipient}',$user['name'],$title),
+                    str_replace('{recipient}',$user['name'],$contents),
+                    $link,
+                    $icon);
+                $n_ids[] = $id ? $id : $notification->errors();
+            }
+            $un_id = $userNotification->createUserNotification($id,$userId,$email,$notif);
+            $un_ids[] = $un_id ? $un_id : $userNotification->errors();
+            if (getenv("TEST_EMAIL")){
+                $email = false;
+                $notif = false;
+            } 
+        }
+        return [
+            "notification_ids" => $n_ids,
+            "user_notificaion_ids" => $un_ids,
+        ];
+    }
+
 }
