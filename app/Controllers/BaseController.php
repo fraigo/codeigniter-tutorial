@@ -486,7 +486,12 @@ abstract class BaseController extends ResourceController
     function update($id=null){
         $fields = $this->editFields;
         if ($this->isJSON()){
-            $jsonData = $this->request->getJSON(true);
+            $jsonData = null;
+            try {
+                $jsonData = $this->request->getJSON(true);
+            } catch (\Exception $e) {
+                // ignore invalid json
+            }
             if (!$jsonData){
                 $jsonData = $this->getVars();
             }
