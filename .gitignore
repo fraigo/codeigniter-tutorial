@@ -125,6 +125,8 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
+composer.phar
+
 writable/*.*
 writable/documents
 google.json
