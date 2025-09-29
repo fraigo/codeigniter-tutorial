@@ -286,9 +286,6 @@ abstract class BaseController extends ResourceController
     }
 
     function isJson(){
-        if (strpos($this->request->getHeaderLine('Content-Type'), 'multipart/form-data') !== false) {
-            return false;
-        }
         $url = current_url(true);
         return $url->getSegment(1) == 'api' || strpos($this->request->getHeaderLine('Content-Type'), 'application/json') !== false;
     }
@@ -485,7 +482,7 @@ abstract class BaseController extends ResourceController
     function update($id=null){
         $fields = $this->editFields;
         if ($this->isJSON()){
-            $jsonData = $this->request->getJSON(true);
+            $jsonData = @$this->request->getJSON(true);
             if (!$jsonData){
                 $jsonData = $this->getVars();
             }
