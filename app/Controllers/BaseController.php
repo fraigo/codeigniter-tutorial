@@ -287,9 +287,6 @@ abstract class BaseController extends ResourceController
 
     function isJson(){
         $contentType = $this->request->getHeaderLine('Content-Type');
-        if (stripos($contentType, 'multipart/form-data') !== false) {
-            return false;
-        }
         $url = current_url(true);
         return $url->getSegment(1) == 'api' || strpos($contentType, 'application/json') !== false;
     }
@@ -487,10 +484,10 @@ abstract class BaseController extends ResourceController
         $fields = $this->editFields;
         if ($this->isJSON()){
             $jsonData = null;
-            try {
+            $contentType = $this->request->getHeaderLine('Content-Type');
+            $isMultipart = stripos($contentType, 'multipart/form-data') !== false;
+            if (!$isMultipart) {
                 $jsonData = $this->request->getJSON(true);
-            } catch (\Exception $e) {
-                // ignore invalid json
             }
             if (!$jsonData){
                 $jsonData = $this->getVars();
